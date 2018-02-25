@@ -1,0 +1,9 @@
+.DS_Store
+.vscode
+.tox
+.coverage
+htmlcov
+venv
+*.egg-info
+*.pyc
+*.swp

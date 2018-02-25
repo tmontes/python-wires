@@ -1,0 +1,21 @@
+; ----------------------------------------------------------------------------
+; .coveragerc
+; ----------------------------------------------------------------------------
+
+
+; ----------------------------------------------------------------------------
+; Purpose:
+; ----------------------------------------------------------------------------
+; - "Merge" real installed package paths actually covered during tests...
+; - ...with soure paths in the repository.
+;
+; Thanks Hynek: https://hynek.me/articles/testing-packaging/
+; ----------------------------------------------------------------------------
+
+[paths]
+source =
+    src/wires
+    .tox/*/lib/python*/site-packages/wires
+
+[run]
+omit = */lib/python*/site-packages/six.py
