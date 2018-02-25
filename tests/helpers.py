@@ -12,6 +12,8 @@ Python Wires test helpers.
 
 from __future__ import absolute_import
 
+import logging
+
 
 
 class CallTracker(object):
@@ -37,6 +39,24 @@ class CallTracker(object):
         Calls to self count.
         """
         return len(self.call_args)
+
+
+
+class TrackingLoggingHandler(logging.Handler):
+
+    """
+    Logging handler that keeps track of logged records.
+    """
+
+    def __init__(self):
+
+        super(TrackingLoggingHandler, self).__init__()
+        self.records = []
+
+
+    def emit(self, record):
+
+        self.records.append(record)
 
 
 
