@@ -66,7 +66,12 @@ class TestWiresAPI(unittest.TestCase):
         """
         Wiring a callable works.
         """
-        wire.this.calls_to(lambda: None)
+        test_callable = lambda: None
+
+        # Calling test_callble works (for coverage completion's sake).
+        test_callable()
+
+        wire.this.calls_to(test_callable)
 
 
     @staticmethod
@@ -75,6 +80,9 @@ class TestWiresAPI(unittest.TestCase):
         Wiring and then unwiring to the same callable works.
         """
         test_callable = lambda: None
+
+        # Calling test_callble works (for coverage completion's sake).
+        test_callable()
 
         wire.this.calls_to(test_callable)
         unwire.this.calls_to(test_callable)
@@ -87,6 +95,9 @@ class TestWiresAPI(unittest.TestCase):
         - Starts with "unknown function ".
         """
         test_callable = lambda: None
+
+        # Calling test_callble works (for coverage completion's sake).
+        test_callable()
 
         with self.assertRaises(ValueError) as cm:
             unwire.this.calls_to(test_callable)
