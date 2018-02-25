@@ -100,7 +100,8 @@ class Callable(object):
             logger.exception(e)
         elif self.use_log is not None:
             sys.stderr.write(msg+'\n')
-            print_exception(type(e), e, e.__traceback__, file=sys.stderr)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            print_exception(exc_type, exc_value, exc_traceback, file=sys.stderr)
 
 
     @staticmethod
