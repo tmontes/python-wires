@@ -38,11 +38,11 @@ class Callable(object):
         # See `_log_handler_failure` below.
         self.use_log = True
 
-        # Handler functions/callables.
+        # Handler (functions/callables, wire args, wire kwargs) tuples.
         self._functions = []
 
 
-    def calls_to(self, function):
+    def calls_to(self, function, *args, **kwargs):
 
         """
         Adds/removes `function` as a handler.
@@ -53,22 +53,25 @@ class Callable(object):
 
         # TODO: explain
         if self._wires.wire_context:
-            self._functions.append(function)
+            self._functions.append((function, args, kwargs))
         else:
-            try:
-                self._functions.remove(function)
-            except ValueError as e:
-                e.args = ('unknown function %r: %s' % (function, e),)
-                raise
+            tuples_to_remove = [v for v in self._functions if v[0] == function]
+            if not tuples_to_remove:
+                raise ValueError('unknown function %r' % (function,))
+            self._functions.remove(tuples_to_remove[0])
 
 
     def __call__(self, *args, **kwargs):
 
         # Calls all handler functions.
 
-        for function in self._functions:
+        for function, wire_args, wire_kwargs in self._functions:
             try:
-                function(*args, **kwargs)
+                combined_args = list(wire_args)
+                combined_args.extend(args)
+                combined_kwargs = dict(wire_kwargs)
+                combined_kwargs.update(kwargs)
+                function(*combined_args, **combined_kwargs)
             except Exception as e:
                 # Catching exceptions here is critical to ensure decoupling
                 # callables from callees.
