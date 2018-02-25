@@ -5,6 +5,9 @@
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
+"""
+Python Wires Singleton.
+"""
 
 from __future__ import absolute_import
 
@@ -18,7 +21,7 @@ class _WireWrapper(object):
         self._wires_shell = wires_shell
 
     def __getattr__(self, name):
-        self._wires_shell._wires_instance.wire_context = True
+        self._wires_shell._wires_instance._wire_context = True
         return getattr(self._wires_shell._wires_instance, name)
 
 
@@ -29,7 +32,7 @@ class _UnwireWrapper(object):
         self._wires_shell = wires_shell
 
     def __getattr__(self, name):
-        self._wires_shell._wires_instance.wire_context = False
+        self._wires_shell._wires_instance._wire_context = False
         return getattr(self._wires_shell._wires_instance, name)
 
 
@@ -40,6 +43,7 @@ class _WiresSingleton(object):
         wires_shell = _shell.WiresShell()
         self.wire = _WireWrapper(wires_shell)
         self.unwire = _UnwireWrapper(wires_shell)
+
 
 
 _WIRE_SINGLETON = _WiresSingleton()

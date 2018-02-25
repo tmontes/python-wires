@@ -1,12 +1,12 @@
 # ----------------------------------------------------------------------------
-# Python Wires Tests
+# Python Wires
 # ----------------------------------------------------------------------------
 # Copyright (c) Tiago Montes.
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
 """
-Python Call Wires.
+Python Wires Instance.
 """
 
 from __future__ import absolute_import
@@ -18,29 +18,10 @@ from . import _callable
 class WiresInstance(object):
 
     """
-    Callable based event manager with a minimal API.
-    Summary:
-    - Events are attributes of Wires, created dynamically, as needed.
-    - Events have zero or more handlers: functions/callables added to them.
-    - Events are fired by calling them, like functions.
-    - Firing an event calls all associated handlers, passing them the same
-      arguments the "fire event" call was given.
-
-    Usage example:
-
-    >>> em = Wires()
-
-    # Tell the event manager to call our lambda when 'my_event' is fired.
-    >>> em.my_event.calls(lambda: print('event handler #1'))
-
-    # Adding another callable for 'my_event':
-    >>> em.my_event.calls(lambda: print('event handler #2'))
-
-    # Trigger 'my_event'
-    >>> em.my_event()
-    event handler #1
-    event handler #2
+    Python Wires Instance
     """
+
+    # Should be used wrapped in a Wires Shell.
 
     def __init__(self):
 
@@ -50,14 +31,15 @@ class WiresInstance(object):
 
         self._callables = {}
 
-        # TODO: explain this
-        self.wire_context = True
+        # Our callers' `calls_to` method checks this attribute to decide
+        # whether to wire or unwire the passed in callee.
+        self._wire_context = True
 
 
     def __getattr__(self, name):
 
-        # Called on attribute access, returns an event object.
-        # Either uses an tracked one or creates new one, tracking it.
+        # Called on attribute access, returns an callable object.
+        # Either uses a tracked one or creates new one, tracking it.
 
         try:
             return self._callables[name]

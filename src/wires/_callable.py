@@ -1,14 +1,13 @@
 # ----------------------------------------------------------------------------
-# Python Wires Tests
+# Python Wires
 # ----------------------------------------------------------------------------
 # Copyright (c) Tiago Montes.
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
 """
-Simple callable.
+Python Wires Callable.
 """
-
 
 from __future__ import absolute_import
 
@@ -23,10 +22,10 @@ class Callable(object):
     """
     Callable with a minimal API.
     Summary:
-    - Has zero or more handlers: functions/callables added to it.
-    - Fired by calling it, like a function.
-    - Firing it calls all associated handlers, passing them any
-      arguments given to call.
+    - Has zero or more callees: functions/callables wired to it.
+    - Each callee has optional wire-time arguments.
+    - Calling it calls all wired callees , passing them any
+      arguments given to call combined with the wire-time callee arguments.
     """
 
     def __init__(self, name, wires, logger_name='wires'):
@@ -38,21 +37,24 @@ class Callable(object):
         # See `_log_handler_failure` below.
         self.use_log = True
 
-        # Handler (functions/callables, wire args, wire kwargs) tuples.
+        # Wired (callee, wire-time args, wire-time kwargs) tuples.
         self._functions = []
 
 
     def calls_to(self, function, *args, **kwargs):
 
         """
-        Adds/removes `function` as a handler.
+        Wires/unwires `function` as a callee.
+
+        `args` and `kwargs` are used to set wire-time arguments and ignored
+        when unwiring.
         """
 
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
 
-        # TODO: explain
-        if self._wires.wire_context:
+        # Wire/unwire depending on our instance's `_wire_context` attribute.
+        if self._wires._wire_context:
             self._functions.append((function, args, kwargs))
         else:
             tuples_to_remove = [v for v in self._functions if v[0] == function]
@@ -63,7 +65,7 @@ class Callable(object):
 
     def __call__(self, *args, **kwargs):
 
-        # Calls all handler functions.
+        # Calls all callee functions.
 
         for function, wire_args, wire_kwargs in self._functions:
             try:
@@ -82,7 +84,7 @@ class Callable(object):
 
         # Try to produce a useful message including:
         # - The callable name.
-        # - The function name.
+        # - The callee name.
         # - The raised execption.
 
         # `self.use_log` is used to prevent usage of the logging system:
