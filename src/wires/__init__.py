@@ -10,7 +10,7 @@ from __future__ import absolute_import
 
 
 
-__version__ = '18.1.0a1'
+__version__ = '18.1.0b1'
 
 __title__ = 'wires'
 __description__ = 'Python Wires'
