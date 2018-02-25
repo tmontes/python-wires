@@ -3,7 +3,8 @@
 .tox
 .coverage
 htmlcov
-venv
 *.egg-info
 *.pyc
 *.swp
+build
+dist
