@@ -44,7 +44,7 @@ class WiringInstance(object):
         try:
             return self._callables[name]
         except KeyError:
-            new_callable = _callable.Callable(name, self)
+            new_callable = _callable.WiringCallable(name, self)
             self._callables[name] = new_callable
             return new_callable
 

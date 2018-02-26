@@ -17,7 +17,7 @@ from traceback import print_exception
 
 
 
-class Callable(object):
+class WiringCallable(object):
 
     """
     Callable with a minimal API.
