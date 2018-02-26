@@ -25,8 +25,8 @@ __author__ = 'Tiago Montes'
 __email__ = 'tiago.montes@gmail.com'
 
 
-from . _shell import WiresShell as Wires
-from . _singleton import wire, unwire
+from . _shell import WiringShell as Wiring
+from . _singleton import wiring, wire, unwire
 
 
 # ----------------------------------------------------------------------------

@@ -11,13 +11,13 @@ Minimal usage example:
 
 .. code-block:: python
 
-    from wires import wire
+    from wires import wiring, wire
 
     def my_callable():
         print('Hello from wires!')
 
     wire.this_callable.calls_to(my_callable)
-    wire.this_callable()
+    wiring.this_callable()
 
 
 

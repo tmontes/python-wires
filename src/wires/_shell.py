@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wires Shell.
+Python Wiring Shell.
 """
 
 from __future__ import absolute_import
@@ -15,26 +15,26 @@ from . import _instance
 
 
 
-class WiresShell(object):
+class WiringShell(object):
 
     """
-    Python Wires Shell
+    Python Wiring Shell
     """
 
-    # Wraps a Wires Instance, cooperating with it by setting its
+    # Wraps a Wiring Instance, cooperating with it by setting its
     # `wire_context` attribute to support the defined usage as in:
     #
-    # >>> ws = WiresShell()
+    # >>> ws = WiringShell()
     # >>> ws.wire.some_callable.calls_to(<callee>)
     # >>> ws.unwire.some_callable.calls_to(<callee>)
     #
-    # The `calls_to` method of the Wires Callable wires/unwires the given
-    # `<callee>` depending on its Wires Instance `wire_context`, set by
-    # the WiresShell object.
+    # The `calls_to` method of the Wiring Callable wires/unwires the given
+    # `<callee>` depending on its Wiring Instance `wire_context`, set by
+    # the WiringShell object.
 
     def __init__(self):
 
-        self._wires_instance = _instance.WiresInstance()
+        self._wiring = _instance.WiringInstance()
 
 
     @property
@@ -42,8 +42,8 @@ class WiresShell(object):
         """
         Callable/callee wiring attribute.
         """
-        self._wires_instance._wire_context = True
-        return self._wires_instance
+        self._wiring._wire_context = True
+        return self._wiring
 
 
     @property
@@ -51,13 +51,13 @@ class WiresShell(object):
         """
         Callable/callee unwiring attribute.
         """
-        self._wires_instance._wire_context = False
-        return self._wires_instance
+        self._wiring._wire_context = False
+        return self._wiring
 
 
     def __getattr__(self, name):
 
-        return getattr(self._wires_instance, name)
+        return getattr(self._wiring, name)
 
 
 # ----------------------------------------------------------------------------
