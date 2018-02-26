@@ -44,14 +44,15 @@ class _UnwireWrapper(_Wrapper):
 class _WiresSingleton(object):
 
     def __init__(self):
-        wiring_shell = _shell.WiringShell()
-        self.wire = _WireWrapper(wiring_shell)
-        self.unwire = _UnwireWrapper(wiring_shell)
+        self.wiring_shell = _shell.WiringShell()
+        self.wire = _WireWrapper(self.wiring_shell)
+        self.unwire = _UnwireWrapper(self.wiring_shell)
 
 
 
 _WIRE_SINGLETON = _WiresSingleton()
 
+wiring = _WIRE_SINGLETON.wiring_shell
 wire = _WIRE_SINGLETON.wire
 unwire = _WIRE_SINGLETON.unwire
 
