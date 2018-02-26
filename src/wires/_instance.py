@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wires Instance.
+Python Wiring Instance.
 """
 
 from __future__ import absolute_import
@@ -15,10 +15,10 @@ from . import _callable
 
 
 
-class WiresInstance(object):
+class WiringInstance(object):
 
     """
-    Python Wires Instance
+    Python Wiring Instance
     """
 
     # Should be used wrapped in a Wires Shell.

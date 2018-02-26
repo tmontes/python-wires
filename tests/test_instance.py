@@ -14,7 +14,7 @@ import sys
 
 import six
 
-from wires import Wires
+from wires import Wiring
 
 from . import helpers
 
@@ -28,14 +28,14 @@ class TestWiresAPI(unittest.TestCase):
 
     def setUp(self):
 
-        self.wires = Wires()
+        self.w = Wiring()
 
 
     def test_unwired_call_does_not_fail(self):
         """
         Calling an unwired call works. Does nothing, but works.
         """
-        self.wires.wire.unwired_call()
+        self.w.wire.unwired_call()
 
 
     def test_wiring_non_callable_raises_value_error(self):
@@ -48,7 +48,7 @@ class TestWiresAPI(unittest.TestCase):
         for non_callable in (None, True, 42, 2.3, (), [], {}, set()):
 
             with self.assertRaises(ValueError) as cm:
-                self.wires.wire.this.calls_to(non_callable)
+                self.w.wire.this.calls_to(non_callable)
 
             exception_args = cm.exception.args
             self.assertEqual(len(exception_args), 1)
@@ -77,13 +77,13 @@ class TestWiresAPI(unittest.TestCase):
         # Calling test_callble works (for coverage completion's sake).
         self._test_callable()
 
-        self.wires.wire.this.calls_to(self._test_callable)
+        self.w.wire.this.calls_to(self._test_callable)
         self.addCleanup(self._unwire_test_callable)
 
 
     def _unwire_test_callable(self):
 
-        self.wires.unwire.this.calls_to(self._test_callable)
+        self.w.unwire.this.calls_to(self._test_callable)
 
 
     def test_wiring_unwiring_works(self):
@@ -93,8 +93,8 @@ class TestWiresAPI(unittest.TestCase):
         # Calling test_callble works (for coverage completion's sake).
         self._test_callable()
 
-        self.wires.wire.this.calls_to(self._test_callable)
-        self.wires.unwire.this.calls_to(self._test_callable)
+        self.w.wire.this.calls_to(self._test_callable)
+        self.w.unwire.this.calls_to(self._test_callable)
 
 
     def test_unwiring_unknown_callable_raises_value_error(self):
@@ -104,7 +104,7 @@ class TestWiresAPI(unittest.TestCase):
         - Starts with "unknown function ".
         """
         with self.assertRaises(ValueError) as cm:
-            self.wires.unwire.this.calls_to(self._test_callable)
+            self.w.unwire.this.calls_to(self._test_callable)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -121,8 +121,8 @@ class TestWiresAPI(unittest.TestCase):
         Wiring/unwiring via indexing works.
         """
         name = 'name'
-        self.wires.wire[name].calls_to(self._test_callable)
-        self.wires.unwire[name].calls_to(self._test_callable)
+        self.w.wire[name].calls_to(self._test_callable)
+        self.w.unwire[name].calls_to(self._test_callable)
 
 
 
@@ -134,7 +134,7 @@ class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
 
     def setUp(self):
 
-        self.wires = Wires()
+        self.w = Wiring()
 
 
     def test_wire_call(self):
@@ -144,8 +144,8 @@ class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
         """
         tracker = helpers.CallTracker()
 
-        self.wires.wire.this.calls_to(tracker)
-        self.wires.this()
+        self.w.wire.this.calls_to(tracker)
+        self.w.this()
 
         self.assertEqual(tracker.call_count, 1, 'call count mismatch')
         self.assertEqual(tracker.call_args, [
@@ -160,9 +160,9 @@ class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
         """
         tracker = helpers.CallTracker()
 
-        self.wires.wire.this.calls_to(tracker)
-        self.wires.wire.this.calls_to(tracker)
-        self.wires.this()
+        self.w.wire.this.calls_to(tracker)
+        self.w.wire.this.calls_to(tracker)
+        self.w.this()
 
         self.assertEqual(tracker.call_count, 2, 'call count mismatch')
         self.assertEqual(tracker.call_args, [
@@ -182,9 +182,9 @@ class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
         trackers = [helpers.CallTracker() for _ in range(num_wirings)]
 
         for tracker in trackers:
-            self.wires.wire.this.calls_to(tracker)
+            self.w.wire.this.calls_to(tracker)
 
-        self.wires.this()
+        self.w.this()
 
         for tracker in trackers:
             self.assertEqual(tracker.call_count, 1, 'call count mismatch')
@@ -202,13 +202,13 @@ class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
         """
         tracker = helpers.CallTracker()
 
-        self.wires.wire.this.calls_to(tracker)
-        self.wires.this()
+        self.w.wire.this.calls_to(tracker)
+        self.w.this()
 
         self.assert_single_call_no_args(tracker)
 
-        self.wires.unwire.this.calls_to(tracker)
-        self.wires.this()
+        self.w.unwire.this.calls_to(tracker)
+        self.w.this()
 
         self.assert_single_call_no_args(tracker)
 
@@ -230,13 +230,13 @@ class TestWiresCalleeFailures(unittest.TestCase):
         self._save_sys_stderr = sys.stderr
         sys.stderr = self.stderr
 
-        self.wires = Wires()
-        self.wires.wire.will_fail.calls_to(self._failing_callee)
+        self.w = Wiring()
+        self.w.wire.will_fail.calls_to(self._failing_callee)
 
 
     def tearDown(self):
 
-        self.wires.unwire.will_fail.calls_to(self._failing_callee)
+        self.w.unwire.will_fail.calls_to(self._failing_callee)
         sys.stderr = self._save_sys_stderr
         self.root_logger.removeHandler(self.log_handler)
 
@@ -251,8 +251,8 @@ class TestWiresCalleeFailures(unittest.TestCase):
 
     def test_callee_execption_logs_error(self):
 
-        self.wires.will_fail.use_log = True
-        self.wires.will_fail()
+        self.w.will_fail.use_log = True
+        self.w.will_fail()
 
         # We get two log records:
         # - The first one with a "custom" call fail record.
@@ -330,8 +330,8 @@ class TestWiresCalleeFailures(unittest.TestCase):
         No records logged at all.
         Failure is output to sys.stderr.
         """
-        self.wires.will_fail.use_log = False
-        self.wires.will_fail()
+        self.w.will_fail.use_log = False
+        self.w.will_fail()
 
         # We get no log records.
         self.assertEqual(len(self.log_handler.records), 0, 'logged record count')
@@ -371,8 +371,8 @@ class TestWiresCalleeFailures(unittest.TestCase):
         No records logged at all.
         No output to sys.stderr.
         """
-        self.wires.will_fail.use_log = None
-        self.wires.will_fail()
+        self.w.will_fail.use_log = None
+        self.w.will_fail()
 
         # We get no log records.
         self.assertEqual(len(self.log_handler.records), 0, 'log record count')
@@ -405,9 +405,9 @@ class ArgPassingMixin(helpers.CallTrackerAssertMixin):
         """
         tracker = helpers.CallTracker()
 
-        self.wires = Wires()
-        self.wires.wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
-        self.wires.this(*self.call_args, **self.call_kwargs)
+        self.w = Wiring()
+        self.w.wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
+        self.w.this(*self.call_args, **self.call_kwargs)
         self.addCleanup(self._unwire, tracker)
 
         self.assertEqual(tracker.call_count, 1, 'call count mismatch')
@@ -423,10 +423,10 @@ class ArgPassingMixin(helpers.CallTrackerAssertMixin):
         """
         tracker = helpers.CallTracker()
 
-        self.wires = Wires()
-        self.wires.wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
-        self.wires.this.calls_to(tracker, *self.wire2_args, **self.wire2_kwargs)
-        self.wires.this(*self.call_args, **self.call_kwargs)
+        self.w = Wiring()
+        self.w.wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
+        self.w.this.calls_to(tracker, *self.wire2_args, **self.wire2_kwargs)
+        self.w.this(*self.call_args, **self.call_kwargs)
         self.addCleanup(self._unwire, tracker)
         self.addCleanup(self._unwire, tracker)
 
@@ -439,7 +439,7 @@ class ArgPassingMixin(helpers.CallTrackerAssertMixin):
 
     def _unwire(self, tracker):
 
-        self.wires.unwire.this.calls_to(tracker)
+        self.w.unwire.this.calls_to(tracker)
 
 
 

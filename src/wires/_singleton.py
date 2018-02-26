@@ -17,8 +17,8 @@ from . import _shell
 
 class _Wrapper(object):
 
-    def __init__(self, wires_shell):
-        self._wires_shell = wires_shell
+    def __init__(self, wiring_shell):
+        self._wiring_shell = wiring_shell
 
     def __getitem__(self, name):
         return getattr(self, name)
@@ -28,25 +28,25 @@ class _Wrapper(object):
 class _WireWrapper(_Wrapper):
 
     def __getattr__(self, name):
-        self._wires_shell._wires_instance._wire_context = True
-        return getattr(self._wires_shell._wires_instance, name)
+        self._wiring_shell._wiring._wire_context = True
+        return getattr(self._wiring_shell._wiring, name)
 
 
 
 class _UnwireWrapper(_Wrapper):
 
     def __getattr__(self, name):
-        self._wires_shell._wires_instance._wire_context = False
-        return getattr(self._wires_shell._wires_instance, name)
+        self._wiring_shell._wiring._wire_context = False
+        return getattr(self._wiring_shell._wiring, name)
 
 
 
 class _WiresSingleton(object):
 
     def __init__(self):
-        wires_shell = _shell.WiresShell()
-        self.wire = _WireWrapper(wires_shell)
-        self.unwire = _UnwireWrapper(wires_shell)
+        wiring_shell = _shell.WiringShell()
+        self.wire = _WireWrapper(wiring_shell)
+        self.unwire = _UnwireWrapper(wiring_shell)
 
 
 
