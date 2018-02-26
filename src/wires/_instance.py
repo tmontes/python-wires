@@ -49,4 +49,11 @@ class WiresInstance(object):
             return new_callable
 
 
+    def __getitem__(self, name):
+
+        # Support attribute access for simpler dynamic name wiring/unwiring.
+
+        return self.__getattr__(name)
+
+
 # ----------------------------------------------------------------------------

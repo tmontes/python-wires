@@ -112,6 +112,15 @@ class TestWiresAPI(unittest.TestCase):
         )
 
 
+    def test_dynamic_name_wire_call_unwire(self):
+        """
+        Wiring/unwiring via indexing works.
+        """
+        name = 'name'
+        wire[name].calls_to(self._test_callable)
+        unwire[name].calls_to(self._test_callable)
+
+
 
 class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
 
