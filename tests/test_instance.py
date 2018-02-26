@@ -65,29 +65,36 @@ class TestWiresAPI(unittest.TestCase):
             )
 
 
+    @staticmethod
+    def _test_callable():
+        pass
+
+
     def test_wiring_callable_works(self):
         """
         Wiring a callable works.
         """
-        test_callable = lambda: None
-        
         # Calling test_callble works (for coverage completion's sake).
-        test_callable()
+        self._test_callable()
 
-        self.wires.wire.this.calls_to(test_callable)
+        self.wires.wire.this.calls_to(self._test_callable)
+        self.addCleanup(self._unwire_test_callable)
+
+
+    def _unwire_test_callable(self):
+
+        self.wires.unwire.this.calls_to(self._test_callable)
 
 
     def test_wiring_unwiring_works(self):
         """
         Wiring and then unwiring to the same callable works.
         """
-        test_callable = lambda: None
-
         # Calling test_callble works (for coverage completion's sake).
-        test_callable()
+        self._test_callable()
 
-        self.wires.wire.this.calls_to(test_callable)
-        self.wires.unwire.this.calls_to(test_callable)
+        self.wires.wire.this.calls_to(self._test_callable)
+        self.wires.unwire.this.calls_to(self._test_callable)
 
 
     def test_unwiring_unknown_callable_raises_value_error(self):
@@ -96,13 +103,8 @@ class TestWiresAPI(unittest.TestCase):
         The exception argument (message):
         - Starts with "unknown function ".
         """
-        test_callable = lambda: None
-
-        # Calling test_callble works (for coverage completion's sake).
-        test_callable()
-
         with self.assertRaises(ValueError) as cm:
-            self.wires.unwire.this.calls_to(test_callable)
+            self.wires.unwire.this.calls_to(self._test_callable)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -112,6 +114,15 @@ class TestWiresAPI(unittest.TestCase):
             msg.startswith('unknown function '),
             'wrong exception message: %r' % (msg,),
         )
+
+
+    def test_dynamic_name_wire_call_unwire(self):
+        """
+        Wiring/unwiring via indexing works.
+        """
+        name = 'name'
+        self.wires.wire[name].calls_to(self._test_callable)
+        self.wires.unwire[name].calls_to(self._test_callable)
 
 
 

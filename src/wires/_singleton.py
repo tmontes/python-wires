@@ -15,10 +15,17 @@ from . import _shell
 
 
 
-class _WireWrapper(object):
+class _Wrapper(object):
 
     def __init__(self, wires_shell):
         self._wires_shell = wires_shell
+
+    def __getitem__(self, name):
+        return getattr(self, name)
+
+
+
+class _WireWrapper(_Wrapper):
 
     def __getattr__(self, name):
         self._wires_shell._wires_instance._wire_context = True
@@ -26,10 +33,7 @@ class _WireWrapper(object):
 
 
 
-class _UnwireWrapper(object):
-
-    def __init__(self, wires_shell):
-        self._wires_shell = wires_shell
+class _UnwireWrapper(_Wrapper):
 
     def __getattr__(self, name):
         self._wires_shell._wires_instance._wire_context = False
