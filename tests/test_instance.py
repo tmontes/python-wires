@@ -179,6 +179,14 @@ class TestWiresAPI(unittest.TestCase):
         # TODO: assert exception details
 
 
+    def test_wiring_from_instance_fails(self):
+
+        with self.assertRaises(RuntimeError) as cm:
+            self.w.some_callable.calls_to(self._test_callable)
+
+        # TODO: assert exception details
+
+
 
 class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
 
