@@ -35,10 +35,26 @@ class WiringCallable(object):
         self._logger_name = logger_name
 
         # See `_log_handler_failure` below.
-        self.use_log = True
+        self._use_log = True
 
         # Wired (callee, wire-time args, wire-time kwargs) tuples.
         self._functions = []
+
+
+    @property
+    def use_log(self):
+
+        if self._wiring._wire_context is not None:
+            raise RuntimeError('invalid access in wiring context')
+        return self._use_log
+
+
+    @use_log.setter
+    def use_log(self, value):
+
+        if self._wiring._wire_context is not None:
+            raise RuntimeError('invalid access in wiring context')
+        self._use_log = value
 
 
     def calls_to(self, function, *args, **kwargs):
@@ -53,19 +69,27 @@ class WiringCallable(object):
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
 
-        # Wire/unwire depending on our instance's `_wire_context` attribute.
-        if self._wiring._wire_context:
+        # Wire/unwire depending on our wiring `_wire_context` attribute.
+        wire_context = self._wiring._wire_context
+        self._wiring._wire_context = None
+
+        if wire_context is True:
             self._functions.append((function, args, kwargs))
-        else:
+        elif wire_context is False:
             tuples_to_remove = [v for v in self._functions if v[0] == function]
             if not tuples_to_remove:
                 raise ValueError('unknown function %r' % (function,))
             self._functions.remove(tuples_to_remove[0])
+        else:
+            raise RuntimeError('undefined wiring context')
 
 
     def __call__(self, *args, **kwargs):
 
         # Calls all callee functions.
+
+        if self._wiring._wire_context is not None:
+            raise RuntimeError('calling within wiring context')
 
         for function, wire_args, wire_kwargs in self._functions:
             try:

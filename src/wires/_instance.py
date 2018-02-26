@@ -32,8 +32,9 @@ class WiringInstance(object):
         self._callables = {}
 
         # Our callers' `calls_to` method checks this attribute to decide
-        # whether to wire or unwire the passed in callee.
-        self._wire_context = True
+        # whether to wire or unwire the passed in callee; also used to
+        # disallow calling from within wiring/unwiring contexts.
+        self._wire_context = None
 
 
     def __getattr__(self, name):

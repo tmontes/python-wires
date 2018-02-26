@@ -121,6 +121,60 @@ class TestWiresAPI(unittest.TestCase):
         unwire[name].calls_to(self._test_callable)
 
 
+    def test_call_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            wire.some_callable()
+
+        # TODO: assert exception details
+
+
+    def test_call_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            unwire.some_callable()
+
+        # TODO: assert exception details
+
+
+    def test_call_get_use_log_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            _ = wire.some_callable.use_log
+
+        # TODO: assert exception details
+
+
+    def test_call_get_use_log_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            _ = unwire.some_callable.use_log
+
+        # TODO: assert exception details
+
+
+    def test_call_set_use_log_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            wire.some_callable.use_log = None
+
+        # TODO: assert exception details
+
+
+    def test_call_set_use_log_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            unwire.some_callable.use_log = None
+
+        # TODO: assert exception details
+
+
 
 class TestWiresUtilization(helpers.CallTrackerAssertMixin, unittest.TestCase):
 
@@ -244,7 +298,7 @@ class TestWiresCalleeFailures(unittest.TestCase):
         Callee exceptions are logged by default.
         No output to sys.stderr should be produced.
         """
-        wire.will_fail.use_log = True
+        wiring.will_fail.use_log = True
         wiring.will_fail()
 
         # We get two log records:
@@ -326,7 +380,7 @@ class TestWiresCalleeFailures(unittest.TestCase):
         No records logged at all.
         Failure is output to sys.stderr.
         """
-        wire.will_fail.use_log = False
+        wiring.will_fail.use_log = False
         wiring.will_fail()
 
         # We get no log records.
@@ -367,7 +421,7 @@ class TestWiresCalleeFailures(unittest.TestCase):
         No records logged at all.
         No output to sys.stderr.
         """
-        wire.will_fail.use_log = None
+        wiring.will_fail.use_log = None
         wiring.will_fail()
 
         # We get no log records.

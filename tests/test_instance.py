@@ -35,7 +35,7 @@ class TestWiresAPI(unittest.TestCase):
         """
         Calling an unwired call works. Does nothing, but works.
         """
-        self.w.wire.unwired_call()
+        self.w.unwired_call()
 
 
     def test_wiring_non_callable_raises_value_error(self):
@@ -123,6 +123,60 @@ class TestWiresAPI(unittest.TestCase):
         name = 'name'
         self.w.wire[name].calls_to(self._test_callable)
         self.w.unwire[name].calls_to(self._test_callable)
+
+
+    def test_call_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.w.wire.some_callable()
+
+        # TODO: assert exception details
+
+
+    def test_call_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.w.unwire.some_callable()
+
+        # TODO: assert exception details
+
+
+    def test_callable_get_use_log_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            _ = self.w.wire.some_callable.use_log
+
+        # TODO: assert exception details
+
+
+    def test_callable_get_use_log_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            _ = self.w.unwire.some_callable.use_log
+
+        # TODO: assert exception details
+
+
+    def test_callable_set_use_log_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.w.wire.some_callable.use_log = None
+
+        # TODO: assert exception details
+
+
+    def test_callable_set_use_log_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.w.unwire.some_callable.use_log = None
+
+        # TODO: assert exception details
 
 
 
@@ -425,7 +479,7 @@ class ArgPassingMixin(helpers.CallTrackerAssertMixin):
 
         self.w = Wiring()
         self.w.wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
-        self.w.this.calls_to(tracker, *self.wire2_args, **self.wire2_kwargs)
+        self.w.wire.this.calls_to(tracker, *self.wire2_args, **self.wire2_kwargs)
         self.w.this(*self.call_args, **self.call_kwargs)
         self.addCleanup(self._unwire, tracker)
         self.addCleanup(self._unwire, tracker)
