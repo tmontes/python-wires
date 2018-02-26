@@ -139,7 +139,7 @@ class TestWiresAPI(unittest.TestCase):
         # TODO: assert exception details
 
 
-    def test_call_get_use_log_via_wire_fails(self):
+    def test_callable_get_use_log_via_wire_fails(self):
         """
         """
         with self.assertRaises(RuntimeError) as cm:
@@ -148,7 +148,7 @@ class TestWiresAPI(unittest.TestCase):
         # TODO: assert exception details
 
 
-    def test_call_get_use_log_via_unwire_fails(self):
+    def test_callable_get_use_log_via_unwire_fails(self):
         """
         """
         with self.assertRaises(RuntimeError) as cm:
@@ -157,7 +157,7 @@ class TestWiresAPI(unittest.TestCase):
         # TODO: assert exception details
 
 
-    def test_call_set_use_log_via_wire_fails(self):
+    def test_callable_set_use_log_via_wire_fails(self):
         """
         """
         with self.assertRaises(RuntimeError) as cm:
@@ -166,11 +166,19 @@ class TestWiresAPI(unittest.TestCase):
         # TODO: assert exception details
 
 
-    def test_call_set_use_log_via_unwire_fails(self):
+    def test_callable_set_use_log_via_unwire_fails(self):
         """
         """
         with self.assertRaises(RuntimeError) as cm:
             unwire.some_callable.use_log = None
+
+        # TODO: assert exception details
+
+
+    def test_wiring_from_instance_fails(self):
+
+        with self.assertRaises(RuntimeError) as cm:
+            wiring.some_callable.calls_to(self._test_callable)
 
         # TODO: assert exception details
 
