@@ -28,10 +28,10 @@ class Callable(object):
       arguments given to call combined with the wire-time callee arguments.
     """
 
-    def __init__(self, name, wires, logger_name='wires'):
+    def __init__(self, name, wiring, logger_name='wires'):
 
         self._name = name
-        self._wires = wires
+        self._wiring = wiring
         self._logger_name = logger_name
 
         # See `_log_handler_failure` below.
@@ -54,7 +54,7 @@ class Callable(object):
             raise ValueError('argument not callable: %r' % (function,))
 
         # Wire/unwire depending on our instance's `_wire_context` attribute.
-        if self._wires._wire_context:
+        if self._wiring._wire_context:
             self._functions.append((function, args, kwargs))
         else:
             tuples_to_remove = [v for v in self._functions if v[0] == function]
