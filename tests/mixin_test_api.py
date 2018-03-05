@@ -14,7 +14,7 @@ class TestWiresAPIMixin(object):
 
     """
     Drives Wires API tests requiring mixed class to:
-    - Set self.w to a Wiring instance.
+    - Have a Wiring instance at self.w.
     - Allow wiring via self.wire.
     - Allow unwiring via self.unwire.
     """

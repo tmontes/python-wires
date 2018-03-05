@@ -8,17 +8,32 @@
 
 from __future__ import absolute_import
 
-import unittest
-
-from . import mixin_test_api, mixin_test_singleton
+from wires import wiring, wire, unwire
 
 
 
-class TestWiresAPI(mixin_test_singleton.TestWiresSingletonMixin,
-                   mixin_test_api.TestWiresAPIMixin,
-                   unittest.TestCase):
+class TestWiresSingletonMixin(object):
 
-    pass
+    """
+    Singleton Wires test mixin.
+    """
+
+    @property
+    def w(self):
+
+        return wiring
+
+
+    @property
+    def wire(self):
+
+        return wire
+
+
+    @property
+    def unwire(self):
+
+        return unwire
 
 
 # ----------------------------------------------------------------------------

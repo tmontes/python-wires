@@ -12,11 +12,13 @@ import unittest
 
 from wires import Wiring
 
-from . import mixin_test_api
+from . import mixin_test_api, mixin_test_instance
 
 
 
-class TestWiresAPI(mixin_test_api.TestWiresAPIMixin, unittest.TestCase):
+class TestWiresAPI(mixin_test_api.TestWiresAPIMixin,
+                   mixin_test_instance.TestWiresInstanceMixin,
+                   unittest.TestCase):
 
     """
     Minimal API tests for the Wires singleton.
@@ -25,24 +27,6 @@ class TestWiresAPI(mixin_test_api.TestWiresAPIMixin, unittest.TestCase):
     def setUp(self):
 
         self._w = Wiring()
-
-
-    @property
-    def w(self):
-
-        return self._w
-
-
-    @property
-    def wire(self):
-
-        return self._w.wire
-
-
-    @property
-    def unwire(self):
-
-        return self._w.unwire
 
 
 # ----------------------------------------------------------------------------
