@@ -42,24 +42,6 @@ class CallTracker(object):
 
 
 
-class TrackingLoggingHandler(logging.Handler):
-
-    """
-    Logging handler that keeps track of logged records.
-    """
-
-    def __init__(self):
-
-        super(TrackingLoggingHandler, self).__init__()
-        self.records = []
-
-
-    def emit(self, record):
-
-        self.records.append(record)
-
-
-
 class CallTrackerAssertMixin(object):
 
     """
