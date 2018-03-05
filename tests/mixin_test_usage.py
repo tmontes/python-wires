@@ -8,14 +8,6 @@
 
 from __future__ import absolute_import
 
-import logging
-import unittest
-import sys
-
-import six
-
-from wires import Wiring
-
 from . import helpers
 
 

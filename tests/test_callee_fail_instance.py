@@ -10,8 +10,6 @@ from __future__ import absolute_import
 
 import unittest
 
-from wires import Wiring
-
 from . import mixin_test_instance, mixin_test_callee_fail
 
 
