@@ -31,10 +31,9 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
         self.wire.this.calls_to(tracker)
         self.w.this()
 
-        self.assertEqual(tracker.call_count, 1, 'call count mismatch')
-        self.assertEqual(tracker.call_args, [
+        self.assert_called(tracker, [
             ((), {},),
-        ], 'call argument mismatch')
+        ])
 
 
     def test_double_wire_call(self):
@@ -48,11 +47,10 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
         self.wire.this.calls_to(tracker)
         self.w.this()
 
-        self.assertEqual(tracker.call_count, 2, 'call count mismatch')
-        self.assertEqual(tracker.call_args, [
+        self.assert_called(tracker, [
             ((), {},),
             ((), {},),
-        ], 'call argument mismatch')
+        ])
 
 
     def test_multi_wired_call(self):
@@ -71,10 +69,9 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
         self.w.this()
 
         for tracker in trackers:
-            self.assertEqual(tracker.call_count, 1, 'call count mismatch')
-            self.assertEqual(tracker.call_args, [
+            self.assert_called(tracker, [
                 ((), {},),
-            ], 'call argument mismatch')
+            ])
 
 
     def test_wire_call_unwire_call(self):
