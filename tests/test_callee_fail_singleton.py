@@ -24,12 +24,12 @@ class TestWiresCalleeFail(mixin_test_singleton.TestWiresSingletonMixin,
 
     def setUp(self):
 
-        mixin_test_callee_fail.TestWiresCalleeFailMixin.mixin_setUp(self)
+        mixin_test_callee_fail.TestWiresCalleeFailMixin.setUp(self)
 
 
     def tearDown(self):
 
-        mixin_test_callee_fail.TestWiresCalleeFailMixin.mixin_tearDown(self)
+        mixin_test_callee_fail.TestWiresCalleeFailMixin.tearDown(self)
 
 
 # ----------------------------------------------------------------------------

@@ -10,8 +10,6 @@ from __future__ import absolute_import
 
 import unittest
 
-from wires import Wiring
-
 from . import mixin_test_api, mixin_test_instance
 
 
@@ -23,10 +21,6 @@ class TestWiresAPI(mixin_test_api.TestWiresAPIMixin,
     """
     Minimal API tests for the Wires singleton.
     """
-
-    def setUp(self):
-
-        self._w = Wiring()
 
 
 # ----------------------------------------------------------------------------

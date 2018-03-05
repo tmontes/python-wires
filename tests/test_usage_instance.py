@@ -24,9 +24,5 @@ class TestWiresUtilization(mixin_test_instance.TestWiresInstanceMixin,
     Utilization tests for the Wires instances.
     """
 
-    def setUp(self):
-
-        self._w = Wiring()
-
 
 # ----------------------------------------------------------------------------

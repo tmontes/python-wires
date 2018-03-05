@@ -24,7 +24,7 @@ class TestWiresCalleeFailMixin(object):
     - Have a Wiring instance at self.w.
     """
 
-    def mixin_setUp(self):
+    def setUp(self):
 
         self.log_handler = helpers.TrackingLoggingHandler()
         self.root_logger = logging.getLogger()
@@ -37,7 +37,7 @@ class TestWiresCalleeFailMixin(object):
         self.wire.will_fail.calls_to(self._failing_callee)
 
 
-    def mixin_tearDown(self):
+    def tearDown(self):
 
         self.unwire.will_fail.calls_to(self._failing_callee)
         sys.stderr = self._save_sys_stderr
