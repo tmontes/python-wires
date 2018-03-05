@@ -123,7 +123,7 @@ class TestWiresCalleeFailMixin(object):
         for tb_attr in ('tb_frame', 'tb_lasti', 'tb_lineno', 'tb_next'):
             self.assertTrue(
                 getattr(record.exc_info[2], tb_attr, None),
-                'second log record traceback with no %r attribute' % (tb_attr,) 
+                'second log record traceback with no %r attribute' % (tb_attr,)
             )
 
 
