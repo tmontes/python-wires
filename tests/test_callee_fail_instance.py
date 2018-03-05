@@ -5,6 +5,10 @@
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
+"""
+Wires instance callee failure tests.
+"""
+
 
 from __future__ import absolute_import
 
