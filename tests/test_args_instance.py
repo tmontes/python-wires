@@ -8,78 +8,17 @@
 
 from __future__ import absolute_import
 
-import logging
 import unittest
-import sys
 
-import six
+from wires import Wiring
 
-from wires import wiring, wire, unwire
-
-from . import helpers
+from . import mixin_test_instance, mixin_test_args
 
 
 
-class ArgPassingMixin(helpers.CallTrackerAssertMixin):
-
-    """
-    Argument passing utilization tests for the Wires singleton.
-    """
-
-    wire1_args = ()
-    wire1_kwargs = {}
-
-    wire2_args = ()
-    wire2_kwargs = {}
-
-    call_args = ()
-    call_kwargs = {}
-
-
-    def test_wire_call_args(self):
-        """
-        Wires the `this` call and calls it.
-        Checks the wired callable was called once with the correct arguments.
-        """
-        tracker = helpers.CallTracker()
-
-        wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
-        wiring.this(*self.call_args, **self.call_kwargs)
-        self.addCleanup(self._unwire, tracker)
-
-        self.assertEqual(tracker.call_count, 1, 'call count mismatch')
-        self.assertEqual(tracker.call_args, [
-            (self.expected_call_args, self.expected_call_kwargs),
-        ], 'call argument mismatch')
-
-
-    def test_double_wire_call_args(self):
-        """
-        Wires the `this` call and calls it.
-        Checks the wired callable was called once with the correct arguments.
-        """
-        tracker = helpers.CallTracker()
-
-        wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
-        wire.this.calls_to(tracker, *self.wire2_args, **self.wire2_kwargs)
-        wiring.this(*self.call_args, **self.call_kwargs)
-        self.addCleanup(self._unwire, tracker)
-        self.addCleanup(self._unwire, tracker)
-
-        self.assertEqual(tracker.call_count, 2, 'call count mismatch')
-        self.assertEqual(tracker.call_args, [
-            (self.expected_call_args, self.expected_call_kwargs),
-            (self.expected_2nd_call_args, self.expected_2nd_call_kwargs),
-        ], 'call argument mismatch')
-
-
-    def _unwire(self, tracker):
-
-        unwire.this.calls_to(tracker)
-
-
-
-class TestWiresNoArgPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresNoArgPassing(mixin_test_instance.TestWiresInstanceMixin,
+                            mixin_test_args.TestWiresArgPassingMixin,
+                            unittest.TestCase):
 
     expected_call_args = ()
     expected_call_kwargs = {}
@@ -89,7 +28,9 @@ class TestWiresNoArgPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresWireArgPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresWireArgPassing(mixin_test_instance.TestWiresInstanceMixin,
+                              mixin_test_args.TestWiresArgPassingMixin,
+                              unittest.TestCase):
 
     wire1_args = (1, 2, 3)
 
@@ -101,7 +42,9 @@ class TestWiresWireArgPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresWireKwargPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresWireKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+                                mixin_test_args.TestWiresArgPassingMixin,
+                                unittest.TestCase):
 
     wire1_kwargs = dict(a='a', b='b')
 
@@ -113,7 +56,9 @@ class TestWiresWireKwargPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresWireArgKwargPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresWireArgKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+                                   mixin_test_args.TestWiresArgPassingMixin,
+                                   unittest.TestCase):
 
     wire1_args = (1, 2, 3)
     wire1_kwargs = dict(a='a', b='b')
@@ -126,7 +71,9 @@ class TestWiresWireArgKwargPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresCallArgPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresCallArgPassing(mixin_test_instance.TestWiresInstanceMixin,
+                              mixin_test_args.TestWiresArgPassingMixin,
+                              unittest.TestCase):
 
     call_args = (1, 2, 3)
 
@@ -138,7 +85,9 @@ class TestWiresCallArgPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresCallKwargPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresCallKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+                                mixin_test_args.TestWiresArgPassingMixin,
+                                unittest.TestCase):
 
     call_kwargs = dict(a='a', b='b')
 
@@ -150,7 +99,9 @@ class TestWiresCallKwargPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresCallArgKwargPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresCallArgKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+                                   mixin_test_args.TestWiresArgPassingMixin,
+                                   unittest.TestCase):
 
     call_args = (1, 2, 3)
     call_kwargs = dict(a='a', b='b')
@@ -163,7 +114,9 @@ class TestWiresCallArgKwargPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresFullPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresFullPassing(mixin_test_instance.TestWiresInstanceMixin,
+                           mixin_test_args.TestWiresArgPassingMixin,
+                           unittest.TestCase):
 
     wire1_args = (1, 2, 3)
     wire1_kwargs = dict(a='a', b='b')
@@ -179,7 +132,9 @@ class TestWiresFullPassing(ArgPassingMixin, unittest.TestCase):
 
 
 
-class TestWiresDoubleFullPassing(ArgPassingMixin, unittest.TestCase):
+class TestWiresDoubleFullPassing(mixin_test_instance.TestWiresInstanceMixin,
+                                 mixin_test_args.TestWiresArgPassingMixin,
+                                 unittest.TestCase):
 
     wire1_args = (1, 2, 3)
     wire1_kwargs = dict(a='a', b='b')

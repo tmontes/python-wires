@@ -8,14 +8,20 @@
 
 from __future__ import absolute_import
 
+from wires import Wiring
+
 
 
 class TestWiresInstanceMixin(object):
 
     """
-    Wires instance test mixin, requiring mixed classes to have:
-    - self._w as a Wiring instance.
+    Wires instance test mixin.
     """
+
+    def setUp(self):
+
+        self._w = Wiring()
+
 
     @property
     def w(self):
