@@ -1,0 +1,180 @@
+# ----------------------------------------------------------------------------
+# Python Wires Tests
+# ----------------------------------------------------------------------------
+# Copyright (c) Tiago Montes.
+# See LICENSE for deatils.
+# ----------------------------------------------------------------------------
+
+
+from __future__ import absolute_import
+
+
+
+class TestWiresAPIMixin(object):
+
+    """
+    Drives Wires API tests requiring mixed class to:
+    - Set self.w to a Wiring instance.
+    - Allow wiring via self.wire.
+    - Allow unwiring via self.unwire.
+    """
+
+    def test_unwired_call_does_not_fail(self):
+        """
+        Calling an unwired call works. Does nothing, but works.
+        """
+        self.w.unwired_call()
+
+
+    def test_wiring_non_callable_raises_value_error(self):
+        """
+        Wiring a call to a non-callable raises ValueError.
+        The exception argument (message):
+        - Starts with "argument not callable: ".
+        - Contains repr(argument).
+        """
+        for non_callable in (None, True, 42, 2.3, (), [], {}, set()):
+
+            with self.assertRaises(ValueError) as cm:
+                self.wire.this.calls_to(non_callable)
+
+            exception_args = cm.exception.args
+            self.assertEqual(len(exception_args), 1)
+
+            msg = exception_args[0]
+            self.assertTrue(
+                msg.startswith('argument not callable: '),
+                'wrong exception message: %r' % (msg,),
+            )
+            self.assertIn(
+                repr(non_callable),
+                msg,
+                'missing argument repr in message: %r' % (msg,),
+            )
+
+
+    def test_wiring_callable_works(self):
+        """
+        Wiring a callable works.
+        """
+        # Calling test_callble works (for coverage completion's sake).
+        self._test_callable()
+
+        self.wire.this.calls_to(self._test_callable)
+        self.addCleanup(self._unwire_test_callable)
+
+
+    @staticmethod
+    def _test_callable():
+        pass
+
+
+    def _unwire_test_callable(self):
+
+        self.unwire.this.calls_to(self._test_callable)
+
+
+    def test_wiring_unwiring_works(self):
+        """
+        Wiring and then unwiring to the same callable works.
+        """
+        # Calling test_callble works (for coverage completion's sake).
+        self._test_callable()
+
+        self.wire.this.calls_to(self._test_callable)
+        self.unwire.this.calls_to(self._test_callable)
+
+
+    def test_unwiring_unknown_callable_raises_value_error(self):
+        """
+        Unwiring an unknown callable raises a ValueError.
+        The exception argument (message):
+        - Starts with "unknown function ".
+        """
+        with self.assertRaises(ValueError) as cm:
+            self.unwire.this.calls_to(self._test_callable)
+
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+
+        msg = exception_args[0]
+        self.assertTrue(
+            msg.startswith('unknown function '),
+            'wrong exception message: %r' % (msg,),
+        )
+
+
+    def test_dynamic_name_wire_call_unwire(self):
+        """
+        Wiring/unwiring via indexing works.
+        """
+        name = 'name'
+        self.wire[name].calls_to(self._test_callable)
+        self.unwire[name].calls_to(self._test_callable)
+
+
+    def test_call_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.wire.some_callable()
+
+        # TODO: assert exception details
+
+
+    def test_call_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.unwire.some_callable()
+
+        # TODO: assert exception details
+
+
+    def test_callable_get_use_log_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            _ = self.wire.some_callable.use_log
+
+        # TODO: assert exception details
+
+
+    def test_callable_get_use_log_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            _ = self.unwire.some_callable.use_log
+
+        # TODO: assert exception details
+
+
+    def test_callable_set_use_log_via_wire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.wire.some_callable.use_log = None
+
+        # TODO: assert exception details
+
+
+    def test_callable_set_use_log_via_unwire_fails(self):
+        """
+        """
+        with self.assertRaises(RuntimeError) as cm:
+            self.unwire.some_callable.use_log = None
+
+        # TODO: assert exception details
+
+
+    def test_wiring_from_instance_fails(self):
+
+        with self.assertRaises(RuntimeError) as cm:
+            self.w.some_callable.calls_to(self._test_callable)
+
+        # TODO: assert exception details
+
+
+
+
+# ----------------------------------------------------------------------------
