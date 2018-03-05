@@ -5,6 +5,10 @@
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
+"""
+Callee failure test driver mixin.
+"""
+
 
 from __future__ import absolute_import
 
@@ -25,7 +29,10 @@ class TestWiresCalleeFailMixin(object):
     """
 
     def setUp(self):
-
+        """
+        Sets up callee failure mixin tests: adds a tracking logging handler,
+        temporarily captures stderr and wires a callable to a failing callee.
+        """
         self.log_handler = helpers.TrackingLoggingHandler()
         self.root_logger = logging.getLogger()
         self.root_logger.addHandler(self.log_handler)
@@ -38,7 +45,9 @@ class TestWiresCalleeFailMixin(object):
 
 
     def tearDown(self):
-
+        """
+        Reverses the callee failure mixing test setup.
+        """
         self.unwire.will_fail.calls_to(self._failing_callee)
         sys.stderr = self._save_sys_stderr
         self.root_logger.removeHandler(self.log_handler)
@@ -53,7 +62,11 @@ class TestWiresCalleeFailMixin(object):
 
 
     def test_callee_execption_logs_error(self):
-
+        """
+        Directs callee exceptions to the logging system.
+        Triggers the callee failure.
+        Verifies log output and clean stderr.
+        """
         self.w.will_fail.use_log = True
         self.w.will_fail()
 
@@ -130,8 +143,8 @@ class TestWiresCalleeFailMixin(object):
     def test_callee_execption_to_stderr(self):
         """
         Directs callee exceptions to stderr.
-        No records logged at all.
-        Failure is output to sys.stderr.
+        Triggers the callee failure.
+        Verifies stderr and no log output.
         """
         self.w.will_fail.use_log = False
         self.w.will_fail()
@@ -170,9 +183,9 @@ class TestWiresCalleeFailMixin(object):
 
     def test_callee_execption_muted(self):
         """
-        Directs callee exception reporting.
-        No records logged at all.
-        No output to sys.stderr.
+        Disables callee exception reporting.
+        Triggers the callee failure.
+        Verifies no stderr or log output.
         """
         self.w.will_fail.use_log = None
         self.w.will_fail()
