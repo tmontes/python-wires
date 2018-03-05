@@ -5,6 +5,9 @@
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
+"""
+Global Wires singleton API tests.
+"""
 
 from __future__ import absolute_import
 
@@ -18,7 +21,9 @@ class TestWiresAPI(mixin_test_singleton.TestWiresSingletonMixin,
                    mixin_test_api.TestWiresAPIMixin,
                    unittest.TestCase):
 
-    pass
+    """
+    API tests for the global Wires singleton.
+    """
 
 
 # ----------------------------------------------------------------------------

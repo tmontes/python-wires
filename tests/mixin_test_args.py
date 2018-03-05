@@ -77,6 +77,10 @@ class _TestWiresArgPassingMixin(helpers.CallTrackerAssertMixin):
 
 class TestWiresNoArgPassingMixin(_TestWiresArgPassingMixin):
 
+    """
+    No wire-time args/kwargs, no call-time args/kwargs.
+    """
+
     expected_call_args = ()
     expected_call_kwargs = {}
 
@@ -86,6 +90,10 @@ class TestWiresNoArgPassingMixin(_TestWiresArgPassingMixin):
 
 
 class TestWiresWireArgPassingMixin(_TestWiresArgPassingMixin):
+
+    """
+    Wire-time args, no call-time args/kwargs.
+    """
 
     wire1_args = (1, 2, 3)
 
@@ -99,6 +107,10 @@ class TestWiresWireArgPassingMixin(_TestWiresArgPassingMixin):
 
 class TestWiresWireKwargPassingMixin(_TestWiresArgPassingMixin):
 
+    """
+    Wire-time kwargs, no call-time args/kwargs.
+    """
+
     wire1_kwargs = dict(a='a', b='b')
 
     expected_call_args = ()
@@ -110,6 +122,10 @@ class TestWiresWireKwargPassingMixin(_TestWiresArgPassingMixin):
 
 
 class TestWiresWireArgKwargPassingMixin(_TestWiresArgPassingMixin):
+
+    """
+    Wire-time args and kwargs, no call-time args/kwargs.
+    """
 
     wire1_args = (1, 2, 3)
     wire1_kwargs = dict(a='a', b='b')
@@ -124,6 +140,10 @@ class TestWiresWireArgKwargPassingMixin(_TestWiresArgPassingMixin):
 
 class TestWiresCallArgPassingMixin(_TestWiresArgPassingMixin):
 
+    """
+    No wire-time args/kwargs, call-time args.
+    """
+
     call_args = (1, 2, 3)
 
     expected_call_args = (1, 2, 3)
@@ -135,6 +155,10 @@ class TestWiresCallArgPassingMixin(_TestWiresArgPassingMixin):
 
 
 class TestWiresCallKwargPassingMixin(_TestWiresArgPassingMixin):
+
+    """
+    No wire-time args/kwargs, call-time kwargs.
+    """
 
     call_kwargs = dict(a='a', b='b')
 
@@ -148,6 +172,10 @@ class TestWiresCallKwargPassingMixin(_TestWiresArgPassingMixin):
 
 class TestWiresCallArgKwargPassingMixin(_TestWiresArgPassingMixin):
 
+    """
+    No wire-time args/kwargs, call-time wire args and kwargs.
+    """
+
     call_args = (1, 2, 3)
     call_kwargs = dict(a='a', b='b')
 
@@ -160,6 +188,10 @@ class TestWiresCallArgKwargPassingMixin(_TestWiresArgPassingMixin):
 
 
 class TestWiresFullPassingMixin(_TestWiresArgPassingMixin):
+
+    """
+    Wire-time args and kwargs, call-time args and kwargs.
+    """
 
     wire1_args = (1, 2, 3)
     wire1_kwargs = dict(a='a', b='b')
@@ -176,6 +208,10 @@ class TestWiresFullPassingMixin(_TestWiresArgPassingMixin):
 
 
 class TestWiresDoubleFullPassingMixin(_TestWiresArgPassingMixin):
+
+    """
+    Two wirings with separate args and kwargs each, call time arg and kwargs.
+    """
 
     wire1_args = (1, 2, 3)
     wire1_kwargs = dict(a='a', b='b')

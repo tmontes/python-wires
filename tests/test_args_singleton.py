@@ -5,6 +5,10 @@
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
+"""
+Global Wires singleton argument passing tests.
+"""
+
 
 from __future__ import absolute_import
 

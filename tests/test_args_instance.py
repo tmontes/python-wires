@@ -5,6 +5,10 @@
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
+"""
+Wires instance argument passing tests.
+"""
+
 
 from __future__ import absolute_import
 

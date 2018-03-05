@@ -5,6 +5,10 @@
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
+"""
+Wires instance API tests.
+"""
+
 
 from __future__ import absolute_import
 
@@ -19,7 +23,7 @@ class TestWiresAPI(mixin_test_api.TestWiresAPIMixin,
                    unittest.TestCase):
 
     """
-    Minimal API tests for the Wires singleton.
+    API tests for Wires instances.
     """
 
 
