@@ -113,13 +113,20 @@ class TestWiresAPIMixin(object):
         self.unwire[name].calls_to(self._test_callable)
 
 
+    def _assert_exception_arg(self, cm, expected):
+
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        self.assertEqual(exception_args[0], expected)
+
+
     def test_call_via_wire_fails(self):
         """
         """
         with self.assertRaises(RuntimeError) as cm:
             self.wire.some_callable()
 
-        # TODO: assert exception details
+        self._assert_exception_arg(cm, 'calling within wiring context')
 
 
     def test_call_via_unwire_fails(self):
@@ -128,7 +135,7 @@ class TestWiresAPIMixin(object):
         with self.assertRaises(RuntimeError) as cm:
             self.unwire.some_callable()
 
-        # TODO: assert exception details
+        self._assert_exception_arg(cm, 'calling within wiring context')
 
 
     def test_callable_get_use_log_via_wire_fails(self):
@@ -137,7 +144,7 @@ class TestWiresAPIMixin(object):
         with self.assertRaises(RuntimeError) as cm:
             _ = self.wire.some_callable.use_log
 
-        # TODO: assert exception details
+        self._assert_exception_arg(cm, 'invalid access in wiring context')
 
 
     def test_callable_get_use_log_via_unwire_fails(self):
@@ -146,7 +153,7 @@ class TestWiresAPIMixin(object):
         with self.assertRaises(RuntimeError) as cm:
             _ = self.unwire.some_callable.use_log
 
-        # TODO: assert exception details
+        self._assert_exception_arg(cm, 'invalid access in wiring context')
 
 
     def test_callable_set_use_log_via_wire_fails(self):
@@ -155,7 +162,7 @@ class TestWiresAPIMixin(object):
         with self.assertRaises(RuntimeError) as cm:
             self.wire.some_callable.use_log = None
 
-        # TODO: assert exception details
+        self._assert_exception_arg(cm, 'invalid access in wiring context')
 
 
     def test_callable_set_use_log_via_unwire_fails(self):
@@ -164,7 +171,7 @@ class TestWiresAPIMixin(object):
         with self.assertRaises(RuntimeError) as cm:
             self.unwire.some_callable.use_log = None
 
-        # TODO: assert exception details
+        self._assert_exception_arg(cm, 'invalid access in wiring context')
 
 
     def test_wiring_from_instance_fails(self):
@@ -172,9 +179,7 @@ class TestWiresAPIMixin(object):
         with self.assertRaises(RuntimeError) as cm:
             self.w.some_callable.calls_to(self._test_callable)
 
-        # TODO: assert exception details
-
-
+        self._assert_exception_arg(cm, 'undefined wiring context')
 
 
 # ----------------------------------------------------------------------------
