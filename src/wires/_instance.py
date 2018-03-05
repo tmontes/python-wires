@@ -36,6 +36,9 @@ class WiringInstance(object):
         # disallow calling from within wiring/unwiring contexts.
         self._wire_context = None
 
+        # TODO: write thies
+        self._call_coupling = False
+
 
     def __getattr__(self, name):
 

@@ -55,6 +55,14 @@ class WiringShell(object):
         return self._wiring
 
 
+    @property
+    def coupled_call(self):
+        """
+        """
+        self._wiring._call_coupling = True
+        return self._wiring
+
+
     def __getattr__(self, name):
 
         return getattr(self._wiring, name)

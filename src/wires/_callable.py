@@ -72,6 +72,11 @@ class WiringCallable(object):
         if self._wiring._wire_context is not None:
             raise RuntimeError('calling within wiring context')
 
+        # TODO: write this
+        call_coupling = self._wiring._call_coupling
+        # TODO: will be set back to WiringShell's default
+        self._wiring._call_coupling = None
+
         # Will contain (<exception>, <result>) per-callee tuples.
         call_result = []
 
@@ -82,12 +87,12 @@ class WiringCallable(object):
                 combined_kwargs = dict(wire_kwargs)
                 combined_kwargs.update(kwargs)
                 result = function(*combined_args, **combined_kwargs)
-                exception = None
+                call_result.append((None, result))
             except Exception as e:
-                result = None
-                exception = e
-            finally:
-                call_result.append((exception, result))
+                if call_coupling:
+                    raise RuntimeError(call_result)
+                else:
+                    call_result.append((e, None))
 
         return call_result
 
