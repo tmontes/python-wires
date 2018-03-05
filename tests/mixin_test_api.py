@@ -76,7 +76,7 @@ class TestWiresAPIMixin(object):
 
     def test_wiring_unwiring_works(self):
         """
-        Wiring and then unwiring to the same callable works.
+        Wiring and then unwiring same callable works.
         """
         # Calling test_callble works (for coverage completion's sake).
         self._test_callable()
@@ -104,7 +104,7 @@ class TestWiresAPIMixin(object):
         )
 
 
-    def test_dynamic_name_wire_call_unwire(self):
+    def test_dynamic_name_wire_unwire(self):
         """
         Wiring/unwiring via indexing works.
         """
@@ -122,6 +122,7 @@ class TestWiresAPIMixin(object):
 
     def test_call_via_wire_fails(self):
         """
+        Calling within wiring context raises a RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
             self.wire.some_callable()
@@ -131,6 +132,7 @@ class TestWiresAPIMixin(object):
 
     def test_call_via_unwire_fails(self):
         """
+        Calling within unwiring context raises a RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
             self.unwire.some_callable()
@@ -140,6 +142,7 @@ class TestWiresAPIMixin(object):
 
     def test_callable_get_use_log_via_wire_fails(self):
         """
+        Accessing callable's `use_log` in wiring context raises RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
             _ = self.wire.some_callable.use_log
@@ -149,6 +152,7 @@ class TestWiresAPIMixin(object):
 
     def test_callable_get_use_log_via_unwire_fails(self):
         """
+        Accessing callable's `use_log` in unwiring context raises RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
             _ = self.unwire.some_callable.use_log
@@ -158,6 +162,7 @@ class TestWiresAPIMixin(object):
 
     def test_callable_set_use_log_via_wire_fails(self):
         """
+        Setting callable's `use_log` in wiring context raises RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
             self.wire.some_callable.use_log = None
@@ -167,6 +172,7 @@ class TestWiresAPIMixin(object):
 
     def test_callable_set_use_log_via_unwire_fails(self):
         """
+        Setting callable's `use_log` in unwiring context raises RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
             self.unwire.some_callable.use_log = None
@@ -175,7 +181,9 @@ class TestWiresAPIMixin(object):
 
 
     def test_wiring_from_instance_fails(self):
-
+        """
+        Wiring at the instance level raises RuntimeError.
+        """
         with self.assertRaises(RuntimeError) as cm:
             self.w.some_callable.calls_to(self._test_callable)
 
