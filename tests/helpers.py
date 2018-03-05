@@ -62,8 +62,15 @@ class TrackingLoggingHandler(logging.Handler):
 
 class CallTrackerAssertMixin(object):
 
-    def assert_called(self, call_tracker, expected_call_arg_list):
+    """
+    Call tracking assertion methods.
+    """
 
+    def assert_called(self, call_tracker, expected_call_arg_list):
+        """
+        Asserts `call_tracker` was called as many times as there are entries
+        in `expected_call_arg_list` and that the arguments match.
+        """
         self.assertEqual(
             call_tracker.call_count,
             len(expected_call_arg_list),
@@ -76,12 +83,14 @@ class CallTrackerAssertMixin(object):
         )
 
 
-    def assert_single_call_no_args(self, tracker):
-
+    def assert_single_call_no_args(self, call_tracker):
+        """
+        Asserts `call_tracker` was called once, with no arguments.
+        """
         expected_call_arg_list = [
             ((), {},),
         ]
-        self.assert_called(tracker, expected_call_arg_list)
+        self.assert_called(call_tracker, expected_call_arg_list)
 
 
 # ----------------------------------------------------------------------------
