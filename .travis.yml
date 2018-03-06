@@ -23,8 +23,5 @@ install:
 script:
   - tox
 
-after_success:
-  - tox -e coverage-report
-
 notifications:
   email: false
