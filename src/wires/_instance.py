@@ -15,6 +15,50 @@ from . import _callable
 
 
 
+class _InstanceActionContext(object):
+
+    """
+    Supports `WiringShell.wire.<callable>` and `WiringShell.unwire.<callable>`
+    wiring action contexts.
+    """
+
+    def __init__(self, wiring_instance):
+
+        self._wiring_instance = wiring_instance
+
+
+    def __getitem__(self, name):
+
+        return getattr(self, name)
+
+
+    def __getattr__(self, name):
+
+        wiring_callable = getattr(self._wiring_instance, name)
+        return self.callable_action_context(wiring_callable)
+
+
+
+class InstanceWiringActionContext(_InstanceActionContext):
+
+    """
+    The `WiringShell.wire.<callable>` context.
+    """
+
+    callable_action_context = _callable.WiringActionContext
+
+
+
+class InstanceUnwiringActionContext(_InstanceActionContext):
+
+    """
+    The `WiringShell.unwire.<callable>` context.
+    """
+
+    callable_action_context = _callable.UnwiringActionContext
+
+
+
 class WiringInstance(object):
 
     """
@@ -33,11 +77,6 @@ class WiringInstance(object):
         # - Values are Callable objects.
 
         self._callables = {}
-
-        # Our callers' `calls_to` method checks this attribute to decide
-        # whether to wire or unwire the passed in callee; also used to
-        # disallow calling from within wiring/unwiring contexts.
-        self._wire_context = None
 
         # Call coupling behavior is set by the shell, which will be dynamically
         # overridden via its `coupled_call` and `decoupled_call` attributes,
@@ -65,13 +104,6 @@ class WiringInstance(object):
             new_callable = _callable.WiringCallable(name, self)
             self._callables[name] = new_callable
             return new_callable
-
-
-    def __getitem__(self, name):
-
-        # Support attribute access for simpler dynamic name wiring/unwiring.
-
-        return self.__getattr__(name)
 
 
 # ----------------------------------------------------------------------------

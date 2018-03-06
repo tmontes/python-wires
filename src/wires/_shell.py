@@ -55,8 +55,7 @@ class WiringShell(object):
         """
         Callable/callee wiring attribute.
         """
-        self._wiring._wire_context = True
-        return self._wiring
+        return _instance.InstanceWiringActionContext(self._wiring)
 
 
     @property
@@ -64,8 +63,7 @@ class WiringShell(object):
         """
         Callable/callee unwiring attribute.
         """
-        self._wiring._wire_context = False
-        return self._wiring
+        return _instance.InstanceUnwiringActionContext(self._wiring)
 
 
     @property
