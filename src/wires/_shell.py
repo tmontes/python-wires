@@ -39,7 +39,7 @@ class WiringShell(object):
     def __init__(self, coupling=False):
 
         self._coupling = coupling
-        self._wiring = _instance.WiringInstance(self)
+        self._wiring_instance = _instance.WiringInstance(self)
 
 
     @property
@@ -53,40 +53,40 @@ class WiringShell(object):
     @property
     def wire(self):
         """
-        Callable/callee wiring attribute.
+        Callable/callee wiring context attribute.
         """
-        return _instance.InstanceWiringActionContext(self._wiring)
+        return _instance.InstanceWiringActionContext(self._wiring_instance)
 
 
     @property
     def unwire(self):
         """
-        Callable/callee unwiring attribute.
+        Callable/callee unwiring context attribute.
         """
-        return _instance.InstanceUnwiringActionContext(self._wiring)
+        return _instance.InstanceUnwiringActionContext(self._wiring_instance)
 
 
     @property
     def coupled_call(self):
         """
-        Force caller/callee coupling when called through this.
+        Caller/callee coupled call context attribute (overrides default).
         """
-        self._wiring.coupling = True
-        return self._wiring
+        self._wiring_instance.coupling = True
+        return self._wiring_instance
 
 
     @property
     def decoupled_call(self):
         """
-        Force caller/callee decoupling when called through this.
+        Caller/callee decoupled call context attribute (overrides default).
         """
-        self._wiring.coupling = False
-        return self._wiring
+        self._wiring_instance.coupling = False
+        return self._wiring_instance
 
 
     def __getattr__(self, name):
 
-        return getattr(self._wiring, name)
+        return getattr(self._wiring_instance, name)
 
 
 # ----------------------------------------------------------------------------
