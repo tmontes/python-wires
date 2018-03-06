@@ -11,10 +11,6 @@ Python Wires Callable.
 
 from __future__ import absolute_import
 
-import logging
-import sys
-from traceback import print_exception
-
 
 
 class WiringCallable(object):
