@@ -108,8 +108,9 @@ class TestCallerCalleeCouplingMixin(object):
             self.w.coupled_call.this()
 
         exception_args = cm.exception.args
-        self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], [(None, 42)])
+        self.assertEqual(len(exception_args), 2)
+        self.assertEqual(exception_args[0], (None, 42))
+        self.assertEqual(exception_args[1], (self._THE_EXCEPTION, None))
 
 
     def test_wire_force_decoupled_call(self):

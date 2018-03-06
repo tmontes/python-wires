@@ -89,10 +89,9 @@ class WiringCallable(object):
                 result = function(*combined_args, **combined_kwargs)
                 call_result.append((None, result))
             except Exception as e:
+                call_result.append((e, None))
                 if call_coupling:
-                    raise RuntimeError(call_result)
-                else:
-                    call_result.append((e, None))
+                    raise RuntimeError(*call_result)
 
         return call_result
 
