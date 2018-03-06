@@ -31,7 +31,7 @@ class WiringCallable(object):
         self._logger_name = logger_name
 
         # Wired (callee, wire-time args, wire-time kwargs) tuples.
-        self._functions = []
+        self._callees = []
 
 
     def calls_to(self, function, *args, **kwargs):
@@ -51,12 +51,12 @@ class WiringCallable(object):
         self._wiring._wire_context = None
 
         if wire_context is True:
-            self._functions.append((function, args, kwargs))
+            self._callees.append((function, args, kwargs))
         elif wire_context is False:
-            tuples_to_remove = [v for v in self._functions if v[0] == function]
+            tuples_to_remove = [v for v in self._callees if v[0] == function]
             if not tuples_to_remove:
                 raise ValueError('unknown function %r' % (function,))
-            self._functions.remove(tuples_to_remove[0])
+            self._callees.remove(tuples_to_remove[0])
         else:
             raise RuntimeError('undefined wiring context')
 
@@ -77,13 +77,13 @@ class WiringCallable(object):
         # Will contain (<exception>, <result>) per-callee tuples.
         call_result = []
 
-        for function, wire_args, wire_kwargs in self._functions:
+        for callee, wire_args, wire_kwargs in self._callees:
             try:
                 combined_args = list(wire_args)
                 combined_args.extend(args)
                 combined_kwargs = dict(wire_kwargs)
                 combined_kwargs.update(kwargs)
-                result = function(*combined_args, **combined_kwargs)
+                result = callee(*combined_args, **combined_kwargs)
                 call_result.append((None, result))
             except Exception as e:
                 call_result.append((e, None))
