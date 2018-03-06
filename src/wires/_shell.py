@@ -63,6 +63,14 @@ class WiringShell(object):
         return self._wiring
 
 
+    @property
+    def decoupled_call(self):
+        """
+        """
+        self._wiring._call_coupling = False
+        return self._wiring
+
+
     def __getattr__(self, name):
 
         return getattr(self._wiring, name)

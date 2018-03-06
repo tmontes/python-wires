@@ -49,7 +49,7 @@ class TestCallerCalleeCouplingMixin(object):
         self.unwire.this.calls_to(callee)
 
 
-    def test_default_uncoupled_wire_call(self):
+    def test_wire_default_decoupled_call(self):
         """
         Default uncoupled test: return a list of (<exception>, <result>), per-
         callee tuple.
@@ -62,7 +62,7 @@ class TestCallerCalleeCouplingMixin(object):
         self.assertEqual(result[0], (None, 42))
 
 
-    def test_default_uncoupled_wire_wire_wire_call(self):
+    def test_wire_wire_wire_default_decoupled_call(self):
         """
         Default uncoupled test: return a list of (<exception>, <result>), per-
         callee tuple.
@@ -110,6 +110,37 @@ class TestCallerCalleeCouplingMixin(object):
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
         self.assertEqual(exception_args[0], [(None, 42)])
+
+
+    def test_wire_force_decoupled_call(self):
+        """
+        Wire a callable, call it forcing coupling.
+        """
+        self.wire.this.calls_to(self._returns_42_callee)
+        self.addCleanup(self._unwire_call, self._returns_42_callee)
+        result = self.w.decoupled_call.this()
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0], (None, 42))
+
+
+    def test_wire_wire_wire_decoupled_call(self):
+        """
+        Wire a callable three times: the second one raises an exception.
+        """
+        self.wire.this.calls_to(self._returns_42_callee)
+        self.wire.this.calls_to(self._raises_exception_callee)
+        self.wire.this.calls_to(self._returns_None_callee)
+        self.addCleanup(self._unwire_call, self._returns_None_callee)
+        self.addCleanup(self._unwire_call, self._raises_exception_callee)
+        self.addCleanup(self._unwire_call, self._returns_42_callee)
+
+        result = self.w.decoupled_call.this()
+
+        self.assertEqual(len(result), 3)
+        self.assertEqual(result[0], (None, 42))
+        self.assertEqual(result[1], (self._THE_EXCEPTION, None))
+        self.assertEqual(result[2], (None, None))
 
 
 # ----------------------------------------------------------------------------
