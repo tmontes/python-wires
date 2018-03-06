@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wires Callable.
+Python Wiring Callable.
 """
 
 from __future__ import absolute_import
@@ -69,11 +69,9 @@ class WiringCallable(object):
       arguments given to call combined with the wire-time callee arguments.
     """
 
-    def __init__(self, name, wiring, logger_name='wires'):
+    def __init__(self, wiring_instance):
 
-        self._name = name
-        self._wiring = wiring
-        self._logger_name = logger_name
+        self._wiring_instance = wiring_instance
 
         # Wired (callee, wire-time args, wire-time kwargs) tuples.
         self._callees = []
@@ -125,8 +123,8 @@ class WiringCallable(object):
         # Get call coupling behaviour for this call from our WiringInstance and
         # then reset it to its default value to account for correct "default"
         # vs "overridden" call coupling behaviour.
-        call_coupling = self._wiring.coupling
-        self._wiring.coupling_reset()
+        call_coupling = self._wiring_instance.coupling
+        self._wiring_instance.coupling_reset()
 
         # Will contain (<exception>, <result>) per-callee tuples.
         call_result = []

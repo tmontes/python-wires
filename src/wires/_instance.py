@@ -67,30 +67,29 @@ class WiringInstance(object):
 
     # Should be used wrapped in a Wires Shell.
 
-    def __init__(self, shell):
+    def __init__(self, wiring_shell):
 
         # Needed to track parameters like `coupling`.
-        self._shell = shell
+        self._wiring_shell = wiring_shell
 
         # Tracks known Callable instances:
-        # - Keys are callable names (my dynamic attributes).
-        # - Values are Callable objects.
-
-        self._callables = {}
+        # - Keys are callable names (this instance's dynamic attributes).
+        # - Values are WiringCallable objects.
+        self._wiring_callables = {}
 
         # Call coupling behavior is set by the shell, which will be dynamically
         # overridden via its `coupled_call` and `decoupled_call` attributes,
         # that set our `coupled` attribute. Callables check this attribute to
         # determine call-time coupling and *must* call our `coupling_reset`
         # after that to ensure correct "default" vs "overridden" coupling.
-        self.coupling = shell.coupling
+        self.coupling = wiring_shell.coupling
 
 
     def coupling_reset(self):
         """
         Resets call coupling behaviour to our shell's default.
         """
-        self.coupling = self._shell.coupling
+        self.coupling = self._wiring_shell.coupling
 
 
     def __getattr__(self, name):
@@ -99,10 +98,10 @@ class WiringInstance(object):
         # Either uses a tracked one or creates new one, tracking it.
 
         try:
-            return self._callables[name]
+            return self._wiring_callables[name]
         except KeyError:
-            new_callable = _callable.WiringCallable(name, self)
-            self._callables[name] = new_callable
+            new_callable = _callable.WiringCallable(self)
+            self._wiring_callables[name] = new_callable
             return new_callable
 
 
