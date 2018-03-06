@@ -57,6 +57,33 @@ class TestWiresAPIMixin(object):
             )
 
 
+    def test_unwiring_non_callable_raises_value_error(self):
+        """
+        Unwiring a call from a non-callable raises ValueError.
+        The exception argument (message):
+        - Starts with "argument not callable: ".
+        - Contains repr(argument).
+        """
+        for non_callable in (None, True, 42, 2.3, (), [], {}, set()):
+
+            with self.assertRaises(ValueError) as cm:
+                self.unwire.this.calls_to(non_callable)
+
+            exception_args = cm.exception.args
+            self.assertEqual(len(exception_args), 1)
+
+            msg = exception_args[0]
+            self.assertTrue(
+                msg.startswith('argument not callable: '),
+                'wrong exception message: %r' % (msg,),
+            )
+            self.assertIn(
+                repr(non_callable),
+                msg,
+                'missing argument repr in message: %r' % (msg,),
+            )
+
+
     def test_wiring_callable_works(self):
         """
         Wiring a callable works.

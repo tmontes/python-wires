@@ -13,6 +13,34 @@ from __future__ import absolute_import
 
 
 
+class _ActionContext(object):
+
+    def __init__(self, wiring_callable):
+
+        self._wiring_callable = wiring_callable
+
+
+    def __call__(self, *args, **kwargs):
+
+        raise RuntimeError('calling within wiring context')
+
+
+class WiringActionContext(_ActionContext):
+
+    def calls_to(self, function, *args, **kwargs):
+
+        return self._wiring_callable.wire(function, *args, **kwargs)
+
+
+
+class UnwiringActionContext(_ActionContext):
+
+    def calls_to(self, function):
+
+        return self._wiring_callable.unwire(function)
+
+
+
 class WiringCallable(object):
 
     """
@@ -34,39 +62,42 @@ class WiringCallable(object):
         self._callees = []
 
 
-    def calls_to(self, function, *args, **kwargs):
+    def wire(self, function, *args, **kwargs):
 
         """
-        Wires/unwires `function` as a callee.
+        Wires `function` as a callee.
 
-        `args` and `kwargs` are used to set wire-time arguments and ignored
-        when unwiring.
+        `args` and `kwargs` are used to set wire-time arguments.
         """
 
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
 
-        # Wire/unwire depending on our wiring `_wire_context` attribute.
-        wire_context = self._wiring._wire_context
-        self._wiring._wire_context = None
+        self._callees.append((function, args, kwargs))
 
-        if wire_context is True:
-            self._callees.append((function, args, kwargs))
-        elif wire_context is False:
-            tuples_to_remove = [v for v in self._callees if v[0] == function]
-            if not tuples_to_remove:
-                raise ValueError('unknown function %r' % (function,))
-            self._callees.remove(tuples_to_remove[0])
-        else:
-            raise RuntimeError('undefined wiring context')
+
+    def unwire(self, function):
+
+        """
+        Unwires `function` as a callee.
+        If `function` is wired multiple times, just unwires the first wiring.
+        """
+
+        if not callable(function):
+            raise ValueError('argument not callable: %r' % (function,))
+
+        tuples_to_remove = [v for v in self._callees if v[0] == function]
+        if not tuples_to_remove:
+            raise ValueError('unknown function %r' % (function,))
+        self._callees.remove(tuples_to_remove[0])
+
+
+    def calls_to(self, *_args, **_kwargs):
+
+        raise RuntimeError('undefined wiring context')
 
 
     def __call__(self, *args, **kwargs):
-
-        # Calls all callee functions.
-
-        if self._wiring._wire_context is not None:
-            raise RuntimeError('calling within wiring context')
 
         # Get call coupling behaviour for this call from our WiringInstance and
         # then reset it to its default value to account for correct "default"
