@@ -72,10 +72,11 @@ class WiringCallable(object):
         if self._wiring._wire_context is not None:
             raise RuntimeError('calling within wiring context')
 
-        # TODO: write this
-        call_coupling = self._wiring._call_coupling
-        # TODO: will be set back to WiringShell's default
-        self._wiring._call_coupling = None
+        # Get call coupling behaviour for this call from our WiringInstance and
+        # then reset it to its default value to account for correct "default"
+        # vs "overridden" call coupling behaviour.
+        call_coupling = self._wiring.coupling
+        self._wiring.coupling_reset()
 
         # Will contain (<exception>, <result>) per-callee tuples.
         call_result = []

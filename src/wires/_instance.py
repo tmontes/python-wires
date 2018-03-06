@@ -23,7 +23,10 @@ class WiringInstance(object):
 
     # Should be used wrapped in a Wires Shell.
 
-    def __init__(self):
+    def __init__(self, shell):
+
+        # Needed to track parameters like `coupling`.
+        self._shell = shell
 
         # Tracks known Callable instances:
         # - Keys are callable names (my dynamic attributes).
@@ -36,8 +39,19 @@ class WiringInstance(object):
         # disallow calling from within wiring/unwiring contexts.
         self._wire_context = None
 
-        # TODO: write thies
-        self._call_coupling = False
+        # Call coupling behavior is set by the shell, which will be dynamically
+        # overridden via its `coupled_call` and `decoupled_call` attributes,
+        # that set our `coupled` attribute. Callables check this attribute to
+        # determine call-time coupling and *must* call our `coupling_reset`
+        # after that to ensure correct "default" vs "overridden" coupling.
+        self.coupling = shell.coupling
+
+
+    def coupling_reset(self):
+        """
+        Resets call coupling behaviour to our shell's default.
+        """
+        self.coupling = self._shell.coupling
 
 
     def __getattr__(self, name):

@@ -31,10 +31,23 @@ class WiringShell(object):
     # The `calls_to` method of the Wiring Callable wires/unwires the given
     # `<callee>` depending on its Wiring Instance `wire_context`, set by
     # the WiringShell object.
+    #
+    # Also holds the default call `coupling` mode used by the Instance and
+    # Callables to determine call-time behavior; the coupling mode can also
+    # be overridden at call-time via `coupled_call` and `decoupled_call`.
 
-    def __init__(self):
+    def __init__(self, coupling=False):
 
-        self._wiring = _instance.WiringInstance()
+        self._coupling = coupling
+        self._wiring = _instance.WiringInstance(self)
+
+
+    @property
+    def coupling(self):
+        """
+        Read-only default call coupling mode.
+        """
+        return self._coupling
 
 
     @property
@@ -58,16 +71,18 @@ class WiringShell(object):
     @property
     def coupled_call(self):
         """
+        Force caller/callee coupling when called through this.
         """
-        self._wiring._call_coupling = True
+        self._wiring.coupling = True
         return self._wiring
 
 
     @property
     def decoupled_call(self):
         """
+        Force caller/callee decoupling when called through this.
         """
-        self._wiring._call_coupling = False
+        self._wiring.coupling = False
         return self._wiring
 
 
