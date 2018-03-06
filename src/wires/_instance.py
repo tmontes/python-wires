@@ -17,6 +17,11 @@ from . import _callable
 
 class _InstanceActionContext(object):
 
+    """
+    Supports `WiringShell.wire.<callable>` and `WiringShell.unwire.<callable>`
+    wiring action contexts.
+    """
+
     def __init__(self, wiring_instance):
 
         self._wiring_instance = wiring_instance
@@ -36,11 +41,19 @@ class _InstanceActionContext(object):
 
 class InstanceWiringActionContext(_InstanceActionContext):
 
+    """
+    The `WiringShell.wire.<callable>` context.
+    """
+
     callable_action_context = _callable.WiringActionContext
 
 
 
 class InstanceUnwiringActionContext(_InstanceActionContext):
+
+    """
+    The `WiringShell.unwire.<callable>` context.
+    """
 
     callable_action_context = _callable.UnwiringActionContext
 

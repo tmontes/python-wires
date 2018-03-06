@@ -15,6 +15,11 @@ from __future__ import absolute_import
 
 class _ActionContext(object):
 
+    """
+    Supports `WiringShell.wire.<callable>` and `WiringShell.unwire.<callable>`
+    wiring action contexts.
+    """
+
     def __init__(self, wiring_callable):
 
         self._wiring_callable = wiring_callable
@@ -27,16 +32,28 @@ class _ActionContext(object):
 
 class WiringActionContext(_ActionContext):
 
-    def calls_to(self, function, *args, **kwargs):
+    """
+    The `WiringShell.wire.<callable>` context.
+    """
 
+    def calls_to(self, function, *args, **kwargs):
+        """
+        Wiring action `WiringShell.wire.<callable>.calls_to(...)`.
+        """
         return self._wiring_callable.wire(function, *args, **kwargs)
 
 
 
 class UnwiringActionContext(_ActionContext):
 
-    def calls_to(self, function):
+    """
+    The `WiringShell.unwire.<callable>` context.
+    """
 
+    def calls_to(self, function):
+        """
+        Unwiring action `WiringShell.unwire.<callable>.calls_to(...)`.
+        """
         return self._wiring_callable.unwire(function)
 
 
@@ -92,7 +109,13 @@ class WiringCallable(object):
         self._callees.remove(tuples_to_remove[0])
 
 
-    def calls_to(self, *_args, **_kwargs):
+    @staticmethod
+    def calls_to(*_args, **_kwargs):
+
+        """
+        Called outside of a wiring action context, which makes no sense, as in
+        `WiringShell.<callable>.calls_to(...)`.
+        """
 
         raise RuntimeError('undefined wiring context')
 
