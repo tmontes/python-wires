@@ -7,9 +7,14 @@ coverage:
     project:
       default: on
     patch:
-      default: on
+      default:
+        target: 100%
+        only_pulls: true
     changes:
       default: off
+
+
+
 
 comment:
   layout: "header, reach, diff, flags, files, footer"
