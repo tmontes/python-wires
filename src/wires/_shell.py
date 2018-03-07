@@ -40,6 +40,13 @@ class WiringShell(object):
 
     def __init__(self, min_callees=None, max_callees=None, coupling=False):
 
+        if min_callees is not None and min_callees <= 0:
+            raise ValueError('min_callees must be positive or None')
+        if max_callees is not None and max_callees <= 0:
+            raise ValueError('max_callees must be positive or None')
+        if min_callees and max_callees and min_callees > max_callees:
+            raise ValueError('max_callees must be >= min_callees')
+
         self._min_callees = min_callees
         self._max_callees = max_callees
         self._coupling = coupling
