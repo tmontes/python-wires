@@ -73,8 +73,68 @@ class WiringCallable(object):
 
         self._wiring_instance = wiring_instance
 
-        # Wired (callee, wire-time args, wire-time kwargs) tuples.
+        # Default min/max_callees to our instance's.
+        self._min_callees = wiring_instance.min_callees
+        self._max_callees = wiring_instance.max_callees
+
+        # Wired (<callee>, <wire-time-args>, <wire-time-kwargs>) tuples.
         self._callees = []
+
+
+    @property
+    def min_callees(self):
+        """
+        Minimum number of allowed wirings. None means no limit.
+        """
+        return self._min_callees
+
+
+    @min_callees.setter
+    def min_callees(self, value):
+        """
+        Minimum number of allowed wirings. None means no limit. Must be:
+        - A positive integer.
+        - Less than or equal to max_callees
+        - Less than or equal to the current number of wirings, if any.
+        """
+        if value is not None:
+            callee_count = len(self._callees)
+            if value <= 0:
+                raise ValueError('min_callees must be positive or None')
+            elif self._max_callees is not None and value > self._max_callees:
+                raise ValueError('min_callees must be <= max_callees')
+            elif callee_count and value > callee_count:
+                raise ValueError('too few wired callees')
+
+        self._min_callees = value
+
+
+    @property
+    def max_callees(self):
+        """
+        Maximum number of allowed wirings. None means no limit.
+        """
+        return self._max_callees
+
+
+    @max_callees.setter
+    def max_callees(self, value):
+        """
+        Maximum number of allowed wirings. None means no limit. Must be:
+        - A positive integer.
+        - Greater than or equal to min_callees
+        - Greater than or equal to the current number of wirings, if any.
+        """
+        if value is not None:
+            callee_count = len(self._callees)
+            if value <= 0:
+                raise ValueError('max_callees must be positive or None')
+            elif self._min_callees is not None and value < self._min_callees:
+                raise ValueError('max_callees must be >= min_callees')
+            elif callee_count and value < callee_count:
+                raise ValueError('too many wired callees')
+
+        self._max_callees = value
 
 
     def wire(self, function, *args, **kwargs):
@@ -88,7 +148,8 @@ class WiringCallable(object):
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
 
-        if len(self._callees) == self._wiring_instance.max_callees:
+        # self._max_callees can be None, meaning "no limit": comparison ok
+        if len(self._callees) == self._max_callees:
             raise RuntimeError('max_callees limit reached')
 
         self._callees.append((function, args, kwargs))
@@ -104,7 +165,8 @@ class WiringCallable(object):
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
 
-        if len(self._callees) == self._wiring_instance.min_callees:
+        # self._min_callees can be None, meaning "no limit": comparison ok
+        if len(self._callees) == self._min_callees:
             raise RuntimeError('min_callees limit reached')
 
         tuples_to_remove = [v for v in self._callees if v[0] == function]
@@ -127,7 +189,7 @@ class WiringCallable(object):
     def __call__(self, *args, **kwargs):
 
         # Calling with wired callee count < `min_callees`, if set, is an error.
-        min_callees = self._wiring_instance.min_callees
+        min_callees = self._min_callees
         if min_callees and len(self._callees) < min_callees:
             raise RuntimeError('less than min_callees wired')
 
