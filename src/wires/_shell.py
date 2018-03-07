@@ -32,14 +32,41 @@ class WiringShell(object):
     # `<callee>` depending on its Wiring Instance `wire_context`, set by
     # the WiringShell object.
     #
-    # Also holds the default call `coupling` mode used by the Instance and
-    # Callables to determine call-time behavior; the coupling mode can also
-    # be overridden at call-time via `coupled_call` and `decoupled_call`.
+    # Holds the default per callable `min_callee` and `max_callee` as well
+    # as the default caller/callee `coupling` mode:
+    # - `min_callee` and `max_callee` are used by the instance at wire-time.
+    # - `coupling` mode is used by the instance at call-time and can be
+    #   overridden (again, at call-time), via `coupled_call` / `decoupled_call`.
 
-    def __init__(self, coupling=False):
+    def __init__(self, min_callees=None, max_callees=None, coupling=False):
 
+        if min_callees is not None and min_callees <= 0:
+            raise ValueError('min_callees must be positive or None')
+        if max_callees is not None and max_callees <= 0:
+            raise ValueError('max_callees must be positive or None')
+        if min_callees and max_callees and min_callees > max_callees:
+            raise ValueError('max_callees must be >= min_callees')
+
+        self._min_callees = min_callees
+        self._max_callees = max_callees
         self._coupling = coupling
         self._wiring_instance = _instance.WiringInstance(self)
+
+
+    @property
+    def min_callees(self):
+        """
+        Read-only default minimum wired callees.
+        """
+        return self._min_callees
+
+
+    @property
+    def max_callees(self):
+        """
+        Read-only default maximum wired callees.
+        """
+        return self._max_callees
 
 
     @property
