@@ -16,58 +16,43 @@ import unittest
 
 from wires import Wiring
 
+from . import mixin_test_callees
 
 
-class _TestWiresCouplingMixin(object):
+
+class _TestWiresCouplingMixin(mixin_test_callees.TestCalleesMixin):
 
     """
     Caller/callee custom coupling tests for Wires instances.
     """
 
-    @staticmethod
-    def _returns_42_callee():
-
-        return 42
-
-
-    @staticmethod
-    def _returns_None_callee():
-
-        return None
-
-
-    _THE_EXCEPTION = ValueError('bad value detail')
-
-    def _raises_exception_callee(self):
-
-        raise self._THE_EXCEPTION
-
-
-    def _unwire_call(self, callee):
-
-        self.w.unwire.this.calls_to(callee)
-
+    @property
+    def unwire(self):
+        """
+        Per test mixin contract: self.unwire unwires callabless.
+        """
+        return self.w.unwire
 
     def wire_returns_42_callee(self):
 
-        self.w.wire.this.calls_to(self._returns_42_callee)
-        self.addCleanup(self._unwire_call, self._returns_42_callee)
+        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.addCleanup(self.unwire_call, self.returns_42_callee)
 
 
     def wire_raises_exeption_callee(self):
 
-        self.w.wire.this.calls_to(self._raises_exception_callee)
-        self.addCleanup(self._unwire_call, self._raises_exception_callee)
+        self.w.wire.this.calls_to(self.raises_exception_callee)
+        self.addCleanup(self.unwire_call, self.raises_exception_callee)
 
 
     def wire_three_callees_2nd_one_failing(self):
 
-        self.w.wire.this.calls_to(self._returns_42_callee)
-        self.w.wire.this.calls_to(self._raises_exception_callee)
-        self.w.wire.this.calls_to(self._returns_None_callee)
-        self.addCleanup(self._unwire_call, self._returns_None_callee)
-        self.addCleanup(self._unwire_call, self._raises_exception_callee)
-        self.addCleanup(self._unwire_call, self._returns_42_callee)
+        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.w.wire.this.calls_to(self.raises_exception_callee)
+        self.w.wire.this.calls_to(self.returns_None_callee)
+        self.addCleanup(self.unwire_call, self.returns_None_callee)
+        self.addCleanup(self.unwire_call, self.raises_exception_callee)
+        self.addCleanup(self.unwire_call, self.returns_42_callee)
 
 
 
@@ -101,7 +86,7 @@ class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], (self._THE_EXCEPTION, None))
+        self.assertEqual(exception_args[0], (self.THE_EXCEPTION, None))
     
 
     def test_wire_wire_wire_default_coupled_fail(self):
@@ -114,7 +99,7 @@ class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 2)
         self.assertEqual(exception_args[0], (None, 42))
-        self.assertEqual(exception_args[1], (self._THE_EXCEPTION, None))
+        self.assertEqual(exception_args[1], (self.THE_EXCEPTION, None))
 
 
     def test_wire_coupled_call(self):
@@ -136,7 +121,7 @@ class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], (self._THE_EXCEPTION, None))
+        self.assertEqual(exception_args[0], (self.THE_EXCEPTION, None))
     
 
     def test_wire_wire_wire_coupled_fail(self):
@@ -149,7 +134,7 @@ class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 2)
         self.assertEqual(exception_args[0], (None, 42))
-        self.assertEqual(exception_args[1], (self._THE_EXCEPTION, None))
+        self.assertEqual(exception_args[1], (self.THE_EXCEPTION, None))
 
 
     def test_wire_decoupled_call(self):
@@ -169,7 +154,7 @@ class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
         result = self.w.decoupled_call.this()
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (self._THE_EXCEPTION, None))
+        self.assertEqual(result[0], (self.THE_EXCEPTION, None))
     
 
     def test_wire_wire_wire_decoupled_fail(self):
@@ -180,7 +165,7 @@ class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
 
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0], (None, 42))
-        self.assertEqual(result[1], (self._THE_EXCEPTION, None))
+        self.assertEqual(result[1], (self.THE_EXCEPTION, None))
         self.assertEqual(result[2], (None, None))
 
 
@@ -213,7 +198,7 @@ class TestWiresCouplingFalse(_TestWiresCouplingMixin, unittest.TestCase):
         result = self.w.this()
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (self._THE_EXCEPTION, None))
+        self.assertEqual(result[0], (self.THE_EXCEPTION, None))
     
 
     def test_wire_wire_wire_default_decoupled_fail(self):
@@ -224,7 +209,7 @@ class TestWiresCouplingFalse(_TestWiresCouplingMixin, unittest.TestCase):
 
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0], (None, 42))
-        self.assertEqual(result[1], (self._THE_EXCEPTION, None))
+        self.assertEqual(result[1], (self.THE_EXCEPTION, None))
         self.assertEqual(result[2], (None, None))
 
 
@@ -247,7 +232,7 @@ class TestWiresCouplingFalse(_TestWiresCouplingMixin, unittest.TestCase):
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], (self._THE_EXCEPTION, None))
+        self.assertEqual(exception_args[0], (self.THE_EXCEPTION, None))
     
 
     def test_wire_wire_wire_coupled_fail(self):
@@ -260,7 +245,7 @@ class TestWiresCouplingFalse(_TestWiresCouplingMixin, unittest.TestCase):
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 2)
         self.assertEqual(exception_args[0], (None, 42))
-        self.assertEqual(exception_args[1], (self._THE_EXCEPTION, None))
+        self.assertEqual(exception_args[1], (self.THE_EXCEPTION, None))
 
 
     def test_wire_decoupled_call(self):
@@ -280,7 +265,7 @@ class TestWiresCouplingFalse(_TestWiresCouplingMixin, unittest.TestCase):
         result = self.w.decoupled_call.this()
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (self._THE_EXCEPTION, None))
+        self.assertEqual(result[0], (self.THE_EXCEPTION, None))
     
 
     def test_wire_wire_wire_decoupled_fail(self):
@@ -291,7 +276,7 @@ class TestWiresCouplingFalse(_TestWiresCouplingMixin, unittest.TestCase):
 
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0], (None, 42))
-        self.assertEqual(result[1], (self._THE_EXCEPTION, None))
+        self.assertEqual(result[1], (self.THE_EXCEPTION, None))
         self.assertEqual(result[2], (None, None))
 
 
