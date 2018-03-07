@@ -12,9 +12,11 @@ API test driver mixin.
 
 from __future__ import absolute_import
 
+from . import mixin_test_callees
 
 
-class TestWiresAPIMixin(object):
+
+class TestWiresAPIMixin(mixin_test_callees.TestCalleesMixin):
 
     """
     Drives Wires API tests requiring mixed class to:
@@ -88,32 +90,16 @@ class TestWiresAPIMixin(object):
         """
         Wiring a callable works.
         """
-        # Calling test_callble works (for coverage completion's sake).
-        self._test_callable()
-
-        self.wire.this.calls_to(self._test_callable)
-        self.addCleanup(self._unwire_test_callable)
-
-
-    @staticmethod
-    def _test_callable():
-        pass
-
-
-    def _unwire_test_callable(self):
-
-        self.unwire.this.calls_to(self._test_callable)
+        self.wire.this.calls_to(self.returns_42_callee)
+        self.addCleanup(self.unwire_call, self.returns_42_callee)
 
 
     def test_wiring_unwiring_works(self):
         """
         Wiring and then unwiring same callable works.
         """
-        # Calling test_callble works (for coverage completion's sake).
-        self._test_callable()
-
-        self.wire.this.calls_to(self._test_callable)
-        self.unwire.this.calls_to(self._test_callable)
+        self.wire.this.calls_to(self.returns_42_callee)
+        self.unwire.this.calls_to(self.returns_42_callee)
 
 
     def test_unwiring_unknown_callable_raises_value_error(self):
@@ -123,7 +109,7 @@ class TestWiresAPIMixin(object):
         - Starts with "unknown function ".
         """
         with self.assertRaises(ValueError) as cm:
-            self.unwire.this.calls_to(self._test_callable)
+            self.unwire.this.calls_to(self.returns_42_callee)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -140,8 +126,8 @@ class TestWiresAPIMixin(object):
         Wiring/unwiring via indexing works.
         """
         name = 'name'
-        self.wire[name].calls_to(self._test_callable)
-        self.unwire[name].calls_to(self._test_callable)
+        self.wire[name].calls_to(self.returns_42_callee)
+        self.unwire[name].calls_to(self.returns_42_callee)
 
 
     def _assert_exception_arg(self, cm, expected):
@@ -176,7 +162,7 @@ class TestWiresAPIMixin(object):
         Wiring at the instance level raises RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
-            self.w.some_callable.calls_to(self._test_callable)
+            self.w.some_callable.calls_to(self.returns_42_callee)
 
         self._assert_exception_arg(cm, 'undefined wiring context')
 
