@@ -85,6 +85,22 @@ class WiringInstance(object):
         self.coupling = wiring_shell.coupling
 
 
+    @property
+    def min_callees(self):
+        """
+        Read-only default minimum wired callees.
+        """
+        return self._wiring_shell.min_callees
+
+
+    @property
+    def max_callees(self):
+        """
+        Read-only default maximum wired callees.
+        """
+        return self._wiring_shell.max_callees
+
+
     def coupling_reset(self):
         """
         Resets call coupling behaviour to our shell's default.

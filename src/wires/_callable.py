@@ -88,6 +88,9 @@ class WiringCallable(object):
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
 
+        if len(self._callees) == self._wiring_instance.max_callees:
+            raise RuntimeError('max_callees limit reached')
+
         self._callees.append((function, args, kwargs))
 
 
@@ -100,6 +103,9 @@ class WiringCallable(object):
 
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
+
+        if len(self._callees) == self._wiring_instance.min_callees:
+            raise RuntimeError('min_callees limit reached')
 
         tuples_to_remove = [v for v in self._callees if v[0] == function]
         if not tuples_to_remove:

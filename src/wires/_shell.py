@@ -54,6 +54,22 @@ class WiringShell(object):
 
 
     @property
+    def min_callees(self):
+        """
+        Read-only default minimum wired callees.
+        """
+        return self._min_callees
+
+
+    @property
+    def max_callees(self):
+        """
+        Read-only default maximum wired callees.
+        """
+        return self._max_callees
+
+
+    @property
     def coupling(self):
         """
         Read-only default call coupling mode.
