@@ -102,8 +102,33 @@ class TestMinMaxCallee(mixin_test_callees.TestCalleesMixin, unittest.TestCase):
         self.assertEqual(exception_args[0], 'max_callees limit reached')
 
 
+    def test_min_1_call_raises_runtime_error(self):
+        """
+        Calling an unwired callable with min_callees set raises RuntimeError.
+        """
+        w = Wiring(min_callees=1)
+
+        with self.assertRaises(RuntimeError) as cm:
+            w.this()
+
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        self.assertEqual(exception_args[0], 'less than min_callees wired')
+
+
+    def test_min_1_wire_call(self):
+        """
+        Calling an unwired callable with min_callees set raises RuntimeError.
+        """
+        w = Wiring(min_callees=1)
+
+        w.wire.this.calls_to(self.returns_42_callee)
+        result = w.this()
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0], (None, 42))
+
     # MORE TESTS
-    # - Calling before wiring when min_callees is set.
     # - Per callable min_callee/max_callee setting.
     #   (fail if already wired?)
 

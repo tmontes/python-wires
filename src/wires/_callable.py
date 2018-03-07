@@ -126,6 +126,11 @@ class WiringCallable(object):
 
     def __call__(self, *args, **kwargs):
 
+        # Calling with wired callee count < `min_callees`, if set, is an error.
+        min_callees = self._wiring_instance.min_callees
+        if min_callees and len(self._callees) < min_callees:
+            raise RuntimeError('less than min_callees wired')
+
         # Get call coupling behaviour for this call from our WiringInstance and
         # then reset it to its default value to account for correct "default"
         # vs "overridden" call coupling behaviour.
