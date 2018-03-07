@@ -14,6 +14,7 @@ Python Wires: Call wiring made simple
    :alt: Test Coverage
 
 
+|
 
 
 ``wires`` is a library to facilitate "callable wiring" by decoupling callers from callees and avoiding passing around multiple callables in Python code; it can be used as a callable-based event system or, again callable-based, publish-subscribe like solution.
