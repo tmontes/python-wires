@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Test callees mixin.
+Test callables mixin.
 """
 
 
@@ -16,34 +16,34 @@ from . import helpers
 
 
 
-class TestCalleesMixin(object):
+class TestCallablesMixin(object):
 
     """
-    Holds test callees.
+    Holds test callables.
     """
 
     @staticmethod
-    def returns_42_callee():
+    def returns_42_callable():
 
         return 42
 
 
     @staticmethod
-    def returns_None_callee():
+    def returns_None_callable():
 
         return None
 
 
     THE_EXCEPTION = ValueError('bad value detail')
 
-    def raises_exception_callee(self):
+    def raises_exception_callable(self):
 
         raise self.THE_EXCEPTION
 
 
-    def unwire_call(self, callee):
+    def unwire_call(self, callable_):
 
-        self.w.this.unwire(callee)
+        self.w.this.unwire(callable_)
 
 
 # ----------------------------------------------------------------------------

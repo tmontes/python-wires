@@ -21,22 +21,12 @@ class WiringShell(object):
     Python Wiring Shell
     """
 
-    # Wraps a Wiring Instance, cooperating with it by setting its
-    # `wire_context` attribute to support the defined usage as in:
+    # Holds the default, per-callable, `min_wirings` and `max_wirings` as well
+    # as the default caller/callee call `coupling` mode.
     #
-    # >>> ws = WiringShell()
-    # >>> ws.wire.some_callable.calls_to(<callee>)
-    # >>> ws.unwire.some_callable.calls_to(<callee>)
-    #
-    # The `calls_to` method of the Wiring Callable wires/unwires the given
-    # `<callee>` depending on its Wiring Instance `wire_context`, set by
-    # the WiringShell object.
-    #
-    # Holds the default per callable `min_wirings` and `max_wirings` as well
-    # as the default caller/callee `coupling` mode:
-    # - `min_wirings` and `max_wirings` are used by the instance at wire-time.
-    # - `coupling` mode is used by the instance at call-time and can be
-    #   overridden (again, at call-time), via `couple` / `decouple`.
+    # Wraps a Wiring Instance, cooperating with it by setting its `coupling`
+    # attribute to support call-time caller/callee coupling overriding, while
+    # delegating attribute access to expose the Wiring Instance behaviour.
 
     def __init__(self, min_wirings=None, max_wirings=None, coupling=False):
 

@@ -16,11 +16,11 @@ import unittest
 
 from wires import Wiring
 
-from . import mixin_test_callees
+from . import mixin_test_callables
 
 
 
-class TestInstanceMinMaxWirings(mixin_test_callees.TestCalleesMixin,
+class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
                                unittest.TestCase):
 
     """
@@ -69,8 +69,8 @@ class TestInstanceMinMaxWirings(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(min_wirings=None, max_wirings=None)
 
-        w.this.wire(self.returns_42_callee)
-        w.this.unwire(self.returns_42_callee)
+        w.this.wire(self.returns_42_callable)
+        w.this.unwire(self.returns_42_callable)
 
 
     def test_min_1_wire_unwire_raises_runtime_error(self):
@@ -79,9 +79,9 @@ class TestInstanceMinMaxWirings(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(min_wirings=1)
 
-        w.this.wire(self.returns_42_callee)
+        w.this.wire(self.returns_42_callable)
         with self.assertRaises(RuntimeError) as cm:
-            w.this.unwire(self.returns_42_callee)
+            w.this.unwire(self.returns_42_callable)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -94,9 +94,9 @@ class TestInstanceMinMaxWirings(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(max_wirings=1)
 
-        w.this.wire(self.returns_42_callee)
+        w.this.wire(self.returns_42_callable)
         with self.assertRaises(RuntimeError) as cm:
-            w.this.wire(self.returns_42_callee)
+            w.this.wire(self.returns_42_callable)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -123,7 +123,7 @@ class TestInstanceMinMaxWirings(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(min_wirings=1)
 
-        w.this.wire(self.returns_42_callee)
+        w.this.wire(self.returns_42_callable)
         result = w.this()
 
         self.assertEqual(len(result), 1)
@@ -131,7 +131,7 @@ class TestInstanceMinMaxWirings(mixin_test_callees.TestCalleesMixin,
 
 
 
-class TestCallableMinMaxWirings(mixin_test_callees.TestCalleesMixin,
+class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
                                 unittest.TestCase):
 
     """
@@ -222,14 +222,14 @@ class TestCallableMinMaxWirings(mixin_test_callees.TestCalleesMixin,
         Wiring then unwiring with min_wirings=1 raises a RuntimeError.
         """
         self.w.this.min_wirings = 1
-        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
 
         # clean up in the reverse order, otherwise unwiring fails
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
         self.addCleanup(self.reset_min_max_wirings)
 
         with self.assertRaises(RuntimeError) as cm:
-            self.w.this.unwire(self.returns_42_callee)
+            self.w.this.unwire(self.returns_42_callable)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -241,14 +241,14 @@ class TestCallableMinMaxWirings(mixin_test_callees.TestCalleesMixin,
         Wiring two callables with max_wirings=1 raises a RuntimeError.
         """
         self.w.this.max_wirings = 1
-        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
 
         # clean up in the reverse order, otherwise unwiring fails
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
         self.addCleanup(self.reset_min_max_wirings)
 
         with self.assertRaises(RuntimeError) as cm:
-            self.w.this.wire(self.returns_42_callee)
+            self.w.this.wire(self.returns_42_callable)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -275,10 +275,10 @@ class TestCallableMinMaxWirings(mixin_test_callees.TestCalleesMixin,
         Calling a wired callable with min_wirings works.
         """
         self.w.this.min_wirings = 1
-        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
 
         # clean up in the reverse order, otherwise unwiring fails
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
         self.addCleanup(self.reset_min_max_wirings)
 
         result = self.w.this()
@@ -289,10 +289,10 @@ class TestCallableMinMaxWirings(mixin_test_callees.TestCalleesMixin,
 
     def test_wire_min_2_raises_value_error(self):
         """
-        Setting min_wirings < wired callees raises ValueError.
+        Setting min_wirings < wired callables raises ValueError.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
 
         with self.assertRaises(ValueError) as cm:
             self.w.this.min_wirings = 2
@@ -304,12 +304,12 @@ class TestCallableMinMaxWirings(mixin_test_callees.TestCalleesMixin,
 
     def test_wire_wire_max_1_raises_value_error(self):
         """
-        Setting min_wirings < wired callees raises ValueError.
+        Setting min_wirings < wired callables raises ValueError.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.w.this.wire(self.returns_42_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.w.this.wire(self.returns_42_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
 
         with self.assertRaises(ValueError) as cm:
             self.w.this.max_wirings = 1
