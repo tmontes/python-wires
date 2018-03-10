@@ -34,10 +34,10 @@ class WiringInstance(object):
         self._wiring_callables = {}
 
         # Call coupling behavior is set by the shell, which will be dynamically
-        # overridden via its `coupled_call` and `decoupled_call` attributes,
-        # that set our `coupled` attribute. Callables check this attribute to
-        # determine call-time coupling and *must* call our `coupling_reset`
-        # after that to ensure correct "default" vs "overridden" coupling.
+        # overridden via its `couple` and `decouple` attributes, that set our
+        # `coupled` attribute. Callables check this attribute to determine
+        # call-time coupling and *must* call our `coupling_reset` after that
+        # to ensure correct "default" vs "overridden" coupling.
         self.coupling = wiring_shell.coupling
 
 

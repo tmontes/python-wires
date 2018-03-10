@@ -36,7 +36,7 @@ class WiringShell(object):
     # as the default caller/callee `coupling` mode:
     # - `min_callee` and `max_callee` are used by the instance at wire-time.
     # - `coupling` mode is used by the instance at call-time and can be
-    #   overridden (again, at call-time), via `coupled_call` / `decoupled_call`.
+    #   overridden (again, at call-time), via `couple` / `decouple`.
 
     def __init__(self, min_callees=None, max_callees=None, coupling=False):
 
@@ -78,7 +78,7 @@ class WiringShell(object):
 
 
     @property
-    def coupled_call(self):
+    def couple(self):
         """
         Caller/callee coupled call context attribute (overrides default).
         """
@@ -87,7 +87,7 @@ class WiringShell(object):
 
 
     @property
-    def decoupled_call(self):
+    def decouple(self):
         """
         Caller/callee decoupled call context attribute (overrides default).
         """

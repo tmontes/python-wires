@@ -12,7 +12,7 @@ Caller/callee coupling test driver mixin.
 
 from __future__ import absolute_import
 
-from . import helpers, mixin_test_callees
+from . import mixin_test_callees
 
 
 
@@ -63,7 +63,7 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
-        result = self.w.coupled_call.this()
+        result = self.w.couple.this()
 
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], (None, 42))
@@ -81,7 +81,7 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         self.addCleanup(self.unwire_call, self.returns_42_callee)
 
         with self.assertRaises(RuntimeError) as cm:
-            self.w.coupled_call.this()
+            self.w.couple.this()
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 2)
@@ -95,7 +95,7 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
-        result = self.w.decoupled_call.this()
+        result = self.w.decouple.this()
 
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], (None, 42))
@@ -112,7 +112,7 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         self.addCleanup(self.unwire_call, self.raises_exception_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
 
-        result = self.w.decoupled_call.this()
+        result = self.w.decouple.this()
 
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0], (None, 42))
