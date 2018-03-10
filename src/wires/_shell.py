@@ -32,41 +32,41 @@ class WiringShell(object):
     # `<callee>` depending on its Wiring Instance `wire_context`, set by
     # the WiringShell object.
     #
-    # Holds the default per callable `min_callee` and `max_callee` as well
+    # Holds the default per callable `min_wirings` and `max_wirings` as well
     # as the default caller/callee `coupling` mode:
-    # - `min_callee` and `max_callee` are used by the instance at wire-time.
+    # - `min_wirings` and `max_wirings` are used by the instance at wire-time.
     # - `coupling` mode is used by the instance at call-time and can be
     #   overridden (again, at call-time), via `couple` / `decouple`.
 
-    def __init__(self, min_callees=None, max_callees=None, coupling=False):
+    def __init__(self, min_wirings=None, max_wirings=None, coupling=False):
 
-        if min_callees is not None and min_callees <= 0:
-            raise ValueError('min_callees must be positive or None')
-        if max_callees is not None and max_callees <= 0:
-            raise ValueError('max_callees must be positive or None')
-        if min_callees and max_callees and min_callees > max_callees:
-            raise ValueError('max_callees must be >= min_callees')
+        if min_wirings is not None and min_wirings <= 0:
+            raise ValueError('min_wirings must be positive or None')
+        if max_wirings is not None and max_wirings <= 0:
+            raise ValueError('max_wirings must be positive or None')
+        if min_wirings and max_wirings and min_wirings > max_wirings:
+            raise ValueError('max_wirings must be >= min_wirings')
 
-        self._min_callees = min_callees
-        self._max_callees = max_callees
+        self._min_wirings = min_wirings
+        self._max_wirings = max_wirings
         self._coupling = coupling
         self._wiring_instance = _instance.WiringInstance(self)
 
 
     @property
-    def min_callees(self):
+    def min_wirings(self):
         """
-        Read-only default minimum wired callees.
+        Read-only default minimum wired callables.
         """
-        return self._min_callees
+        return self._min_wirings
 
 
     @property
-    def max_callees(self):
+    def max_wirings(self):
         """
-        Read-only default maximum wired callees.
+        Read-only default maximum wired callables.
         """
-        return self._max_callees
+        return self._max_wirings
 
 
     @property
