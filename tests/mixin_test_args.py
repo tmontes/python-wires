@@ -12,11 +12,11 @@ Argument passing test driver mixin.
 
 from __future__ import absolute_import
 
-from . import helpers, mixin_test_callees
+from . import helpers, mixin_test_callables
 
 
 
-class _TestWiresArgPassingMixin(mixin_test_callees.TestCalleesMixin,
+class _TestWiresArgPassingMixin(mixin_test_callables.TestCallablesMixin,
                                 helpers.CallTrackerAssertMixin):
 
     """

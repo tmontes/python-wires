@@ -12,11 +12,11 @@ API test driver mixin.
 
 from __future__ import absolute_import
 
-from . import mixin_test_callees
+from . import mixin_test_callables
 
 
 
-class TestWiresAPIMixin(mixin_test_callees.TestCalleesMixin):
+class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
 
     """
     Drives Wires API tests requiring mixed class to:
@@ -90,16 +90,16 @@ class TestWiresAPIMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wiring a callable works.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
 
 
     def test_wiring_unwiring_works(self):
         """
         Wiring and then unwiring same callable works.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.w.this.unwire(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.w.this.unwire(self.returns_42_callable)
 
 
     def test_unwiring_unknown_callable_raises_value_error(self):
@@ -109,7 +109,7 @@ class TestWiresAPIMixin(mixin_test_callees.TestCalleesMixin):
         - Starts with "unknown function ".
         """
         with self.assertRaises(ValueError) as cm:
-            self.w.this.unwire(self.returns_42_callee)
+            self.w.this.unwire(self.returns_42_callable)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -126,8 +126,8 @@ class TestWiresAPIMixin(mixin_test_callees.TestCalleesMixin):
         Wiring/unwiring via indexing works.
         """
         name = 'name'
-        self.w[name].wire(self.returns_42_callee)
-        self.w[name].unwire(self.returns_42_callee)
+        self.w[name].wire(self.returns_42_callable)
+        self.w[name].unwire(self.returns_42_callable)
 
 
     def _assert_exception_arg(self, cm, expected):
@@ -142,7 +142,7 @@ class TestWiresAPIMixin(mixin_test_callees.TestCalleesMixin):
         Wiring at the instance level raises RuntimeError.
         """
         with self.assertRaises(RuntimeError) as cm:
-            self.w.some_callable.calls_to(self.returns_42_callee)
+            self.w.some_callable.calls_to(self.returns_42_callable)
 
         self._assert_exception_arg(cm, 'undefined wiring context')
 

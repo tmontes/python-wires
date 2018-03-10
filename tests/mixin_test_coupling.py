@@ -12,11 +12,11 @@ Caller/callee coupling test driver mixin.
 
 from __future__ import absolute_import
 
-from . import mixin_test_callees
+from . import mixin_test_callables
 
 
 
-class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
+class TestCallerCalleeCouplingMixin(mixin_test_callables.TestCallablesMixin):
 
     """
     Drives Wires caller/callee coupling tests requiring mixed class to:
@@ -30,8 +30,8 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         Default uncoupled test: return a list of (<exception>, <result>), per-
         callee tuple.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
         result = self.w.this()
 
         self.assertEqual(len(result), 1)
@@ -43,12 +43,12 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         Default uncoupled test: return a list of (<exception>, <result>), per-
         callee tuple.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.w.this.wire(self.raises_exception_callee)
-        self.w.this.wire(self.returns_None_callee)
-        self.addCleanup(self.unwire_call, self.returns_None_callee)
-        self.addCleanup(self.unwire_call, self.raises_exception_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.w.this.wire(self.raises_exception_callable)
+        self.w.this.wire(self.returns_None_callable)
+        self.addCleanup(self.unwire_call, self.returns_None_callable)
+        self.addCleanup(self.unwire_call, self.raises_exception_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
         result = self.w.this()
 
         self.assertEqual(len(result), 3)
@@ -61,8 +61,8 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable, call it forcing coupling.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
         result = self.w.couple.this()
 
         self.assertEqual(len(result), 1)
@@ -73,12 +73,12 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable three times: the second one raises an exception.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.w.this.wire(self.raises_exception_callee)
-        self.w.this.wire(self.returns_None_callee)
-        self.addCleanup(self.unwire_call, self.returns_None_callee)
-        self.addCleanup(self.unwire_call, self.raises_exception_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.w.this.wire(self.raises_exception_callable)
+        self.w.this.wire(self.returns_None_callable)
+        self.addCleanup(self.unwire_call, self.returns_None_callable)
+        self.addCleanup(self.unwire_call, self.raises_exception_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
 
         with self.assertRaises(RuntimeError) as cm:
             self.w.couple.this()
@@ -93,8 +93,8 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable, call it forcing coupling.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
         result = self.w.decouple.this()
 
         self.assertEqual(len(result), 1)
@@ -105,12 +105,12 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable three times: the second one raises an exception.
         """
-        self.w.this.wire(self.returns_42_callee)
-        self.w.this.wire(self.raises_exception_callee)
-        self.w.this.wire(self.returns_None_callee)
-        self.addCleanup(self.unwire_call, self.returns_None_callee)
-        self.addCleanup(self.unwire_call, self.raises_exception_callee)
-        self.addCleanup(self.unwire_call, self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callable)
+        self.w.this.wire(self.raises_exception_callable)
+        self.w.this.wire(self.returns_None_callable)
+        self.addCleanup(self.unwire_call, self.returns_None_callable)
+        self.addCleanup(self.unwire_call, self.raises_exception_callable)
+        self.addCleanup(self.unwire_call, self.returns_42_callable)
 
         result = self.w.decouple.this()
 
