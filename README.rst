@@ -23,13 +23,13 @@ Minimal usage example:
 
 .. code-block:: python
 
-    from wires import wiring, wire
+    from wires import w
 
     def my_callable():
         print('Hello from wires!')
 
-    wire.this_callable.calls_to(my_callable)
-    wiring.this_callable()
+    w.this_callable.wire(my_callable)
+    w.this_callable()
 
 
 
