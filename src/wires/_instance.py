@@ -42,19 +42,19 @@ class WiringInstance(object):
 
 
     @property
-    def min_callees(self):
+    def min_wirings(self):
         """
-        Read-only default minimum wired callees.
+        Read-only default minimum wired callables.
         """
-        return self._wiring_shell.min_callees
+        return self._wiring_shell.min_wirings
 
 
     @property
-    def max_callees(self):
+    def max_wirings(self):
         """
-        Read-only default maximum wired callees.
+        Read-only default maximum wired callables.
         """
-        return self._wiring_shell.max_callees
+        return self._wiring_shell.max_wirings
 
 
     def coupling_reset(self):

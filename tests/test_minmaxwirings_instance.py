@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Wires instance min/max callee tests.
+Wires instance min/max wirings tests.
 """
 
 
@@ -20,54 +20,54 @@ from . import mixin_test_callees
 
 
 
-class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
+class TestInstanceMinMaxWirings(mixin_test_callees.TestCalleesMixin,
                                unittest.TestCase):
 
     """
-    min/max callee tests for Wires instances.
+    min/max wirings tests for Wires instances.
     """
 
     def test_non_positive_min_raises_value_error(self):
         """
-        Passing N <= 0 as `min_callees` raises a ValueError.
+        Passing N <= 0 as `min_wirings` raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            _ = Wiring(min_callees=-42)
+            _ = Wiring(min_wirings=-42)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'min_callees must be positive or None')
+        self.assertEqual(exception_args[0], 'min_wirings must be positive or None')
 
 
     def test_non_positive_max_raises_value_error(self):
         """
-        Passing N <= 0 as `max_callees` raises a ValueError.
+        Passing N <= 0 as `max_wirings` raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            _ = Wiring(max_callees=-42)
+            _ = Wiring(max_wirings=-42)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'max_callees must be positive or None')
+        self.assertEqual(exception_args[0], 'max_wirings must be positive or None')
 
 
-    def test_min_callee_greater_than_max_callee_raises_value_error(self):
+    def test_min_wirings_greater_than_max_wirings_raises_value_error(self):
         """
-        Passing `min_callees` > `max_callees` raises a ValueError.
+        Passing `min_wirings` > `max_wirings` raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            _ = Wiring(min_callees=42, max_callees=24)
+            _ = Wiring(min_wirings=42, max_wirings=24)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'max_callees must be >= min_callees')
+        self.assertEqual(exception_args[0], 'max_wirings must be >= min_wirings')
 
 
     def test_min_none_max_none_wire_unwire(self):
         """
         Wiring a single callable works.
         """
-        w = Wiring(min_callees=None, max_callees=None)
+        w = Wiring(min_wirings=None, max_wirings=None)
 
         w.this.wire(self.returns_42_callee)
         w.this.unwire(self.returns_42_callee)
@@ -75,9 +75,9 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
 
     def test_min_1_wire_unwire_raises_runtime_error(self):
         """
-        Wiring then unwiring with min_callee=1 raises a RuntimeError.
+        Wiring then unwiring with min_wirings=1 raises a RuntimeError.
         """
-        w = Wiring(min_callees=1)
+        w = Wiring(min_wirings=1)
 
         w.this.wire(self.returns_42_callee)
         with self.assertRaises(RuntimeError) as cm:
@@ -85,14 +85,14 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'min_callees limit reached')
+        self.assertEqual(exception_args[0], 'min_wirings limit reached')
 
 
     def test_max_1_wire_wire_raises_runtime_error(self):
         """
-        Wiring two callables with max_callee=1 raises a RuntimeError.
+        Wiring two callables with max_wirings=1 raises a RuntimeError.
         """
-        w = Wiring(max_callees=1)
+        w = Wiring(max_wirings=1)
 
         w.this.wire(self.returns_42_callee)
         with self.assertRaises(RuntimeError) as cm:
@@ -100,28 +100,28 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'max_callees limit reached')
+        self.assertEqual(exception_args[0], 'max_wirings limit reached')
 
 
     def test_min_1_call_raises_runtime_error(self):
         """
-        Calling an unwired callable with min_callees set raises RuntimeError.
+        Calling an unwired callable with min_wirings set raises RuntimeError.
         """
-        w = Wiring(min_callees=1)
+        w = Wiring(min_wirings=1)
 
         with self.assertRaises(RuntimeError) as cm:
             w.this()
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'less than min_callees wired')
+        self.assertEqual(exception_args[0], 'less than min_wirings wired')
 
 
     def test_min_1_wire_call(self):
         """
-        Calling a wired callable with min_callees works.
+        Calling a wired callable with min_wirings works.
         """
-        w = Wiring(min_callees=1)
+        w = Wiring(min_wirings=1)
 
         w.this.wire(self.returns_42_callee)
         result = w.this()
@@ -131,11 +131,11 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
 
 
 
-class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
-                               unittest.TestCase):
+class TestCallableMinMaxWirings(mixin_test_callees.TestCalleesMixin,
+                                unittest.TestCase):
 
     """
-    Per callable min/max callee tests.
+    Per callable min/max wirings tests.
     """
 
     def setUp(self):
@@ -143,143 +143,143 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         self.w = Wiring()
 
 
-    def test_min_callees_defaults_to_none(self):
+    def test_min_wirings_defaults_to_none(self):
         """
-        Callable `min_callees` defaults to None.
+        Callable `min_wirings` defaults to None.
         """
-        result = self.w.this.min_callees
+        result = self.w.this.min_wirings
         self.assertIsNone(result)
 
 
-    def test_max_callees_defaults_to_none(self):
+    def test_max_wirings_defaults_to_none(self):
         """
-        Callable `max_callees` defaults to None.
+        Callable `max_wirings` defaults to None.
         """
-        result = self.w.this.max_callees
+        result = self.w.this.max_wirings
         self.assertIsNone(result)
 
 
     def test_non_positive_min_raises_value_error(self):
         """
-        Setting callable `min_callees` to N <= 0 raises a ValueError.
+        Setting callable `min_wirings` to N <= 0 raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            self.w.this.min_callees = -42
+            self.w.this.min_wirings = -42
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'min_callees must be positive or None')
+        self.assertEqual(exception_args[0], 'min_wirings must be positive or None')
 
 
     def test_non_positive_max_raises_value_error(self):
         """
-        Setting callable `max_callees` to N <= 0 raises a ValueError.
+        Setting callable `max_wirings` to N <= 0 raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            self.w.this.max_callees = -42
+            self.w.this.max_wirings = -42
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'max_callees must be positive or None')
+        self.assertEqual(exception_args[0], 'max_wirings must be positive or None')
 
 
-    def test_min_callee_greater_than_max_callee_raises_value_error(self):
+    def test_min_wirings_greater_than_max_wirings_raises_value_error(self):
         """
-        Setting callable `min_callees` > `max_callees` raises a ValueError.
+        Setting callable `min_wirings` > `max_wirings` raises a ValueError.
         """
-        self.w.this.max_callees = 24
+        self.w.this.max_wirings = 24
         with self.assertRaises(ValueError) as cm:
-            self.w.this.min_callees = 42
+            self.w.this.min_wirings = 42
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'min_callees must be <= max_callees')
+        self.assertEqual(exception_args[0], 'min_wirings must be <= max_wirings')
 
 
-    def test_max_callee_less_than_mmin_callee_raises_value_error(self):
+    def test_max_wirings_less_than_mmin_wirings_raises_value_error(self):
         """
-        Setting callable `max_callees` < `min_callees` raises a ValueError.
+        Setting callable `max_wirings` < `min_wirings` raises a ValueError.
         """
-        self.w.this.min_callees = 42
+        self.w.this.min_wirings = 42
         with self.assertRaises(ValueError) as cm:
-            self.w.this.max_callees = 24
+            self.w.this.max_wirings = 24
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'max_callees must be >= min_callees')
+        self.assertEqual(exception_args[0], 'max_wirings must be >= min_wirings')
 
 
-    def reset_min_max_callee(self):
+    def reset_min_max_wirings(self):
         """
         Used in test cleanups.
         """
-        self.w.this.min_callees = None
-        self.w.this.max_callees = None
+        self.w.this.min_wirings = None
+        self.w.this.max_wirings = None
 
 
     def test_min_1_wire_unwire_raises_runtime_error(self):
         """
-        Wiring then unwiring with min_callee=1 raises a RuntimeError.
+        Wiring then unwiring with min_wirings=1 raises a RuntimeError.
         """
-        self.w.this.min_callees = 1
+        self.w.this.min_wirings = 1
         self.w.this.wire(self.returns_42_callee)
 
         # clean up in the reverse order, otherwise unwiring fails
         self.addCleanup(self.unwire_call, self.returns_42_callee)
-        self.addCleanup(self.reset_min_max_callee)
+        self.addCleanup(self.reset_min_max_wirings)
 
         with self.assertRaises(RuntimeError) as cm:
             self.w.this.unwire(self.returns_42_callee)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'min_callees limit reached')
+        self.assertEqual(exception_args[0], 'min_wirings limit reached')
 
 
     def test_max_1_wire_wire_raises_runtime_error(self):
         """
-        Wiring two callables with max_callee=1 raises a RuntimeError.
+        Wiring two callables with max_wirings=1 raises a RuntimeError.
         """
-        self.w.this.max_callees = 1
+        self.w.this.max_wirings = 1
         self.w.this.wire(self.returns_42_callee)
 
         # clean up in the reverse order, otherwise unwiring fails
         self.addCleanup(self.unwire_call, self.returns_42_callee)
-        self.addCleanup(self.reset_min_max_callee)
+        self.addCleanup(self.reset_min_max_wirings)
 
         with self.assertRaises(RuntimeError) as cm:
             self.w.this.wire(self.returns_42_callee)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'max_callees limit reached')
+        self.assertEqual(exception_args[0], 'max_wirings limit reached')
 
 
     def test_min_1_call_raises_runtime_error(self):
         """
-        Calling an unwired callable with min_callees set raises RuntimeError.
+        Calling an unwired callable with min_wirings set raises RuntimeError.
         """
-        self.w.this.min_callees = 1
-        self.addCleanup(self.reset_min_max_callee)
+        self.w.this.min_wirings = 1
+        self.addCleanup(self.reset_min_max_wirings)
 
         with self.assertRaises(RuntimeError) as cm:
             self.w.this()
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'less than min_callees wired')
+        self.assertEqual(exception_args[0], 'less than min_wirings wired')
 
 
     def test_min_1_wire_call(self):
         """
-        Calling a wired callable with min_callees works.
+        Calling a wired callable with min_wirings works.
         """
-        self.w.this.min_callees = 1
+        self.w.this.min_wirings = 1
         self.w.this.wire(self.returns_42_callee)
 
         # clean up in the reverse order, otherwise unwiring fails
         self.addCleanup(self.unwire_call, self.returns_42_callee)
-        self.addCleanup(self.reset_min_max_callee)
+        self.addCleanup(self.reset_min_max_wirings)
 
         result = self.w.this()
 
@@ -289,22 +289,22 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
 
     def test_wire_min_2_raises_value_error(self):
         """
-        Setting min_callees < wired callees raises ValueError.
+        Setting min_wirings < wired callees raises ValueError.
         """
         self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
 
         with self.assertRaises(ValueError) as cm:
-            self.w.this.min_callees = 2
+            self.w.this.min_wirings = 2
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'too few wired callees')
+        self.assertEqual(exception_args[0], 'too few wirings')
 
 
     def test_wire_wire_max_1_raises_value_error(self):
         """
-        Setting min_callees < wired callees raises ValueError.
+        Setting min_wirings < wired callees raises ValueError.
         """
         self.w.this.wire(self.returns_42_callee)
         self.w.this.wire(self.returns_42_callee)
@@ -312,11 +312,11 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         self.addCleanup(self.unwire_call, self.returns_42_callee)
 
         with self.assertRaises(ValueError) as cm:
-            self.w.this.max_callees = 1
+            self.w.this.max_wirings = 1
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], 'too many wired callees')
+        self.assertEqual(exception_args[0], 'too many wirings')
 
 
 # ----------------------------------------------------------------------------
