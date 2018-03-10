@@ -40,7 +40,7 @@ class _TestWiresArgPassingMixin(mixin_test_callees.TestCalleesMixin,
         """
         tracker = helpers.CallTracker()
 
-        self.wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
+        self.w.this.wire(tracker, *self.wire1_args, **self.wire1_kwargs)
         self.w.this(*self.call_args, **self.call_kwargs)
         self.addCleanup(self.unwire_call, tracker)
 
@@ -57,8 +57,8 @@ class _TestWiresArgPassingMixin(mixin_test_callees.TestCalleesMixin,
         """
         tracker = helpers.CallTracker()
 
-        self.wire.this.calls_to(tracker, *self.wire1_args, **self.wire1_kwargs)
-        self.wire.this.calls_to(tracker, *self.wire2_args, **self.wire2_kwargs)
+        self.w.this.wire(tracker, *self.wire1_args, **self.wire1_kwargs)
+        self.w.this.wire(tracker, *self.wire2_args, **self.wire2_kwargs)
         self.w.this(*self.call_args, **self.call_kwargs)
         self.addCleanup(self.unwire_call, tracker)
         self.addCleanup(self.unwire_call, tracker)

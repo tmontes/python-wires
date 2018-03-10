@@ -30,7 +30,7 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         Default uncoupled test: return a list of (<exception>, <result>), per-
         callee tuple.
         """
-        self.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
         result = self.w.this()
 
@@ -43,9 +43,9 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         Default uncoupled test: return a list of (<exception>, <result>), per-
         callee tuple.
         """
-        self.wire.this.calls_to(self.returns_42_callee)
-        self.wire.this.calls_to(self.raises_exception_callee)
-        self.wire.this.calls_to(self.returns_None_callee)
+        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.raises_exception_callee)
+        self.w.this.wire(self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.raises_exception_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
@@ -61,7 +61,7 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable, call it forcing coupling.
         """
-        self.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
         result = self.w.coupled_call.this()
 
@@ -73,9 +73,9 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable three times: the second one raises an exception.
         """
-        self.wire.this.calls_to(self.returns_42_callee)
-        self.wire.this.calls_to(self.raises_exception_callee)
-        self.wire.this.calls_to(self.returns_None_callee)
+        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.raises_exception_callee)
+        self.w.this.wire(self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.raises_exception_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
@@ -93,7 +93,7 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable, call it forcing coupling.
         """
-        self.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
         result = self.w.decoupled_call.this()
 
@@ -105,9 +105,9 @@ class TestCallerCalleeCouplingMixin(mixin_test_callees.TestCalleesMixin):
         """
         Wire a callable three times: the second one raises an exception.
         """
-        self.wire.this.calls_to(self.returns_42_callee)
-        self.wire.this.calls_to(self.raises_exception_callee)
-        self.wire.this.calls_to(self.returns_None_callee)
+        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.raises_exception_callee)
+        self.w.this.wire(self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.raises_exception_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)

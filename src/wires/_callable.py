@@ -13,51 +13,6 @@ from __future__ import absolute_import
 
 
 
-class _ActionContext(object):
-
-    """
-    Supports `WiringShell.wire.<callable>` and `WiringShell.unwire.<callable>`
-    wiring action contexts.
-    """
-
-    def __init__(self, wiring_callable):
-
-        self._wiring_callable = wiring_callable
-
-
-    def __call__(self, *args, **kwargs):
-
-        raise RuntimeError('calling within wiring context')
-
-
-class WiringActionContext(_ActionContext):
-
-    """
-    The `WiringShell.wire.<callable>` context.
-    """
-
-    def calls_to(self, function, *args, **kwargs):
-        """
-        Wiring action `WiringShell.wire.<callable>.calls_to(...)`.
-        """
-        return self._wiring_callable.wire(function, *args, **kwargs)
-
-
-
-class UnwiringActionContext(_ActionContext):
-
-    """
-    The `WiringShell.unwire.<callable>` context.
-    """
-
-    def calls_to(self, function):
-        """
-        Unwiring action `WiringShell.unwire.<callable>.calls_to(...)`.
-        """
-        return self._wiring_callable.unwire(function)
-
-
-
 class WiringCallable(object):
 
     """
