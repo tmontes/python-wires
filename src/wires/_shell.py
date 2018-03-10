@@ -78,22 +78,6 @@ class WiringShell(object):
 
 
     @property
-    def wire(self):
-        """
-        Callable/callee wiring context attribute.
-        """
-        return _instance.InstanceWiringActionContext(self._wiring_instance)
-
-
-    @property
-    def unwire(self):
-        """
-        Callable/callee unwiring context attribute.
-        """
-        return _instance.InstanceUnwiringActionContext(self._wiring_instance)
-
-
-    @property
     def coupled_call(self):
         """
         Caller/callee coupled call context attribute (overrides default).
@@ -114,6 +98,11 @@ class WiringShell(object):
     def __getattr__(self, name):
 
         return getattr(self._wiring_instance, name)
+
+
+    def __getitem__(self, name):
+
+        return self.__getattr__(name)
 
 
 # ----------------------------------------------------------------------------

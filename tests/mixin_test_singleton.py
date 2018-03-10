@@ -12,7 +12,7 @@ Global Wires singleton test mixin.
 
 from __future__ import absolute_import
 
-from wires import wiring, wire, unwire
+from wires import w
 
 
 
@@ -27,23 +27,7 @@ class TestWiresSingletonMixin(object):
         """
         Per test mixin contract: self.w is a Wiring instance.
         """
-        return wiring
-
-
-    @property
-    def wire(self):
-        """
-        Per test mixin contract: self.wire wires callables.
-        """
-        return wire
-
-
-    @property
-    def unwire(self):
-        """
-        Per test mixin contract: self.unwire unwires callabless.
-        """
-        return unwire
+        return w
 
 
 # ----------------------------------------------------------------------------

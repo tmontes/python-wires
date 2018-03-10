@@ -32,7 +32,7 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
         """
         tracker = helpers.CallTracker()
 
-        self.wire.this.calls_to(tracker)
+        self.w.this.wire(tracker)
         self.w.this()
 
         self.assert_called(tracker, [
@@ -47,8 +47,8 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
         """
         tracker = helpers.CallTracker()
 
-        self.wire.this.calls_to(tracker)
-        self.wire.this.calls_to(tracker)
+        self.w.this.wire(tracker)
+        self.w.this.wire(tracker)
         self.w.this()
 
         self.assert_called(tracker, [
@@ -68,7 +68,7 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
         trackers = [helpers.CallTracker() for _ in range(num_wirings)]
 
         for tracker in trackers:
-            self.wire.this.calls_to(tracker)
+            self.w.this.wire(tracker)
 
         self.w.this()
 
@@ -87,12 +87,12 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
         """
         tracker = helpers.CallTracker()
 
-        self.wire.this.calls_to(tracker)
+        self.w.this.wire(tracker)
         self.w.this()
 
         self.assert_single_call_no_args(tracker)
 
-        self.unwire.this.calls_to(tracker)
+        self.w.this.unwire(tracker)
         self.w.this()
 
         self.assert_single_call_no_args(tracker)

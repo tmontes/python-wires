@@ -37,20 +37,4 @@ class TestWiresInstanceMixin(object):
         return self._w
 
 
-    @property
-    def wire(self):
-        """
-        Per test mixin contract: self.wire wires callables.
-        """
-        return self._w.wire
-
-
-    @property
-    def unwire(self):
-        """
-        Per test mixin contract: self.unwire unwires callabless.
-        """
-        return self._w.unwire
-
-
 # ----------------------------------------------------------------------------

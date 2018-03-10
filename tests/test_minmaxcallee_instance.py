@@ -69,8 +69,8 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(min_callees=None, max_callees=None)
 
-        w.wire.this.calls_to(self.returns_42_callee)
-        w.unwire.this.calls_to(self.returns_42_callee)
+        w.this.wire(self.returns_42_callee)
+        w.this.unwire(self.returns_42_callee)
 
 
     def test_min_1_wire_unwire_raises_runtime_error(self):
@@ -79,9 +79,9 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(min_callees=1)
 
-        w.wire.this.calls_to(self.returns_42_callee)
+        w.this.wire(self.returns_42_callee)
         with self.assertRaises(RuntimeError) as cm:
-            w.unwire.this.calls_to(self.returns_42_callee)
+            w.this.unwire(self.returns_42_callee)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -94,9 +94,9 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(max_callees=1)
 
-        w.wire.this.calls_to(self.returns_42_callee)
+        w.this.wire(self.returns_42_callee)
         with self.assertRaises(RuntimeError) as cm:
-            w.wire.this.calls_to(self.returns_42_callee)
+            w.this.wire(self.returns_42_callee)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -123,7 +123,7 @@ class TestInstanceMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         """
         w = Wiring(min_callees=1)
 
-        w.wire.this.calls_to(self.returns_42_callee)
+        w.this.wire(self.returns_42_callee)
         result = w.this()
 
         self.assertEqual(len(result), 1)
@@ -209,14 +209,6 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         self.assertEqual(exception_args[0], 'max_callees must be >= min_callees')
 
 
-    @property
-    def unwire(self):
-        """
-        TestCalleesMixin needs this in self.unwire_call.
-        """
-        return self.w.unwire
-
-
     def reset_min_max_callee(self):
         """
         Used in test cleanups.
@@ -230,14 +222,14 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         Wiring then unwiring with min_callee=1 raises a RuntimeError.
         """
         self.w.this.min_callees = 1
-        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
 
         # clean up in the reverse order, otherwise unwiring fails
         self.addCleanup(self.unwire_call, self.returns_42_callee)
         self.addCleanup(self.reset_min_max_callee)
 
         with self.assertRaises(RuntimeError) as cm:
-            self.w.unwire.this.calls_to(self.returns_42_callee)
+            self.w.this.unwire(self.returns_42_callee)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -249,14 +241,14 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         Wiring two callables with max_callee=1 raises a RuntimeError.
         """
         self.w.this.max_callees = 1
-        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
 
         # clean up in the reverse order, otherwise unwiring fails
         self.addCleanup(self.unwire_call, self.returns_42_callee)
         self.addCleanup(self.reset_min_max_callee)
 
         with self.assertRaises(RuntimeError) as cm:
-            self.w.wire.this.calls_to(self.returns_42_callee)
+            self.w.this.wire(self.returns_42_callee)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -283,7 +275,7 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         Calling a wired callable with min_callees works.
         """
         self.w.this.min_callees = 1
-        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
 
         # clean up in the reverse order, otherwise unwiring fails
         self.addCleanup(self.unwire_call, self.returns_42_callee)
@@ -299,7 +291,7 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         """
         Setting min_callees < wired callees raises ValueError.
         """
-        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
 
         with self.assertRaises(ValueError) as cm:
@@ -314,8 +306,8 @@ class TestCallableMinMaxCallee(mixin_test_callees.TestCalleesMixin,
         """
         Setting min_callees < wired callees raises ValueError.
         """
-        self.w.wire.this.calls_to(self.returns_42_callee)
-        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
 

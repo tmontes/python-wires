@@ -43,7 +43,7 @@ class TestCalleesMixin(object):
 
     def unwire_call(self, callee):
 
-        self.unwire.this.calls_to(callee)
+        self.w.this.unwire(callee)
 
 
 # ----------------------------------------------------------------------------

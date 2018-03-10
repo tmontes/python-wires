@@ -15,11 +15,7 @@ from . import _shell
 
 
 
-_WIRING_SINGLETON = _shell.WiringShell()
-
-wiring = _WIRING_SINGLETON
-wire = _WIRING_SINGLETON.wire
-unwire = _WIRING_SINGLETON.unwire
+w = _shell.WiringShell()
 
 
 # ----------------------------------------------------------------------------

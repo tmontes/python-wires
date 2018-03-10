@@ -26,30 +26,23 @@ class _TestWiresCouplingMixin(mixin_test_callees.TestCalleesMixin):
     Caller/callee custom coupling tests for Wires instances.
     """
 
-    @property
-    def unwire(self):
-        """
-        Per test mixin contract: self.unwire unwires callabless.
-        """
-        return self.w.unwire
-
     def wire_returns_42_callee(self):
 
-        self.w.wire.this.calls_to(self.returns_42_callee)
+        self.w.this.wire(self.returns_42_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)
 
 
     def wire_raises_exeption_callee(self):
 
-        self.w.wire.this.calls_to(self.raises_exception_callee)
+        self.w.this.wire(self.raises_exception_callee)
         self.addCleanup(self.unwire_call, self.raises_exception_callee)
 
 
     def wire_three_callees_2nd_one_failing(self):
 
-        self.w.wire.this.calls_to(self.returns_42_callee)
-        self.w.wire.this.calls_to(self.raises_exception_callee)
-        self.w.wire.this.calls_to(self.returns_None_callee)
+        self.w.this.wire(self.returns_42_callee)
+        self.w.this.wire(self.raises_exception_callee)
+        self.w.this.wire(self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.returns_None_callee)
         self.addCleanup(self.unwire_call, self.raises_exception_callee)
         self.addCleanup(self.unwire_call, self.returns_42_callee)

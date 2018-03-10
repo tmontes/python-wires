@@ -15,50 +15,6 @@ from . import _callable
 
 
 
-class _InstanceActionContext(object):
-
-    """
-    Supports `WiringShell.wire.<callable>` and `WiringShell.unwire.<callable>`
-    wiring action contexts.
-    """
-
-    def __init__(self, wiring_instance):
-
-        self._wiring_instance = wiring_instance
-
-
-    def __getitem__(self, name):
-
-        return getattr(self, name)
-
-
-    def __getattr__(self, name):
-
-        wiring_callable = getattr(self._wiring_instance, name)
-        return self.callable_action_context(wiring_callable)
-
-
-
-class InstanceWiringActionContext(_InstanceActionContext):
-
-    """
-    The `WiringShell.wire.<callable>` context.
-    """
-
-    callable_action_context = _callable.WiringActionContext
-
-
-
-class InstanceUnwiringActionContext(_InstanceActionContext):
-
-    """
-    The `WiringShell.unwire.<callable>` context.
-    """
-
-    callable_action_context = _callable.UnwiringActionContext
-
-
-
 class WiringInstance(object):
 
     """
