@@ -12,7 +12,7 @@ Caller/callee coupling test driver mixin.
 
 from __future__ import absolute_import
 
-from . import helpers, mixin_test_callees
+from . import mixin_test_callees
 
 
 
