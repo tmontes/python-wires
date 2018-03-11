@@ -130,21 +130,4 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.w[name].unwire(self.returns_42_callable)
 
 
-    def _assert_exception_arg(self, cm, expected):
-
-        exception_args = cm.exception.args
-        self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], expected)
-
-
-    def test_wiring_from_instance_fails(self):
-        """
-        Wiring at the instance level raises RuntimeError.
-        """
-        with self.assertRaises(RuntimeError) as cm:
-            self.w.some_callable.calls_to(self.returns_42_callable)
-
-        self._assert_exception_arg(cm, 'undefined wiring context')
-
-
 # ----------------------------------------------------------------------------
