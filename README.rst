@@ -1,5 +1,5 @@
-Python Wires: Call wiring made simple
-=====================================
+Python Wires: Simple Call Wiring
+================================
 
 .. image:: http://img.shields.io/pypi/v/wires.svg
    :target: https://pypi.python.org/pypi/wires
@@ -17,9 +17,9 @@ Python Wires: Call wiring made simple
 |
 
 
-``wires`` is a library to facilitate "callable wiring" by decoupling callers from callees and avoiding passing around multiple callables in Python code; it can be used as a callable-based event system or, again callable-based, publish-subscribe like solution.
+``wires`` is a library to facilitate "call wiring" by decoupling callers from callees; it can be used as a callable-based event system or publish-subscribe like solution.
 
-Minimal usage example:
+Minimal example:
 
 .. code-block:: python
 
