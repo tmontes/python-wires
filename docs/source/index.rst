@@ -1,20 +1,4 @@
 .. include:: ../../README.rst
+   :end-before: marker-end-welcome-dont-remove
 
-
-Table of Contents
-=================
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   reference
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. include:: toc.rst

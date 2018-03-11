@@ -81,6 +81,7 @@ on_rtd = os.environ.get('READTHEDOCS') == 'True'
 if on_rtd:
     html_theme = 'default'
 else:
+    html_theme = 'nature'
     html_theme = 'alabaster'
 
 
@@ -104,6 +105,9 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
+
+html_sidebars = { '**': ['customtoc.html', 'relations.html', 'searchbox.html'], }
+
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
