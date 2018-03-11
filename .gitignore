@@ -8,3 +8,4 @@ htmlcov
 *.swp
 build
 dist
+docs/build
