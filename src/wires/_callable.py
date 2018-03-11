@@ -128,17 +128,6 @@ class WiringCallable(object):
         self._wirings.remove(tuples_to_remove[0])
 
 
-    @staticmethod
-    def calls_to(*_args, **_kwargs):
-
-        """
-        Called outside of a wiring action context, which makes no sense, as in
-        `WiringShell.<callable>.calls_to(...)`.
-        """
-
-        raise RuntimeError('undefined wiring context')
-
-
     def __call__(self, *args, **kwargs):
 
         # Calling with wiring count < `min_wirings`, if set, is an error.
