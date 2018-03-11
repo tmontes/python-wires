@@ -86,12 +86,16 @@ class WiringShell(object):
 
 
     def __getattr__(self, name):
-
+        """
+        Attribute based access to Instance Callables.
+        """
         return getattr(self._wiring_instance, name)
 
 
     def __getitem__(self, name):
-
+        """
+        Index based access to Instance Callables.
+        """
         return self.__getattr__(name)
 
 
