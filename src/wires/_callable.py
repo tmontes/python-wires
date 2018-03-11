@@ -16,8 +16,8 @@ from __future__ import absolute_import
 class WiringCallable(object):
 
     """
-    Callable with a minimal API.
-    Summary:
+    Callable with a minimal API:
+
     - Has zero or more wirings: functions/callables wired to it.
     - Each wiring has optional wire-time arguments.
     - Calling it calls all wired functions/callables, passing them the

@@ -1,5 +1,5 @@
-Python Wires: Call wiring made simple
-=====================================
+Python Wires: Simple Call Wiring
+================================
 
 .. image:: http://img.shields.io/pypi/v/wires.svg
    :target: https://pypi.python.org/pypi/wires
@@ -17,9 +17,9 @@ Python Wires: Call wiring made simple
 |
 
 
-``wires`` is a library to facilitate "callable wiring" by decoupling callers from callees and avoiding passing around multiple callables in Python code; it can be used as a callable-based event system or, again callable-based, publish-subscribe like solution.
+``wires`` is a library to facilitate "call wiring" by decoupling callers from callees; it can be used as a callable-based event system or publish-subscribe like solution.
 
-Minimal usage example:
+Minimal example:
 
 .. code-block:: python
 
@@ -32,15 +32,33 @@ Minimal usage example:
     w.this_callable()
 
 
+.. marker-end-welcome-dont-remove
+
+
+Full documentation at https://python-wires.readthedocs.org/.
+
+
+
 
 Thanks
 ------
 
+.. marker-start-thanks-dont-remove
+
 - Hynek Schlawack for the articles `Sharing Your Labor of Love: PyPI Quick and Dirty <https://hynek.me/articles/sharing-your-labor-of-love-pypi-quick-and-dirty/>`_ and `Testing & Packaging <https://hynek.me/articles/testing-packaging/>`_.
+
+- Stuart Colville for the article `Including parts of README.rst in your sphinx docs <https://muffinresearch.co.uk/selectively-including-parts-readme-rst-in-your-docs/>`_.
+
+.. marker-end-thanks-dont-remove
+
 
 
 About
 -----
 
+.. marker-start-about-dont-remove
+
 Python Wires was created by Tiago Montes.
+
+.. marker-end-about-dont-remove
 
