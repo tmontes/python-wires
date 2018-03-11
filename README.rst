@@ -47,6 +47,8 @@ Thanks
 
 - Hynek Schlawack for the articles `Sharing Your Labor of Love: PyPI Quick and Dirty <https://hynek.me/articles/sharing-your-labor-of-love-pypi-quick-and-dirty/>`_ and `Testing & Packaging <https://hynek.me/articles/testing-packaging/>`_.
 
+- Stuart Colville for the article `Including parts of README.rst in your sphinx docs <https://muffinresearch.co.uk/selectively-including-parts-readme-rst-in-your-docs/>`_.
+
 .. marker-end-thanks-dont-remove
 
 
