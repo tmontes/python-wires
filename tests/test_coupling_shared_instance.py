@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Wires instance API tests.
+Shared Wiring instance caller/callee tests.
 """
 
 
@@ -14,16 +14,16 @@ from __future__ import absolute_import
 
 import unittest
 
-from . import mixin_test_api, mixin_test_instance
+from . import mixin_use_shared_instance, mixin_test_coupling
 
 
 
-class TestWiresAPI(mixin_test_api.TestWiresAPIMixin,
-                   mixin_test_instance.TestWiresInstanceMixin,
-                   unittest.TestCase):
+class TestWiresCoupling(mixin_use_shared_instance.UseSharedInstanceMixin,
+                        mixin_test_coupling.TestCallerCalleeCouplingMixin,
+                        unittest.TestCase):
 
     """
-    API tests for Wires instances.
+    Caller/callee tests for the shared Wiring instance.
     """
 
 

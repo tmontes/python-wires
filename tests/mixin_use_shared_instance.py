@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Global Wires singleton test mixin.
+Shared Wiring instance test mixin.
 """
 
 
@@ -16,10 +16,10 @@ from wires import w
 
 
 
-class TestWiresSingletonMixin(object):
+class UseSharedInstanceMixin(object):
 
     """
-    Singleton Wires test mixin.
+    Wires tests with shared instance mixin.
     """
 
     @property

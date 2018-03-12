@@ -14,11 +14,11 @@ from __future__ import absolute_import
 
 import unittest
 
-from . import mixin_test_instance, mixin_test_args
+from . import mixin_use_new_instance, mixin_test_args
 
 
 
-class TestWiresNoArgPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresNoArgPassing(mixin_use_new_instance.UseNewInstanceMixin,
                             mixin_test_args.TestWiresNoArgPassingMixin,
                             unittest.TestCase):
 
@@ -26,7 +26,7 @@ class TestWiresNoArgPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresWireArgPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresWireArgPassing(mixin_use_new_instance.UseNewInstanceMixin,
                               mixin_test_args.TestWiresWireArgPassingMixin,
                               unittest.TestCase):
 
@@ -34,7 +34,7 @@ class TestWiresWireArgPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresWireKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresWireKwargPassing(mixin_use_new_instance.UseNewInstanceMixin,
                                 mixin_test_args.TestWiresWireKwargPassingMixin,
                                 unittest.TestCase):
 
@@ -42,7 +42,7 @@ class TestWiresWireKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresWireArgKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresWireArgKwargPassing(mixin_use_new_instance.UseNewInstanceMixin,
                                    mixin_test_args.TestWiresWireArgKwargPassingMixin,
                                    unittest.TestCase):
 
@@ -50,7 +50,7 @@ class TestWiresWireArgKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresCallArgPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresCallArgPassing(mixin_use_new_instance.UseNewInstanceMixin,
                               mixin_test_args.TestWiresCallArgPassingMixin,
                               unittest.TestCase):
 
@@ -58,7 +58,7 @@ class TestWiresCallArgPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresCallKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresCallKwargPassing(mixin_use_new_instance.UseNewInstanceMixin,
                                 mixin_test_args.TestWiresCallKwargPassingMixin,
                                 unittest.TestCase):
 
@@ -66,7 +66,7 @@ class TestWiresCallKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresCallArgKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresCallArgKwargPassing(mixin_use_new_instance.UseNewInstanceMixin,
                                    mixin_test_args.TestWiresCallArgKwargPassingMixin,
                                    unittest.TestCase):
 
@@ -74,7 +74,7 @@ class TestWiresCallArgKwargPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresFullPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresFullPassing(mixin_use_new_instance.UseNewInstanceMixin,
                            mixin_test_args.TestWiresFullPassingMixin,
                            unittest.TestCase):
 
@@ -82,7 +82,7 @@ class TestWiresFullPassing(mixin_test_instance.TestWiresInstanceMixin,
 
 
 
-class TestWiresDoubleFullPassing(mixin_test_instance.TestWiresInstanceMixin,
+class TestWiresDoubleFullPassing(mixin_use_new_instance.UseNewInstanceMixin,
                                  mixin_test_args.TestWiresDoubleFullPassingMixin,
                                  unittest.TestCase):
 

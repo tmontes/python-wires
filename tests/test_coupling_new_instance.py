@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Global Wires singleton caller/callee tests.
+Wires instance caller/callee coupling tests.
 """
 
 
@@ -14,16 +14,16 @@ from __future__ import absolute_import
 
 import unittest
 
-from . import mixin_test_singleton, mixin_test_coupling
+from . import mixin_use_new_instance, mixin_test_coupling
 
 
 
-class TestWiresCoupling(mixin_test_singleton.TestWiresSingletonMixin,
+class TestWiresCoupling(mixin_use_new_instance.UseNewInstanceMixin,
                         mixin_test_coupling.TestCallerCalleeCouplingMixin,
                         unittest.TestCase):
 
     """
-    Caller/callee tests for the Wires singleton.
+    Caller/callee tests for Wires instances.
     """
 
 

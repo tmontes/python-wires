@@ -1,29 +1,21 @@
 # ----------------------------------------------------------------------------
-# Python Wires Tests
+# Python Wires
 # ----------------------------------------------------------------------------
 # Copyright (c) Tiago Montes.
 # See LICENSE for deatils.
 # ----------------------------------------------------------------------------
 
 """
-Global Wires singleton API tests.
+Python Wires shared instance.
 """
 
 from __future__ import absolute_import
 
-import unittest
-
-from . import mixin_test_api, mixin_test_singleton
+from . import _shell
 
 
 
-class TestWiresAPI(mixin_test_singleton.TestWiresSingletonMixin,
-                   mixin_test_api.TestWiresAPIMixin,
-                   unittest.TestCase):
-
-    """
-    API tests for the global Wires singleton.
-    """
+w = _shell.WiringShell()
 
 
 # ----------------------------------------------------------------------------

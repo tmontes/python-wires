@@ -26,7 +26,7 @@ __email__ = 'tiago.montes@gmail.com'
 
 
 from . _shell import WiringShell as Wiring
-from . _singleton import w
+from . _shared import w
 
 
 # ----------------------------------------------------------------------------
