@@ -22,20 +22,26 @@ class TestCallablesMixin(object):
 
     @staticmethod
     def returns_42_callable():
-
+        """
+        Answer to the Ultimate Question of Life, the Universe, and Everything.
+        """
         return 42
 
 
     @staticmethod
-    def returns_None_callable():
-
+    def returns_none_callable():
+        """
+        Zero, zip, zilch, nada.
+        """
         return None
 
 
     THE_EXCEPTION = ValueError('bad value detail')
 
     def raises_exception_callable(self):
-
+        """
+        I love the smell of napalm in the morning.
+        """
         raise self.THE_EXCEPTION
 
 

@@ -57,8 +57,8 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
 
         self.w.this.wire(self.returns_42_callable)
         self.w.this.wire(self.raises_exception_callable)
-        self.w.this.wire(self.returns_None_callable)
-        self.addCleanup(self.unwire_call, self.returns_None_callable)
+        self.w.this.wire(self.returns_none_callable)
+        self.addCleanup(self.unwire_call, self.returns_none_callable)
         self.addCleanup(self.unwire_call, self.raises_exception_callable)
         self.addCleanup(self.unwire_call, self.returns_42_callable)
 
