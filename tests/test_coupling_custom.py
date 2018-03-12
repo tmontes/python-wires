@@ -68,7 +68,7 @@ class TestWiresCouplingTrue(mixin_test_coupling.WireAssertCouplingTestMixin,
         with self.assertRaises(RuntimeError) as cm:
             _ = self.w.couple.this()
         self.assert_failure_wire_raises_exeption_callable(cm)
-    
+
 
     def test_wire_wire_wire_coupled_fail(self):
 
@@ -90,7 +90,7 @@ class TestWiresCouplingTrue(mixin_test_coupling.WireAssertCouplingTestMixin,
         self.wire_raises_exeption_callable()
         result = self.w.decouple.this()
         self.assert_result_wire_raises_exeption_callable(result)
-    
+
 
     def test_wire_wire_wire_decoupled_fail(self):
 
@@ -124,7 +124,7 @@ class TestWiresCouplingFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
         self.wire_raises_exeption_callable()
         result = self.w.this()
         self.assert_result_wire_raises_exeption_callable(result)
-    
+
 
     def test_wire_wire_wire_default_decoupled_fail(self):
 
@@ -146,7 +146,7 @@ class TestWiresCouplingFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
         with self.assertRaises(RuntimeError) as cm:
             _ = self.w.couple.this()
         self.assert_failure_wire_raises_exeption_callable(cm)
-    
+
 
     def test_wire_wire_wire_coupled_fail(self):
 
@@ -168,7 +168,7 @@ class TestWiresCouplingFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
         self.wire_raises_exeption_callable()
         result = self.w.decouple.this()
         self.assert_result_wire_raises_exeption_callable(result)
-    
+
 
     def test_wire_wire_wire_decoupled_fail(self):
 

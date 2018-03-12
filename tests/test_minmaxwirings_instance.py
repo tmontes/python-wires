@@ -21,7 +21,7 @@ from . import mixin_test_callables
 
 
 class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
-                               unittest.TestCase):
+                                unittest.TestCase):
 
     """
     min/max wirings tests for Wires instances.

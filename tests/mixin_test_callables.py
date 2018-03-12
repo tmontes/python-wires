@@ -12,8 +12,6 @@ Test callables mixin.
 
 from __future__ import absolute_import
 
-from . import helpers
-
 
 
 class TestCallablesMixin(object):
