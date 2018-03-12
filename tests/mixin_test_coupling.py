@@ -118,7 +118,7 @@ class TestCallerCalleeCouplingMixin(WireAssertCouplingTestMixin):
         Wire a callable, call it forcing coupling.
         """
         self.wire_returns_42_callable()
-        result = self.w.couple.this()
+        result = self.w(coupling=True).this()
         self.assert_result_wire_returns_42_callable(result)
 
 
@@ -128,7 +128,7 @@ class TestCallerCalleeCouplingMixin(WireAssertCouplingTestMixin):
         """
         self.wire_three_callables_2nd_one_failing()
         with self.assertRaises(RuntimeError) as cm:
-            self.w.couple.this()
+            self.w(coupling=True).this()
         self.assert_failure_wire_three_callables_2nd_one_failing(cm)
 
 
@@ -137,7 +137,7 @@ class TestCallerCalleeCouplingMixin(WireAssertCouplingTestMixin):
         Wire a callable, call it with no coupling.
         """
         self.wire_returns_42_callable()
-        result = self.w.decouple.this()
+        result = self.w(coupling=False).this()
         self.assert_result_wire_returns_42_callable(result)
 
 
@@ -146,7 +146,7 @@ class TestCallerCalleeCouplingMixin(WireAssertCouplingTestMixin):
         Wire a callable three times: the second one raises an exception.
         """
         self.wire_three_callables_2nd_one_failing()
-        result = self.w.decouple.this()
+        result = self.w(coupling=False).this()
         self.assert_result_wire_three_callables_2nd_one_failing(result)
 
 
