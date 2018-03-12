@@ -19,11 +19,13 @@ from . import mixin_test_callables
 class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
 
     """
-    Caller/callee custom coupling tests for Wires instances.
+    Wiring and Assertion mixin for caller/callee call-time coupling tests.
     """
 
     def wire_returns_42_callable(self):
-
+        """
+        Wire `TestCallablesMixin.returns_42_callable` to self.w.this.
+        """
         self.w.this.wire(self.returns_42_callable)
         self.addCleanup(self.w.this.unwire, self.returns_42_callable)
 
@@ -35,7 +37,9 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
 
 
     def wire_raises_exeption_callable(self):
-
+        """
+        Wire `TestCallablesMixin.raises_exception_callable` to self.w.this.
+        """
         self.w.this.wire(self.raises_exception_callable)
         self.addCleanup(self.w.this.unwire, self.raises_exception_callable)
 
@@ -54,7 +58,10 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
 
 
     def wire_three_callables_2nd_one_failing(self):
-
+        """
+        Wire three `TestCallablesMixin.*` callables to self.w.this, where the
+        2nd one raises an exception, when called.
+        """
         self.w.this.wire(self.returns_42_callable)
         self.w.this.wire(self.raises_exception_callable)
         self.w.this.wire(self.returns_none_callable)
@@ -83,10 +90,7 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
 class TestCallerCalleeCouplingMixin(WireAssertCouplingTestMixin):
 
     """
-    Drives Wires caller/callee coupling tests requiring mixed class to:
-    - Have a Wiring instance at self.w.
-    - Allow wiring via self.wire.
-    - Allow unwiring via self.unwire.
+    Drives Wires caller/callee coupling tests.
     """
 
     def test_wire_default_decoupled_call(self):
@@ -130,7 +134,7 @@ class TestCallerCalleeCouplingMixin(WireAssertCouplingTestMixin):
 
     def test_wire_force_decoupled_call(self):
         """
-        Wire a callable, call it forcing coupling.
+        Wire a callable, call it with no coupling.
         """
         self.wire_returns_42_callable()
         result = self.w.decouple.this()
