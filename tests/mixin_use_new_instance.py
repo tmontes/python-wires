@@ -6,25 +6,35 @@
 # ----------------------------------------------------------------------------
 
 """
-Wires instance caller/callee coupling tests.
+Wires instance test mixin.
 """
 
 
 from __future__ import absolute_import
 
-import unittest
-
-from . import mixin_test_instance, mixin_test_coupling
+from wires import Wiring
 
 
 
-class TestWiresCoupling(mixin_test_instance.TestWiresInstanceMixin,
-                        mixin_test_coupling.TestCallerCalleeCouplingMixin,
-                        unittest.TestCase):
+class UseNewInstanceMixin(object):
 
     """
-    Caller/callee tests for Wires instances.
+    Wires tests with new instances mixin.
     """
+
+    def setUp(self):
+        """
+        Need a per-test instance: classes we mixin with must call this.
+        """
+        self._w = Wiring()
+
+
+    @property
+    def w(self):
+        """
+        Per test mixin contract: self.w is a Wiring instance.
+        """
+        return self._w
 
 
 # ----------------------------------------------------------------------------

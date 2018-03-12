@@ -6,24 +6,23 @@
 # ----------------------------------------------------------------------------
 
 """
-Wires instance generic usage tests.
+Shared Wiring instance API tests.
 """
-
 
 from __future__ import absolute_import
 
 import unittest
 
-from . import mixin_test_usage, mixin_test_instance
+from . import mixin_test_api, mixin_use_shared_instance
 
 
 
-class TestWiresUtilization(mixin_test_instance.TestWiresInstanceMixin,
-                           mixin_test_usage.TestWiresUsageMixin,
-                           unittest.TestCase):
+class TestWiresAPI(mixin_test_api.TestWiresAPIMixin,
+                   mixin_use_shared_instance.UseSharedInstanceMixin,
+                   unittest.TestCase):
 
     """
-    Utilization tests for the Wires instances.
+    API tests for the shared Wiring instance.
     """
 
 

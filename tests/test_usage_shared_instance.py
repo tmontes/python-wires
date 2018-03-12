@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Global Wires singleton generic usage tests.
+Shared Wiring instance generic usage tests.
 """
 
 
@@ -14,16 +14,16 @@ from __future__ import absolute_import
 
 import unittest
 
-from . import mixin_test_usage, mixin_test_singleton
+from . import mixin_test_usage, mixin_use_shared_instance
 
 
 
-class TestWiresUtilization(mixin_test_singleton.TestWiresSingletonMixin,
+class TestWiresUtilization(mixin_use_shared_instance.UseSharedInstanceMixin,
                            mixin_test_usage.TestWiresUsageMixin,
                            unittest.TestCase):
 
     """
-    Utilization tests for the Wires singleton.
+    Utilization tests for the shared Wiring instance.
     """
 
 

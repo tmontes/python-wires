@@ -6,35 +6,25 @@
 # ----------------------------------------------------------------------------
 
 """
-Wires instance test mixin.
+Wires instance generic usage tests.
 """
 
 
 from __future__ import absolute_import
 
-from wires import Wiring
+import unittest
+
+from . import mixin_test_usage, mixin_use_new_instance
 
 
 
-class TestWiresInstanceMixin(object):
+class TestWiresUtilization(mixin_use_new_instance.UseNewInstanceMixin,
+                           mixin_test_usage.TestWiresUsageMixin,
+                           unittest.TestCase):
 
     """
-    Wires instance test mixin.
+    Utilization tests for the Wires instances.
     """
-
-    def setUp(self):
-        """
-        Need a per-test instance: classes we mixin with must call this.
-        """
-        self._w = Wiring()
-
-
-    @property
-    def w(self):
-        """
-        Per test mixin contract: self.w is a Wiring instance.
-        """
-        return self._w
 
 
 # ----------------------------------------------------------------------------
