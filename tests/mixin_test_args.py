@@ -42,7 +42,7 @@ class _TestWiresArgPassingMixin(mixin_test_callables.TestCallablesMixin,
 
         self.w.this.wire(tracker, *self.wire1_args, **self.wire1_kwargs)
         self.w.this(*self.call_args, **self.call_kwargs)
-        self.addCleanup(self.unwire_call, tracker)
+        self.addCleanup(self.w.this.unwire, tracker)
 
         self.assertEqual(tracker.call_count, 1, 'call count mismatch')
         self.assertEqual(tracker.call_args, [
@@ -60,8 +60,8 @@ class _TestWiresArgPassingMixin(mixin_test_callables.TestCallablesMixin,
         self.w.this.wire(tracker, *self.wire1_args, **self.wire1_kwargs)
         self.w.this.wire(tracker, *self.wire2_args, **self.wire2_kwargs)
         self.w.this(*self.call_args, **self.call_kwargs)
-        self.addCleanup(self.unwire_call, tracker)
-        self.addCleanup(self.unwire_call, tracker)
+        self.addCleanup(self.w.this.unwire, tracker)
+        self.addCleanup(self.w.this.unwire, tracker)
 
         self.assertEqual(tracker.call_count, 2, 'call count mismatch')
         self.assertEqual(tracker.call_args, [

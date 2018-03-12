@@ -225,7 +225,7 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         self.w.this.wire(self.returns_42_callable)
 
         # clean up in the reverse order, otherwise unwiring fails
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
         self.addCleanup(self.reset_min_max_wirings)
 
         with self.assertRaises(RuntimeError) as cm:
@@ -244,7 +244,7 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         self.w.this.wire(self.returns_42_callable)
 
         # clean up in the reverse order, otherwise unwiring fails
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
         self.addCleanup(self.reset_min_max_wirings)
 
         with self.assertRaises(RuntimeError) as cm:
@@ -278,7 +278,7 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         self.w.this.wire(self.returns_42_callable)
 
         # clean up in the reverse order, otherwise unwiring fails
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
         self.addCleanup(self.reset_min_max_wirings)
 
         result = self.w.this()
@@ -292,7 +292,7 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         Setting min_wirings < wired callables raises ValueError.
         """
         self.w.this.wire(self.returns_42_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
 
         with self.assertRaises(ValueError) as cm:
             self.w.this.min_wirings = 2
@@ -308,8 +308,8 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         """
         self.w.this.wire(self.returns_42_callable)
         self.w.this.wire(self.returns_42_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
 
         with self.assertRaises(ValueError) as cm:
             self.w.this.max_wirings = 1

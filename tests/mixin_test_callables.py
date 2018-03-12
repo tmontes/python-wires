@@ -45,9 +45,4 @@ class TestCallablesMixin(object):
         raise self.THE_EXCEPTION
 
 
-    def unwire_call(self, callable_):
-
-        self.w.this.unwire(callable_)
-
-
 # ----------------------------------------------------------------------------

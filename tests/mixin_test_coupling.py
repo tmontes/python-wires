@@ -25,7 +25,7 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
     def wire_returns_42_callable(self):
 
         self.w.this.wire(self.returns_42_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
 
 
     def assert_result_wire_returns_42_callable(self, result):
@@ -37,7 +37,7 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
     def wire_raises_exeption_callable(self):
 
         self.w.this.wire(self.raises_exception_callable)
-        self.addCleanup(self.unwire_call, self.raises_exception_callable)
+        self.addCleanup(self.w.this.unwire, self.raises_exception_callable)
 
 
     def assert_result_wire_raises_exeption_callable(self, result):
@@ -58,9 +58,9 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
         self.w.this.wire(self.returns_42_callable)
         self.w.this.wire(self.raises_exception_callable)
         self.w.this.wire(self.returns_none_callable)
-        self.addCleanup(self.unwire_call, self.returns_none_callable)
-        self.addCleanup(self.unwire_call, self.raises_exception_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_none_callable)
+        self.addCleanup(self.w.this.unwire, self.raises_exception_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
 
 
     def assert_result_wire_three_callables_2nd_one_failing(self, result):
