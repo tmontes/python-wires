@@ -16,75 +16,12 @@ import unittest
 
 from wires import Wiring
 
-from . import mixin_test_callables
+from . import mixin_test_coupling
 
 
 
-class _TestWiresCouplingMixin(mixin_test_callables.TestCallablesMixin):
-
-    """
-    Caller/callee custom coupling tests for Wires instances.
-    """
-
-    def wire_returns_42_callable(self):
-
-        self.w.this.wire(self.returns_42_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
-
-
-    def assert_result_wire_returns_42_callable(self, result):
-
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (None, 42))
-
-
-    def wire_raises_exeption_callable(self):
-
-        self.w.this.wire(self.raises_exception_callable)
-        self.addCleanup(self.unwire_call, self.raises_exception_callable)
-
-
-    def assert_result_wire_raises_exeption_callable(self, result):
-
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (self.THE_EXCEPTION, None))
-
-
-    def assert_failure_wire_raises_exeption_callable(self, cm):
-
-        exception_args = cm.exception.args
-        self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], (self.THE_EXCEPTION, None))
-
-
-    def wire_three_callables_2nd_one_failing(self):
-
-        self.w.this.wire(self.returns_42_callable)
-        self.w.this.wire(self.raises_exception_callable)
-        self.w.this.wire(self.returns_None_callable)
-        self.addCleanup(self.unwire_call, self.returns_None_callable)
-        self.addCleanup(self.unwire_call, self.raises_exception_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
-
-
-    def assert_result_wire_three_callables_2nd_one_failing(self, result):
-
-        self.assertEqual(len(result), 3)
-        self.assertEqual(result[0], (None, 42))
-        self.assertEqual(result[1], (self.THE_EXCEPTION, None))
-        self.assertEqual(result[2], (None, None))
-
-
-    def assert_failure_wire_three_callables_2nd_one_failing(self, cm):
-
-        exception_args = cm.exception.args
-        self.assertEqual(len(exception_args), 2)
-        self.assertEqual(exception_args[0], (None, 42))
-        self.assertEqual(exception_args[1], (self.THE_EXCEPTION, None))
-
-
-
-class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
+class TestWiresCouplingTrue(mixin_test_coupling.WireAssertCouplingTestMixin,
+                            unittest.TestCase):
 
     """
     Caller/callee explicit default coupled tests for Wires instances.
@@ -163,7 +100,8 @@ class TestWiresCouplingTrue(_TestWiresCouplingMixin, unittest.TestCase):
 
 
 
-class TestWiresCouplingFalse(_TestWiresCouplingMixin, unittest.TestCase):
+class TestWiresCouplingFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
+                             unittest.TestCase):
 
     """
     Caller/callee explicit default decoupled tests for Wires instances.
