@@ -91,7 +91,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         Wiring a callable works.
         """
         self.w.this.wire(self.returns_42_callable)
-        self.addCleanup(self.unwire_call, self.returns_42_callable)
+        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
 
 
     def test_wiring_unwiring_works(self):
