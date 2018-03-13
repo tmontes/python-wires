@@ -137,8 +137,8 @@ class WiringCallable(object):
 
         # Get call coupling behaviour for this call from our WiringInstance and
         # then reset it to its default value to account for correct "default"
-        # vs "overridden" call coupling behaviour.
-        call_coupling = self._wiring_instance.coupling
+        # vs "overridden" call time coupling behaviour.
+        return_or_raise = self._wiring_instance.returns
         self._wiring_instance.coupling_reset()
 
         # Will contain (<exception>, <result>) per-wiring tuples.
@@ -154,7 +154,7 @@ class WiringCallable(object):
                 call_result.append((None, result))
             except Exception as e:
                 call_result.append((e, None))
-                if call_coupling:
+                if return_or_raise:
                     raise RuntimeError(*call_result)
 
         return call_result
