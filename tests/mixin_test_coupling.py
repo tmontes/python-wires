@@ -33,206 +33,206 @@ class WireAssertCouplingTestMixin(object):
 
     TESTS = [{
         # Default Wiring instantiation arguments.
-        'wiring-args': {},
+        'wiring_args': {},
         'tests': [{
-            'test-name': 'test_wire_returns_42_default_call',
-            'wirings': [return_42],
-            'args-override': {},
+            'name': 'test_wire_returns_42_default_call',
+            'wire': [return_42],
+            'ctao': {},
             'raises': None,
             'result': [(None, 42)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_default_call',
-            'wirings': [raise_exception],
-            'args-override': {},
+            'name': 'test_wire_raises_exception_default_call',
+            'wire': [raise_exception],
+            'ctao': {},
             'raises': None,
             'result': [(EXCEPTION, None)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_default_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {},
+            'name': 'test_wire_wire_wire_default_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {},
             'raises': None,
             'result': [(None, 42), (EXCEPTION, None), (None, None)],
-            'call-counts': [1, 1, 1],
+            'call_counts': [1, 1, 1],
         }, {
-            'test-name': 'test_wire_returns_42_coupling_true_call',
-            'wirings': [return_42],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_returns_42_coupling_true_call',
+            'wire': [return_42],
+            'ctao': {"coupling": True},
             'raises': None,
             'result': [(None, 42)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_coupling_true_call',
-            'wirings': [raise_exception],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_raises_exception_coupling_true_call',
+            'wire': [raise_exception],
+            'ctao': {"coupling": True},
             'raises': RuntimeError,
             'result': ((EXCEPTION, None),),
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_coupling_true_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_wire_wire_coupling_true_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {"coupling": True},
             'raises': RuntimeError,
             'result': ((None, 42), (EXCEPTION, None),),
-            'call-counts': [1, 1, 0],
+            'call_counts': [1, 1, 0],
         }, {
-            'test-name': 'test_wire_returns_42_coupling_false_call',
-            'wirings': [return_42],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_returns_42_coupling_false_call',
+            'wire': [return_42],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(None, 42)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_coupling_false_call',
-            'wirings': [raise_exception],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_raises_exception_coupling_false_call',
+            'wire': [raise_exception],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(EXCEPTION, None)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_coupling_false_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_wire_wire_coupling_false_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(None, 42), (EXCEPTION, None), (None, None)],
-            'call-counts': [1, 1, 1],
+            'call_counts': [1, 1, 1],
         }]
     }, {
         # Wiring instantiation with coupling=False
-        'wiring-args': {"coupling": False},
+        'wiring_args': {"coupling": False},
         'tests': [{
-            'test-name': 'test_wire_returns_42_default_call',
-            'wirings': [return_42],
-            'args-override': {},
+            'name': 'test_wire_returns_42_default_call',
+            'wire': [return_42],
+            'ctao': {},
             'raises': None,
             'result': [(None, 42)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_default_call',
-            'wirings': [raise_exception],
-            'args-override': {},
+            'name': 'test_wire_raises_exception_default_call',
+            'wire': [raise_exception],
+            'ctao': {},
             'raises': None,
             'result': [(EXCEPTION, None)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_default_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {},
+            'name': 'test_wire_wire_wire_default_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {},
             'raises': None,
             'result': [(None, 42), (EXCEPTION, None), (None, None)],
-            'call-counts': [1, 1, 1],
+            'call_counts': [1, 1, 1],
         }, {
-            'test-name': 'test_wire_returns_42_coupling_true_call',
-            'wirings': [return_42],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_returns_42_coupling_true_call',
+            'wire': [return_42],
+            'ctao': {"coupling": True},
             'raises': None,
             'result': [(None, 42)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_coupling_true_call',
-            'wirings': [raise_exception],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_raises_exception_coupling_true_call',
+            'wire': [raise_exception],
+            'ctao': {"coupling": True},
             'raises': RuntimeError,
             'result': ((EXCEPTION, None),),
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_coupling_true_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_wire_wire_coupling_true_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {"coupling": True},
             'raises': RuntimeError,
             'result': ((None, 42), (EXCEPTION, None),),
-            'call-counts': [1, 1, 0],
+            'call_counts': [1, 1, 0],
         }, {
-            'test-name': 'test_wire_returns_42_coupling_false_call',
-            'wirings': [return_42],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_returns_42_coupling_false_call',
+            'wire': [return_42],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(None, 42)],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_coupling_false_call',
-            'wirings': [raise_exception],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_raises_exception_coupling_false_call',
+            'wire': [raise_exception],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(EXCEPTION, None),],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_coupling_false_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_wire_wire_coupling_false_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(None, 42), (EXCEPTION, None), (None, None),],
-            'call-counts': [1, 1, 1],
+            'call_counts': [1, 1, 1],
         },
 
         ]
     }, {
         # Wiring instantiation with coupling=True
-        'wiring-args': {"coupling": True},
+        'wiring_args': {"coupling": True},
         'tests': [{
-            'test-name': 'test_wire_returns_42_default_call',
-            'wirings': [return_42],
-            'args-override': {},
+            'name': 'test_wire_returns_42_default_call',
+            'wire': [return_42],
+            'ctao': {},
             'raises': None,
             'result': [(None, 42),],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_default_call',
-            'wirings': [raise_exception],
-            'args-override': {},
+            'name': 'test_wire_raises_exception_default_call',
+            'wire': [raise_exception],
+            'ctao': {},
             'raises': RuntimeError,
             'result': ((EXCEPTION, None),),
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_default_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {},
+            'name': 'test_wire_wire_wire_default_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {},
             'raises': RuntimeError,
             'result': ((None, 42), (EXCEPTION, None),),
-            'call-counts': [1, 1, 0],
+            'call_counts': [1, 1, 0],
         }, {
-            'test-name': 'test_wire_returns_42_coupling_true_call',
-            'wirings': [return_42],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_returns_42_coupling_true_call',
+            'wire': [return_42],
+            'ctao': {"coupling": True},
             'raises': None,
             'result': [(None, 42),],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_coupling_true_call',
-            'wirings': [raise_exception],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_raises_exception_coupling_true_call',
+            'wire': [raise_exception],
+            'ctao': {"coupling": True},
             'raises': RuntimeError,
             'result': ((EXCEPTION, None),),
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_coupling_true_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {"coupling": True},
+            'name': 'test_wire_wire_wire_coupling_true_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {"coupling": True},
             'raises': RuntimeError,
             'result': ((None, 42), (EXCEPTION, None),),
-            'call-counts': [1, 1, 0],
+            'call_counts': [1, 1, 0],
         }, {
-            'test-name': 'test_wire_returns_42_coupling_false_call',
-            'wirings': [return_42],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_returns_42_coupling_false_call',
+            'wire': [return_42],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(None, 42),],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_raises_exception_coupling_false_call',
-            'wirings': [raise_exception],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_raises_exception_coupling_false_call',
+            'wire': [raise_exception],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(EXCEPTION, None),],
-            'call-counts': [1],
+            'call_counts': [1],
         }, {
-            'test-name': 'test_wire_wire_wire_coupling_false_call',
-            'wirings': [return_42, raise_exception, return_none],
-            'args-override': {"coupling": False},
+            'name': 'test_wire_wire_wire_coupling_false_call',
+            'wire': [return_42, raise_exception, return_none],
+            'ctao': {"coupling": False},
             'raises': None,
             'result': [(None, 42), (EXCEPTION, None), (None, None),],
-            'call-counts': [1, 1, 1],
+            'call_counts': [1, 1, 1],
         }],
     }]
 
@@ -248,32 +248,26 @@ class TestCouplingMixin(WireAssertCouplingTestMixin):
 
 
 
-def _create_test_method(wiring_args, test_entry):
+def _create_test_method(wiring_args, wire, ctao, raises, result, call_counts):
 
-    wirings = test_entry['wirings']
-    args_override = test_entry['args-override']
-    raises = test_entry['raises']
-    expected_result = test_entry['result']
-    expected_call_counts = test_entry['call-counts']
-
-    def test(self):
+    def call_coupling_test_method(self):
         if wiring_args:
             self.w = Wiring(**wiring_args)
-        for wiring in wirings:
-            wiring.reset()
-            self.w.this.wire(wiring)
-            self.addCleanup(self.w.this.unwire, wiring)
+        for call_tracker in wire:
+            call_tracker.reset()
+            self.w.this.wire(call_tracker)
+            self.addCleanup(self.w.this.unwire, call_tracker)
         if raises:
             with self.assertRaises(raises) as cm:
-                self.w(**args_override).this()
-            result = cm.exception.args
+                self.w(**ctao).this()
+            actual_result = cm.exception.args
         else:
-            result = self.w(**args_override).this()
-        call_counts = [w.call_count for w in wirings]
-        self.assertEqual(expected_call_counts, call_counts, 'call count mismatch')
-        self.assertEqual(expected_result, result, 'result mismatch')
+            actual_result = self.w(**ctao).this()
+        actual_call_counts = [w.call_count for w in wire]
+        self.assertEqual(call_counts, actual_call_counts, 'call count mismatch')
+        self.assertEqual(result, actual_result, 'result mismatch')
 
-    return test
+    return call_coupling_test_method
 
 
 
@@ -281,12 +275,12 @@ def create_test_methods(test_class, wiring_args=None):
     """
     Creates test methods on `test_class` having a `TESTS` test description list.
     Entries in such list have two keys:
-    - `wiring-args`: Wiring initialization arguments for the associated `tests`.
+    - `wiring_args`: Wiring initialization arguments for the associated `tests`.
     - `tests`: List of test specifications.
     Tests will only be created for matching wiring arguments.
     """
     for test_set in test_class.TESTS:
-        test_set_wiring_args = test_set['wiring-args']
+        test_set_wiring_args = test_set['wiring_args']
         if wiring_args is None:
             if test_set_wiring_args:
                 # no wiring_args: skip test sets with wiring args.
@@ -302,8 +296,8 @@ def create_test_methods(test_class, wiring_args=None):
                 continue
         # create the test methods
         for test_entry in test_set['tests']:
-            test_method = _create_test_method(test_set_wiring_args, test_entry)
-            test_method_name = test_entry['test-name']
+            test_method_name = test_entry.pop('name')
+            test_method = _create_test_method(test_set_wiring_args, **test_entry)
             setattr(test_class, test_method_name, test_method)
 
 
