@@ -79,12 +79,14 @@ class WiringShell(object):
         return self._ignore_failures
 
 
-    def __call__(self, returns=None):
+    def __call__(self, returns=None, ignore_failures=None):
         """
         Used for call-time parameter override.
         """
         if returns is not None:
             self._wiring_instance.returns = returns
+        if ignore_failures is not None:
+            self._wiring_instance.ignore_failures = ignore_failures
         return self._wiring_instance
 
 

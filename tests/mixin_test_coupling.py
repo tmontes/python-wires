@@ -71,17 +71,17 @@ def _dict_to_method_name_part(arg_dict):
 
 
 
-def _test_name(wiring_args, ctao, call):
+def _test_name(wa, ctao, call):
 
     return 'test_wa_%s_ctao_%s_%s' % (
-        _dict_to_method_name_part(wiring_args),
+        _dict_to_method_name_part(wa),
         _dict_to_method_name_part(ctao),
         call,
     )
 
 
 
-def _generate_returns_42_test(test_class, wiring_args, ctao, returns):
+def _generate_returns_42_test(test_class, wa, ctao, returns, ignore_failures):
 
     wire = [test_class.return_42]
     raises = None
@@ -90,43 +90,56 @@ def _generate_returns_42_test(test_class, wiring_args, ctao, returns):
 
     setattr(
         test_class,
-        _test_name(wiring_args, ctao, 'returns_42'),
-        _create_test_method(wiring_args, wire, ctao, raises, result, call_counts),
+        _test_name(wa, ctao, 'returns_42'),
+        _create_test_method(wa, wire, ctao, raises, result, call_counts),
     )
 
 
-def _generate_raises_exc_test(test_class, wiring_args, ctao, returns):
+def _generate_raises_exc_test(test_class, wa, ctao, returns, ignore_failures):
 
     wire = [test_class.raise_exception]
-    raises = None
-    result = [(test_class.EXCEPTION, None)] if returns else None
+    if returns:
+        if ignore_failures:
+            result = [(test_class.EXCEPTION, None)] if returns else None
+            raises = None
+        else:
+            result = ((test_class.EXCEPTION, None),) if returns else None
+            raises = RuntimeError
+    else:
+        result = None
+        raises = None
     call_counts = [1]
 
     setattr(
         test_class,
-        _test_name(wiring_args, ctao, 'raises_exception'),
-        _create_test_method(wiring_args, wire, ctao, raises, result, call_counts),
+        _test_name(wa, ctao, 'raises_exception'),
+        _create_test_method(wa, wire, ctao, raises, result, call_counts),
     )
 
 
-def _generate_2in3_raises_test(test_class, wiring_args, ctao, returns):
+def _generate_2in3_raises_test(test_class, wa, ctao, returns, ignore_failures):
 
     wire = [
         test_class.return_42,
         test_class.raise_exception,
         test_class.return_none,
     ]
-    raises = None
     if returns:
-        result = [(None, 42), (test_class.EXCEPTION, None), (None, None)]
+        if ignore_failures:
+            result = [(None, 42), (test_class.EXCEPTION, None), (None, None)]
+            raises = None
+        else:
+            result = ((None, 42), (test_class.EXCEPTION, None),)
+            raises = RuntimeError
     else:
         result = None
-    call_counts = [1, 1, 1]
+        raises = None
+    call_counts = [1, 1, 1] if ignore_failures else [1, 1, 0]
 
     setattr(
         test_class,
-        _test_name(wiring_args, ctao, '2in3_raises_exception'),
-        _create_test_method(wiring_args, wire, ctao, raises, result, call_counts)
+        _test_name(wa, ctao, '2in3_raises_exception'),
+        _create_test_method(wa, wire, ctao, raises, result, call_counts)
     )
 
 
@@ -143,22 +156,22 @@ def generate_tests(test_class, wiring_args_filter=None):
         {},
         {'returns': False},
         {'returns': True},
-        # {'ignore_failures': False},
-        # {'ignore_failures': True},
-        # {'returns': False, 'ignore_failures': False},
-        # {'returns': False, 'ignore_failures': True},
-        # {'returns': True, 'ignore_failures': False},
-        # {'returns': True, 'ignore_failures': True},
+        {'ignore_failures': False},
+        {'ignore_failures': True},
+        {'returns': False, 'ignore_failures': False},
+        {'returns': False, 'ignore_failures': True},
+        {'returns': True, 'ignore_failures': False},
+        {'returns': True, 'ignore_failures': True},
     ]
-    for wiring_args in call_coupling_arg_combinations:
+    for wa in call_coupling_arg_combinations:
         if wiring_args_filter is None:
-            if wiring_args:
+            if wa:
                 # no wiring_args_filter: skip test sets with wiring args.
                 continue
         else:
             skip = False
             for arg, value in wiring_args_filter.items():
-                if wiring_args.get(arg) != value:
+                if wa.get(arg) != value:
                     # skip test sets with differet wiring args
                     skip = True
                     break
@@ -166,10 +179,14 @@ def generate_tests(test_class, wiring_args_filter=None):
                 continue
         # create the test methods
         for ctao in call_coupling_arg_combinations:
-            returns = ctao.get('returns', wiring_args.get('returns', False))
-            _generate_returns_42_test(test_class, wiring_args, ctao, returns)
-            _generate_raises_exc_test(test_class, wiring_args, ctao, returns)
-            _generate_2in3_raises_test(test_class, wiring_args, ctao, returns)
+            returns = ctao.get('returns', wa.get('returns', False))
+            ignore_failures = ctao.get(
+                'ignore_failures',
+                wa.get('ignore_failures', True)
+            )
+            _generate_returns_42_test(test_class, wa, ctao, returns, ignore_failures)
+            _generate_raises_exc_test(test_class, wa, ctao, returns, ignore_failures)
+            _generate_2in3_raises_test(test_class, wa, ctao, returns, ignore_failures)
 
 
 generate_tests(TestCouplingMixin)
