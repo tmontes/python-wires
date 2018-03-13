@@ -18,29 +18,35 @@ from . import mixin_test_coupling
 
 
 
-class TestCouplingTrue(mixin_test_coupling.WireAssertCouplingTestMixin,
-                       unittest.TestCase):
+class TestCouplingReturnsTrue(mixin_test_coupling.WireAssertCouplingTestMixin,
+                              unittest.TestCase):
 
     """
     Call time coupling tests for Wiring instances initialized with:
-    - coupling: True
+    - returns: True
     """
 
 
-mixin_test_coupling.create_test_methods(TestCouplingTrue, {"coupling": True})
+mixin_test_coupling.generate_tests(
+    TestCouplingReturnsTrue,
+    {"returns": True},
+)
 
 
 
-class TestCouplingFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
-                        unittest.TestCase):
+class TestCouplingReturnsFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
+                               unittest.TestCase):
 
     """
     Call time coupling tests for Wiring instances initialized with:
-    - coupling: False
+    - returns: False
     """
 
 
-mixin_test_coupling.create_test_methods(TestCouplingFalse, {"coupling": False})
+mixin_test_coupling.generate_tests(
+    TestCouplingReturnsFalse,
+    {"returns": False},
+)
 
 
 # ----------------------------------------------------------------------------

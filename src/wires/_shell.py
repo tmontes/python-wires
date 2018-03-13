@@ -22,13 +22,16 @@ class WiringShell(object):
     """
 
     # Holds the default, per-callable, `min_wirings` and `max_wirings` as well
-    # as the default caller/callee call `coupling` mode.
+    # as the default caller/callee call coupling behaviour defining `returns`
+    # and `ignore_failures` settings.
     #
-    # Wraps a Wiring Instance, cooperating with it by setting its `coupling`
-    # attribute to support call-time caller/callee coupling overriding, while
-    # delegating attribute access to expose the Wiring Instance behaviour.
+    # Wraps a Wiring Instance, cooperating with it by setting its `returns` and
+    # `ignore_failures` attributes, to support call-time caller/callee coupling
+    # behaviour overriding, while delegating attribute access to the wrapped
+    # Wiring Instance to expose its behaviour.
 
-    def __init__(self, min_wirings=None, max_wirings=None, coupling=False):
+    def __init__(self, min_wirings=None, max_wirings=None, returns=False,
+                 ignore_failures=True):
 
         if min_wirings is not None and min_wirings <= 0:
             raise ValueError('min_wirings must be positive or None')
@@ -39,7 +42,8 @@ class WiringShell(object):
 
         self._min_wirings = min_wirings
         self._max_wirings = max_wirings
-        self._coupling = coupling
+        self._returns = returns
+        self._ignore_failures = ignore_failures
         self._wiring_instance = _instance.WiringInstance(self)
 
 
@@ -60,19 +64,29 @@ class WiringShell(object):
 
 
     @property
-    def coupling(self):
+    def returns(self):
         """
-        Read-only default call coupling mode.
+        Read-only call coupling mode: calling returns values/raises exceptions?
         """
-        return self._coupling
+        return self._returns
 
 
-    def __call__(self, coupling=None):
+    @property
+    def ignore_failures(self):
+        """
+        Read-only call coupling mode: ignore callee exceptions?
+        """
+        return self._ignore_failures
+
+
+    def __call__(self, returns=None, ignore_failures=None):
         """
         Used for call-time parameter override.
         """
-        if coupling is not None:
-            self._wiring_instance.coupling = coupling
+        if returns is not None:
+            self._wiring_instance.returns = returns
+        if ignore_failures is not None:
+            self._wiring_instance.ignore_failures = ignore_failures
         return self._wiring_instance
 
 
