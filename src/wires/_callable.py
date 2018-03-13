@@ -161,8 +161,7 @@ class WiringCallable(object):
                     else:
                         break
 
-        if return_or_raise:
-            return call_result
+        return call_result if return_or_raise else None
 
 
 # ----------------------------------------------------------------------------
