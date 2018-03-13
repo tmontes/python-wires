@@ -14,79 +14,17 @@ from __future__ import absolute_import
 
 from wires import Wiring
 
-from . import mixin_test_callables
+from . helpers import CallTracker as CT
 
 
 
-class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
+class WireAssertCouplingTestMixin(object):
 
     """
     Wiring and Assertion mixin for coupling tests.
     """
 
-    def wire_returns_42_callable(self):
-        """
-        Wire `TestCallablesMixin.returns_42_callable` to self.w.this.
-        """
-        self.w.this.wire(self.returns_42_callable)
-        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
-
-
-    def assert_result_wire_returns_42_callable(self, result):
-
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (None, 42))
-
-
-    def wire_raises_exeption_callable(self):
-        """
-        Wire `TestCallablesMixin.raises_exception_callable` to self.w.this.
-        """
-        self.w.this.wire(self.raises_exception_callable)
-        self.addCleanup(self.w.this.unwire, self.raises_exception_callable)
-
-
-    def assert_result_wire_raises_exeption_callable(self, result):
-
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (self.THE_EXCEPTION, None))
-
-
-    def assert_failure_wire_raises_exeption_callable(self, cm):
-
-        exception_args = cm.exception.args
-        self.assertEqual(len(exception_args), 1)
-        self.assertEqual(exception_args[0], (self.THE_EXCEPTION, None))
-
-
-    def wire_three_callables_2nd_one_failing(self):
-        """
-        Wire three `TestCallablesMixin.*` callables to self.w.this, where the
-        2nd one raises an exception, when called.
-        """
-        self.w.this.wire(self.returns_42_callable)
-        self.w.this.wire(self.raises_exception_callable)
-        self.w.this.wire(self.returns_none_callable)
-        self.addCleanup(self.w.this.unwire, self.returns_none_callable)
-        self.addCleanup(self.w.this.unwire, self.raises_exception_callable)
-        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
-
-
-    def assert_result_wire_three_callables_2nd_one_failing(self, result):
-
-        self.assertEqual(len(result), 3)
-        self.assertEqual(result[0], (None, 42))
-        self.assertEqual(result[1], (self.THE_EXCEPTION, None))
-        self.assertEqual(result[2], (None, None))
-
-
-    def assert_failure_wire_three_callables_2nd_one_failing(self, cm):
-
-        exception_args = cm.exception.args
-        self.assertEqual(len(exception_args), 2)
-        self.assertEqual(exception_args[0], (None, 42))
-        self.assertEqual(exception_args[1], (self.THE_EXCEPTION, None))
-
+    EXCEPTION = ValueError('test exception message')
 
     TESTS = [
 
@@ -95,66 +33,75 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
     {
         'test-name': 'test_wire_returns_42_default_call',
         'wiring-args': {},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_default_call',
         'wiring-args': {},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {},
         'raises': None,
-        'assert': assert_result_wire_raises_exeption_callable,
+        'result': [(EXCEPTION, None)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_default_call',
         'wiring-args': {},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {},
         'raises': None,
-        'assert': assert_result_wire_three_callables_2nd_one_failing,
+        'result': [(None, 42), (EXCEPTION, None), (None, None)],
+        'call-counts': [1, 1, 1],
     }, {
         'test-name': 'test_wire_returns_42_results_true_call',
         'wiring-args': {},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {"coupling": True},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_results_true_call',
         'wiring-args': {},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_raises_exeption_callable,
+        'result': ((EXCEPTION, None),),
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_results_true_call',
         'wiring-args': {},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_three_callables_2nd_one_failing,
+        'result': ((None, 42), (EXCEPTION, None),),
+        'call-counts': [1, 1, 0],
     }, {
         'test-name': 'test_wire_returns_42_results_false_call',
         'wiring-args': {},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_results_false_call',
         'wiring-args': {},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_raises_exeption_callable,
+        'result': [(EXCEPTION, None)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_results_false_call',
         'wiring-args': {},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_three_callables_2nd_one_failing,
+        'result': [(None, 42), (EXCEPTION, None), (None, None)],
+        'call-counts': [1, 1, 1],
     },
 
     # Wiring instantiation with coupling=False
@@ -162,66 +109,75 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
     {
         'test-name': 'test_wire_returns_42_default_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_default_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {},
         'raises': None,
-        'assert': assert_result_wire_raises_exeption_callable,
+        'result': [(EXCEPTION, None)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_default_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {},
         'raises': None,
-        'assert': assert_result_wire_three_callables_2nd_one_failing,
+        'result': [(None, 42), (EXCEPTION, None), (None, None)],
+        'call-counts': [1, 1, 1],
     }, {
         'test-name': 'test_wire_returns_42_results_true_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {"coupling": True},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_results_true_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_raises_exeption_callable,
+        'result': ((EXCEPTION, None),),
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_results_true_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_three_callables_2nd_one_failing,
+        'result': ((None, 42), (EXCEPTION, None),),
+        'call-counts': [1, 1, 0],
     }, {
         'test-name': 'test_wire_returns_42_results_false_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42)],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_results_false_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_raises_exeption_callable,
+        'result': [(EXCEPTION, None),],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_results_false_call',
         'wiring-args': {"coupling": False},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_three_callables_2nd_one_failing,
+        'result': [(None, 42), (EXCEPTION, None), (None, None),],
+        'call-counts': [1, 1, 1],
     },
 
     # Wiring instantiation with coupling=True
@@ -229,66 +185,75 @@ class WireAssertCouplingTestMixin(mixin_test_callables.TestCallablesMixin):
     {
         'test-name': 'test_wire_returns_42_default_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42),],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_default_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_raises_exeption_callable,
+        'result': ((EXCEPTION, None),),
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_default_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_three_callables_2nd_one_failing,
+        'result': ((None, 42), (EXCEPTION, None),),
+        'call-counts': [1, 1, 0],
     }, {
         'test-name': 'test_wire_returns_42_results_true_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {"coupling": True},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42),],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_results_true_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_raises_exeption_callable,
+        'result': ((EXCEPTION, None),),
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_results_true_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
-        'assert': assert_failure_wire_three_callables_2nd_one_failing,
+        'result': ((None, 42), (EXCEPTION, None),),
+        'call-counts': [1, 1, 0],
     }, {
         'test-name': 'test_wire_returns_42_results_false_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_returns_42_callable,
+        'wirings': [CT(returns=42)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_returns_42_callable,
+        'result': [(None, 42),],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_raises_exception_results_false_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_raises_exeption_callable,
+        'wirings': [CT(raises=EXCEPTION)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_raises_exeption_callable,
+        'result': [(EXCEPTION, None),],
+        'call-counts': [1],
     }, {
         'test-name': 'test_wire_wire_wire_results_false_call',
         'wiring-args': {"coupling": True},
-        'wire': wire_three_callables_2nd_one_failing,
+        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
         'args-override': {"coupling": False},
         'raises': None,
-        'assert': assert_result_wire_three_callables_2nd_one_failing,
+        'result': [(None, 42), (EXCEPTION, None), (None, None),],
+        'call-counts': [1, 1, 1],
     }
     
     ]
@@ -308,21 +273,28 @@ class TestCouplingMixin(WireAssertCouplingTestMixin):
 def _create_test_method(test_dict):
 
     wiring_args = test_dict['wiring-args']
-    wire_callable = test_dict['wire']
+    wirings = test_dict['wirings']
     args_override = test_dict['args-override']
     raises = test_dict['raises']
-    assert_callable = test_dict['assert']
+    expected_result = test_dict['result']
+    expected_call_counts = test_dict['call-counts']
 
     def test(self):
         if wiring_args:
             self.w = Wiring(**wiring_args)
-        wire_callable(self)
+        for wiring in wirings:
+            wiring.reset()
+            self.w.this.wire(wiring)
+            self.addCleanup(self.w.this.unwire, wiring)
         if raises:
-            with self.assertRaises(raises) as result:
+            with self.assertRaises(raises) as cm:
                 self.w(**args_override).this()
+            result = cm.exception.args
         else:
             result = self.w(**args_override).this()
-        assert_callable(self, result)
+        call_counts = [w.call_count for w in wirings]
+        self.assertEqual(expected_call_counts, call_counts, 'call count mismatch')
+        self.assertEqual(expected_result, result, 'result mismatch')
 
     return test
 

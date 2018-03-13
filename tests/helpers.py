@@ -45,6 +45,13 @@ class CallTracker(object):
         return len(self.call_args)
 
 
+    def reset(self):
+        """
+        Reset ourselves.
+        """
+        self.call_args = []
+
+
 
 class CallTrackerAssertMixin(object):
 
