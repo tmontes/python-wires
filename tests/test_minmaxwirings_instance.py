@@ -126,8 +126,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         w.this.wire(self.returns_42_callable)
         result = w.this()
 
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (None, 42))
+        self.assertIsNone(result)
 
 
 
@@ -283,8 +282,7 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
 
         result = self.w.this()
 
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], (None, 42))
+        self.assertIsNone(result)
 
 
     def test_wire_min_2_raises_value_error(self):

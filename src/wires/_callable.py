@@ -157,7 +157,8 @@ class WiringCallable(object):
                 if return_or_raise:
                     raise RuntimeError(*call_result)
 
-        return call_result
+        if return_or_raise:
+            return call_result
 
 
 # ----------------------------------------------------------------------------
