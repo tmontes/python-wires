@@ -19,11 +19,11 @@ from . import mixin_use_shared_instance, mixin_test_coupling
 
 
 class TestWiresCoupling(mixin_use_shared_instance.UseSharedInstanceMixin,
-                        mixin_test_coupling.TestCallerCalleeCouplingMixin,
+                        mixin_test_coupling.TestCouplingMixin,
                         unittest.TestCase):
 
     """
-    Caller/callee tests for the shared Wiring instance.
+    Call time coupling tests for the shared Wiring instance.
     """
 
 

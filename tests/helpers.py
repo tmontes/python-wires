@@ -20,15 +20,21 @@ class CallTracker(object):
     Tracks calls to self.
     """
 
-    def __init__(self):
+    def __init__(self, returns=None, raises=None):
 
         # Appended with (args, kwargs) on each call.
         self.call_args = []
+
+        self._returns = returns
+        self._raises = raises
 
 
     def __call__(self, *args, **kwargs):
 
         self.call_args.append((args, kwargs))
+        if self._raises:
+            raise self._raises
+        return self._returns
 
 
     @property
@@ -37,6 +43,13 @@ class CallTracker(object):
         Calls to self count.
         """
         return len(self.call_args)
+
+
+    def reset(self):
+        """
+        Reset ourselves.
+        """
+        self.call_args = []
 
 
 

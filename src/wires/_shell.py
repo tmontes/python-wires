@@ -67,21 +67,12 @@ class WiringShell(object):
         return self._coupling
 
 
-    @property
-    def couple(self):
+    def __call__(self, coupling=None):
         """
-        Caller/callee coupled call context attribute (overrides default).
+        Used for call-time parameter override.
         """
-        self._wiring_instance.coupling = True
-        return self._wiring_instance
-
-
-    @property
-    def decouple(self):
-        """
-        Caller/callee decoupled call context attribute (overrides default).
-        """
-        self._wiring_instance.coupling = False
+        if coupling is not None:
+            self._wiring_instance.coupling = coupling
         return self._wiring_instance
 
 
