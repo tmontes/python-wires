@@ -31,210 +31,6 @@ class WireAssertCouplingTestMixin(object):
     raise_exception = helpers.CallTracker(raises=EXCEPTION)
 
 
-    TESTS = [{
-        # Default Wiring instantiation arguments.
-        'wiring_args': {},
-        'tests': [{
-            'name': 'test_wire_returns_42_default_call',
-            'wire': [return_42],
-            'ctao': {},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_default_call',
-            'wire': [raise_exception],
-            'ctao': {},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_default_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {},
-            'raises': None,
-            'result': None,
-            'call_counts': [1, 1, 1],
-        }, {
-            'name': 'test_wire_returns_42_returns_true_call',
-            'wire': [return_42],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(None, 42)],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_returns_true_call',
-            'wire': [raise_exception],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(EXCEPTION, None),],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_returns_true_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(None, 42), (EXCEPTION, None), (None, None)],
-            'call_counts': [1, 1, 1],
-        }, {
-            'name': 'test_wire_returns_42_returns_false_call',
-            'wire': [return_42],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_returns_false_call',
-            'wire': [raise_exception],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_returns_false_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1, 1, 1],
-        }]
-    }, {
-        # Wiring instantiation with returns=False
-        'wiring_args': {"returns": False},
-        'tests': [{
-            'name': 'test_wire_returns_42_default_call',
-            'wire': [return_42],
-            'ctao': {},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_default_call',
-            'wire': [raise_exception],
-            'ctao': {},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_default_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {},
-            'raises': None,
-            'result': None,
-            'call_counts': [1, 1, 1],
-        }, {
-            'name': 'test_wire_returns_42_returns_true_call',
-            'wire': [return_42],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(None, 42)],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_returns_true_call',
-            'wire': [raise_exception],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(EXCEPTION, None),],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_returns_true_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(None, 42), (EXCEPTION, None), (None, None),],
-            'call_counts': [1, 1, 1],
-        }, {
-            'name': 'test_wire_returns_42_returns_false_call',
-            'wire': [return_42],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_returns_false_call',
-            'wire': [raise_exception],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_returns_false_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1, 1, 1],
-        },
-    ]}, {
-        # Wiring instantiation with returns=True
-        'wiring_args': {"returns": True},
-        'tests': [{
-            'name': 'test_wire_returns_42_default_call',
-            'wire': [return_42],
-            'ctao': {},
-            'raises': None,
-            'result': [(None, 42),],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_default_call',
-            'wire': [raise_exception],
-            'ctao': {},
-            'raises': None,
-            'result': [(EXCEPTION, None),],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_default_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {},
-            'raises': None,
-            'result': [(None, 42), (EXCEPTION, None), (None, None)],
-            'call_counts': [1, 1, 1],
-        }, {
-            'name': 'test_wire_returns_42_returns_true_call',
-            'wire': [return_42],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(None, 42),],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_returns_true_call',
-            'wire': [raise_exception],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(EXCEPTION, None),],
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_returns_true_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {"returns": True},
-            'raises': None,
-            'result': [(None, 42), (EXCEPTION, None), (None, None)],
-            'call_counts': [1, 1, 1],
-        }, {
-            'name': 'test_wire_returns_42_returns_false_call',
-            'wire': [return_42],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_raises_exception_returns_false_call',
-            'wire': [raise_exception],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1],
-        }, {
-            'name': 'test_wire_wire_wire_returns_false_call',
-            'wire': [return_42, raise_exception, return_none],
-            'ctao': {"returns": False},
-            'raises': None,
-            'result': None,
-            'call_counts': [1, 1, 1],
-        }],
-    }]
-
-
 
 class TestCouplingMixin(WireAssertCouplingTestMixin):
 
@@ -269,35 +65,104 @@ def _create_test_method(wiring_args, wire, ctao, raises, result, call_counts):
 
 
 
-def create_test_methods(test_class, wiring_args=None):
+def _dict_to_method_name_part(arg_dict):
+
+    return '_'.join('%s_%s' % (k, v) for k, v in arg_dict.items())
+
+
+
+def _test_name(wiring_args, ctao, call):
+
+    return 'test_wa_%s_ctao_%s_%s' % (
+        _dict_to_method_name_part(wiring_args),
+        _dict_to_method_name_part(ctao),
+        call,
+    )
+
+
+
+def create_test_methods(test_class, wiring_args_filter=None):
     """
     Creates test methods on `test_class` having a `TESTS` test description list.
     Entries in such list have two keys:
-    - `wiring_args`: Wiring initialization arguments for the associated `tests`.
+    - `wiring_args_filter`: Wiring initialization arguments for the associated `tests`.
     - `tests`: List of test specifications.
     Tests will only be created for matching wiring arguments.
     """
-    for test_set in test_class.TESTS:
-        test_set_wiring_args = test_set['wiring_args']
-        if wiring_args is None:
-            if test_set_wiring_args:
-                # no wiring_args: skip test sets with wiring args.
+    call_coupling_arg_combinations = [
+        {},
+        {'returns': False},
+        {'returns': True},
+        # {'ignore_failures': False},
+        # {'ignore_failures': True},
+        # {'returns': False, 'ignore_failures': False},
+        # {'returns': False, 'ignore_failures': True},
+        # {'returns': True, 'ignore_failures': False},
+        # {'returns': True, 'ignore_failures': True},
+    ]
+    for wiring_args in call_coupling_arg_combinations:
+        if wiring_args_filter is None:
+            if wiring_args:
+                # no wiring_args_filter: skip test sets with wiring args.
                 continue
         else:
             skip = False
-            for arg, value in wiring_args.items():
-                if test_set_wiring_args.get(arg) != value:
+            for arg, value in wiring_args_filter.items():
+                if wiring_args.get(arg) != value:
                     # skip test sets with differet wiring args
                     skip = True
                     break
             if skip:
                 continue
         # create the test methods
-        for test_entry in test_set['tests']:
-            test_method_name = test_entry.pop('name')
-            test_method = _create_test_method(test_set_wiring_args, **test_entry)
-            setattr(test_class, test_method_name, test_method)
-
+        # for test_entry in test_set['tests']:
+        #     test_method_name = test_entry.pop('name')
+        #     test_method = _create_test_method(test_set_wiring_args, **test_entry)
+        #     setattr(test_class, test_method_name, test_method)
+        returns = wiring_args.get('returns', False)
+        for ctao in call_coupling_arg_combinations:
+            # generate test with a single wired callable, returning 42
+            ctao_returns = ctao.get('returns')
+            if ctao_returns is not None:
+                returns = ctao_returns
+            setattr(
+                test_class,
+                _test_name(wiring_args, ctao, 'returns_42'),
+                _create_test_method(
+                    wiring_args,
+                    wire=[test_class.return_42],
+                    ctao=ctao,
+                    raises=None,
+                    result=[(None, 42)] if returns else None,
+                    call_counts=[1],
+                )
+            )
+            # generate test with a single wired callable, raising an exception
+            setattr(
+                test_class,
+                _test_name(wiring_args, ctao, 'raises_exception'),
+                _create_test_method(
+                    wiring_args,
+                    wire=[test_class.raise_exception],
+                    ctao=ctao,
+                    raises=None,
+                    result=[(test_class.EXCEPTION, None)] if returns else None,
+                    call_counts=[1],
+                )
+            )
+            # generate test with 3 callables, the 2nd raising an exception
+            setattr(
+                test_class,
+                _test_name(wiring_args, ctao, '2in3_raises_exception'),
+                _create_test_method(
+                    wiring_args,
+                    wire=[test_class.return_42, test_class.raise_exception, test_class.return_none],
+                    ctao=ctao,
+                    raises=None,
+                    result=[(None, 42), (test_class.EXCEPTION, None), (None, None)] if returns else None,
+                    call_counts=[1, 1, 1],
+                )
+            )
 
 
 create_test_methods(TestCouplingMixin)
