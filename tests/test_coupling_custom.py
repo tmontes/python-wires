@@ -27,7 +27,7 @@ class TestCouplingReturnsTrue(mixin_test_coupling.WireAssertCouplingTestMixin,
     """
 
 
-mixin_test_coupling.create_test_methods(
+mixin_test_coupling.generate_tests(
     TestCouplingReturnsTrue,
     {"returns": True},
 )
@@ -43,7 +43,7 @@ class TestCouplingReturnsFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
     """
 
 
-mixin_test_coupling.create_test_methods(
+mixin_test_coupling.generate_tests(
     TestCouplingReturnsFalse,
     {"returns": False},
 )

@@ -38,7 +38,7 @@ class TestCouplingMixin(WireAssertCouplingTestMixin):
     Drives Wires call coupling tests.
     """
 
-    # Tests added via create_test_methods, below.
+    # Tests added via generate_tests, below.
 
 
 
@@ -81,7 +81,57 @@ def _test_name(wiring_args, ctao, call):
 
 
 
-def create_test_methods(test_class, wiring_args_filter=None):
+def _generate_returns_42_test(test_class, wiring_args, ctao, returns):
+
+    wire = [test_class.return_42]
+    raises = None
+    result = [(None, 42)] if returns else None
+    call_counts = [1]
+
+    setattr(
+        test_class,
+        _test_name(wiring_args, ctao, 'returns_42'),
+        _create_test_method(wiring_args, wire, ctao, raises, result, call_counts),
+    )
+
+
+def _generate_raises_exc_test(test_class, wiring_args, ctao, returns):
+
+    wire = [test_class.raise_exception]
+    raises = None
+    result = [(test_class.EXCEPTION, None)] if returns else None
+    call_counts = [1]
+
+    setattr(
+        test_class,
+        _test_name(wiring_args, ctao, 'raises_exception'),
+        _create_test_method(wiring_args, wire, ctao, raises, result, call_counts),
+    )
+
+
+def _generate_2in3_raises_test(test_class, wiring_args, ctao, returns):
+
+    wire = [
+        test_class.return_42,
+        test_class.raise_exception,
+        test_class.return_none,
+    ]
+    raises = None
+    if returns:
+        result = [(None, 42), (test_class.EXCEPTION, None), (None, None)]
+    else:
+        result = None
+    call_counts = [1, 1, 1]
+
+    setattr(
+        test_class,
+        _test_name(wiring_args, ctao, '2in3_raises_exception'),
+        _create_test_method(wiring_args, wire, ctao, raises, result, call_counts)
+    )
+
+
+
+def generate_tests(test_class, wiring_args_filter=None):
     """
     Creates test methods on `test_class` having a `TESTS` test description list.
     Entries in such list have two keys:
@@ -117,48 +167,12 @@ def create_test_methods(test_class, wiring_args_filter=None):
         # create the test methods
         for ctao in call_coupling_arg_combinations:
             returns = ctao.get('returns', wiring_args.get('returns', False))
-            # generate test with a single wired callable, returning 42
-            setattr(
-                test_class,
-                _test_name(wiring_args, ctao, 'returns_42'),
-                _create_test_method(
-                    wiring_args,
-                    wire=[test_class.return_42],
-                    ctao=ctao,
-                    raises=None,
-                    result=[(None, 42)] if returns else None,
-                    call_counts=[1],
-                )
-            )
-            # generate test with a single wired callable, raising an exception
-            setattr(
-                test_class,
-                _test_name(wiring_args, ctao, 'raises_exception'),
-                _create_test_method(
-                    wiring_args,
-                    wire=[test_class.raise_exception],
-                    ctao=ctao,
-                    raises=None,
-                    result=[(test_class.EXCEPTION, None)] if returns else None,
-                    call_counts=[1],
-                )
-            )
-            # generate test with 3 callables, the 2nd raising an exception
-            setattr(
-                test_class,
-                _test_name(wiring_args, ctao, '2in3_raises_exception'),
-                _create_test_method(
-                    wiring_args,
-                    wire=[test_class.return_42, test_class.raise_exception, test_class.return_none],
-                    ctao=ctao,
-                    raises=None,
-                    result=[(None, 42), (test_class.EXCEPTION, None), (None, None)] if returns else None,
-                    call_counts=[1, 1, 1],
-                )
-            )
+            _generate_returns_42_test(test_class, wiring_args, ctao, returns)
+            _generate_raises_exc_test(test_class, wiring_args, ctao, returns)
+            _generate_2in3_raises_test(test_class, wiring_args, ctao, returns)
 
 
-create_test_methods(TestCouplingMixin)
+generate_tests(TestCouplingMixin)
 
 
 # ----------------------------------------------------------------------------
