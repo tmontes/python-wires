@@ -66,16 +66,16 @@ class WireAssertCouplingTestMixin(object):
             'name': 'test_wire_raises_exception_returns_true_call',
             'wire': [raise_exception],
             'ctao': {"returns": True},
-            'raises': RuntimeError,
-            'result': ((EXCEPTION, None),),
+            'raises': None,
+            'result': [(EXCEPTION, None),],
             'call_counts': [1],
         }, {
             'name': 'test_wire_wire_wire_returns_true_call',
             'wire': [return_42, raise_exception, return_none],
             'ctao': {"returns": True},
-            'raises': RuntimeError,
-            'result': ((None, 42), (EXCEPTION, None),),
-            'call_counts': [1, 1, 0],
+            'raises': None,
+            'result': [(None, 42), (EXCEPTION, None), (None, None)],
+            'call_counts': [1, 1, 1],
         }, {
             'name': 'test_wire_returns_42_returns_false_call',
             'wire': [return_42],
@@ -133,16 +133,16 @@ class WireAssertCouplingTestMixin(object):
             'name': 'test_wire_raises_exception_returns_true_call',
             'wire': [raise_exception],
             'ctao': {"returns": True},
-            'raises': RuntimeError,
-            'result': ((EXCEPTION, None),),
+            'raises': None,
+            'result': [(EXCEPTION, None),],
             'call_counts': [1],
         }, {
             'name': 'test_wire_wire_wire_returns_true_call',
             'wire': [return_42, raise_exception, return_none],
             'ctao': {"returns": True},
-            'raises': RuntimeError,
-            'result': ((None, 42), (EXCEPTION, None),),
-            'call_counts': [1, 1, 0],
+            'raises': None,
+            'result': [(None, 42), (EXCEPTION, None), (None, None),],
+            'call_counts': [1, 1, 1],
         }, {
             'name': 'test_wire_returns_42_returns_false_call',
             'wire': [return_42],
@@ -165,9 +165,7 @@ class WireAssertCouplingTestMixin(object):
             'result': None,
             'call_counts': [1, 1, 1],
         },
-
-        ]
-    }, {
+    ]}, {
         # Wiring instantiation with returns=True
         'wiring_args': {"returns": True},
         'tests': [{
@@ -181,16 +179,16 @@ class WireAssertCouplingTestMixin(object):
             'name': 'test_wire_raises_exception_default_call',
             'wire': [raise_exception],
             'ctao': {},
-            'raises': RuntimeError,
-            'result': ((EXCEPTION, None),),
+            'raises': None,
+            'result': [(EXCEPTION, None),],
             'call_counts': [1],
         }, {
             'name': 'test_wire_wire_wire_default_call',
             'wire': [return_42, raise_exception, return_none],
             'ctao': {},
-            'raises': RuntimeError,
-            'result': ((None, 42), (EXCEPTION, None),),
-            'call_counts': [1, 1, 0],
+            'raises': None,
+            'result': [(None, 42), (EXCEPTION, None), (None, None)],
+            'call_counts': [1, 1, 1],
         }, {
             'name': 'test_wire_returns_42_returns_true_call',
             'wire': [return_42],
@@ -202,16 +200,16 @@ class WireAssertCouplingTestMixin(object):
             'name': 'test_wire_raises_exception_returns_true_call',
             'wire': [raise_exception],
             'ctao': {"returns": True},
-            'raises': RuntimeError,
-            'result': ((EXCEPTION, None),),
+            'raises': None,
+            'result': [(EXCEPTION, None),],
             'call_counts': [1],
         }, {
             'name': 'test_wire_wire_wire_returns_true_call',
             'wire': [return_42, raise_exception, return_none],
             'ctao': {"returns": True},
-            'raises': RuntimeError,
-            'result': ((None, 42), (EXCEPTION, None),),
-            'call_counts': [1, 1, 0],
+            'raises': None,
+            'result': [(None, 42), (EXCEPTION, None), (None, None)],
+            'call_counts': [1, 1, 1],
         }, {
             'name': 'test_wire_returns_42_returns_false_call',
             'wire': [return_42],

@@ -39,6 +39,7 @@ class WiringInstance(object):
         # time coupling behaviour and *must* call our `coupling_reset` method
         # after that, to ensure correct "default" vs "overridde" behaviour.
         self.returns = wiring_shell.returns
+        self.ignore_failures = wiring_shell.ignore_failures
 
 
     @property
@@ -62,6 +63,7 @@ class WiringInstance(object):
         Resets call time coupling behaviour to our shell's default.
         """
         self.returns = self._wiring_shell.returns
+        self.ignore_failures = self._wiring_shell.ignore_failures
 
 
     def __getattr__(self, name):
