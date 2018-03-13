@@ -14,7 +14,7 @@ from __future__ import absolute_import
 
 from wires import Wiring
 
-from . helpers import CallTracker as CT
+from . import helpers
 
 
 
@@ -26,6 +26,11 @@ class WireAssertCouplingTestMixin(object):
 
     EXCEPTION = ValueError('test exception message')
 
+    return_42 = helpers.CallTracker(returns=42)
+    return_none = helpers.CallTracker(returns=None)
+    raise_exception = helpers.CallTracker(raises=EXCEPTION)
+
+
     TESTS = [
 
     # Default Wiring instantiation arguments.
@@ -33,7 +38,7 @@ class WireAssertCouplingTestMixin(object):
     {
         'test-name': 'test_wire_returns_42_default_call',
         'wiring-args': {},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {},
         'raises': None,
         'result': [(None, 42)],
@@ -41,7 +46,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_default_call',
         'wiring-args': {},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {},
         'raises': None,
         'result': [(EXCEPTION, None)],
@@ -49,7 +54,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_default_call',
         'wiring-args': {},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {},
         'raises': None,
         'result': [(None, 42), (EXCEPTION, None), (None, None)],
@@ -57,7 +62,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_returns_42_results_true_call',
         'wiring-args': {},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {"coupling": True},
         'raises': None,
         'result': [(None, 42)],
@@ -65,7 +70,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_results_true_call',
         'wiring-args': {},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
         'result': ((EXCEPTION, None),),
@@ -73,7 +78,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_results_true_call',
         'wiring-args': {},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
         'result': ((None, 42), (EXCEPTION, None),),
@@ -81,7 +86,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_returns_42_results_false_call',
         'wiring-args': {},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(None, 42)],
@@ -89,7 +94,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_results_false_call',
         'wiring-args': {},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(EXCEPTION, None)],
@@ -97,7 +102,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_results_false_call',
         'wiring-args': {},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(None, 42), (EXCEPTION, None), (None, None)],
@@ -109,7 +114,7 @@ class WireAssertCouplingTestMixin(object):
     {
         'test-name': 'test_wire_returns_42_default_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {},
         'raises': None,
         'result': [(None, 42)],
@@ -117,7 +122,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_default_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {},
         'raises': None,
         'result': [(EXCEPTION, None)],
@@ -125,7 +130,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_default_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {},
         'raises': None,
         'result': [(None, 42), (EXCEPTION, None), (None, None)],
@@ -133,7 +138,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_returns_42_results_true_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {"coupling": True},
         'raises': None,
         'result': [(None, 42)],
@@ -141,7 +146,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_results_true_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
         'result': ((EXCEPTION, None),),
@@ -149,7 +154,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_results_true_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
         'result': ((None, 42), (EXCEPTION, None),),
@@ -157,7 +162,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_returns_42_results_false_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(None, 42)],
@@ -165,7 +170,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_results_false_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(EXCEPTION, None),],
@@ -173,7 +178,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_results_false_call',
         'wiring-args': {"coupling": False},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(None, 42), (EXCEPTION, None), (None, None),],
@@ -185,7 +190,7 @@ class WireAssertCouplingTestMixin(object):
     {
         'test-name': 'test_wire_returns_42_default_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {},
         'raises': None,
         'result': [(None, 42),],
@@ -193,7 +198,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_default_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {},
         'raises': RuntimeError,
         'result': ((EXCEPTION, None),),
@@ -201,7 +206,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_default_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {},
         'raises': RuntimeError,
         'result': ((None, 42), (EXCEPTION, None),),
@@ -209,7 +214,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_returns_42_results_true_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {"coupling": True},
         'raises': None,
         'result': [(None, 42),],
@@ -217,7 +222,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_results_true_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
         'result': ((EXCEPTION, None),),
@@ -225,7 +230,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_results_true_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {"coupling": True},
         'raises': RuntimeError,
         'result': ((None, 42), (EXCEPTION, None),),
@@ -233,7 +238,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_returns_42_results_false_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(returns=42)],
+        'wirings': [return_42],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(None, 42),],
@@ -241,7 +246,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_raises_exception_results_false_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(raises=EXCEPTION)],
+        'wirings': [raise_exception],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(EXCEPTION, None),],
@@ -249,7 +254,7 @@ class WireAssertCouplingTestMixin(object):
     }, {
         'test-name': 'test_wire_wire_wire_results_false_call',
         'wiring-args': {"coupling": True},
-        'wirings': [CT(returns=42), CT(raises=EXCEPTION), CT(returns=None)],
+        'wirings': [return_42, raise_exception, return_none],
         'args-override': {"coupling": False},
         'raises': None,
         'result': [(None, 42), (EXCEPTION, None), (None, None),],
