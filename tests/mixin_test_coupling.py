@@ -115,16 +115,9 @@ def create_test_methods(test_class, wiring_args_filter=None):
             if skip:
                 continue
         # create the test methods
-        # for test_entry in test_set['tests']:
-        #     test_method_name = test_entry.pop('name')
-        #     test_method = _create_test_method(test_set_wiring_args, **test_entry)
-        #     setattr(test_class, test_method_name, test_method)
-        returns = wiring_args.get('returns', False)
         for ctao in call_coupling_arg_combinations:
+            returns = ctao.get('returns', wiring_args.get('returns', False))
             # generate test with a single wired callable, returning 42
-            ctao_returns = ctao.get('returns')
-            if ctao_returns is not None:
-                returns = ctao_returns
             setattr(
                 test_class,
                 _test_name(wiring_args, ctao, 'returns_42'),
