@@ -69,7 +69,7 @@ def _test_name(wa, ctao, call):
 
 def _generate_returns_42_test(test_class, wa, ctao, returns, ignore_failures):
 
-    wire = [test_class.returns_42_callable]
+    wire = [test_class.returns_42]
     raises = None
     result = [(None, 42)] if returns else None
     call_counts = [1]
@@ -83,13 +83,13 @@ def _generate_returns_42_test(test_class, wa, ctao, returns, ignore_failures):
 
 def _generate_raises_exc_test(test_class, wa, ctao, returns, ignore_failures):
 
-    wire = [test_class.raises_exception_callable]
+    wire = [test_class.raises_exception]
     if returns:
         if ignore_failures:
-            result = [(test_class.THE_EXCEPTION, None)] if returns else None
+            result = [(test_class.EXCEPTION, None)] if returns else None
             raises = None
         else:
-            result = ((test_class.THE_EXCEPTION, None),) if returns else None
+            result = ((test_class.EXCEPTION, None),) if returns else None
             raises = RuntimeError
     else:
         result = None
@@ -106,16 +106,16 @@ def _generate_raises_exc_test(test_class, wa, ctao, returns, ignore_failures):
 def _generate_2in3_raises_test(test_class, wa, ctao, returns, ignore_failures):
 
     wire = [
-        test_class.returns_42_callable,
-        test_class.raises_exception_callable,
-        test_class.returns_none_callable,
+        test_class.returns_42,
+        test_class.raises_exception,
+        test_class.returns_none,
     ]
     if returns:
         if ignore_failures:
-            result = [(None, 42), (test_class.THE_EXCEPTION, None), (None, None)]
+            result = [(None, 42), (test_class.EXCEPTION, None), (None, None)]
             raises = None
         else:
-            result = ((None, 42), (test_class.THE_EXCEPTION, None),)
+            result = ((None, 42), (test_class.EXCEPTION, None),)
             raises = RuntimeError
     else:
         result = None

@@ -90,16 +90,16 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         """
         Wiring a callable works.
         """
-        self.w.this.wire(self.returns_42_callable)
-        self.addCleanup(self.w.this.unwire, self.returns_42_callable)
+        self.w.this.wire(self.returns_42)
+        self.addCleanup(self.w.this.unwire, self.returns_42)
 
 
     def test_wiring_unwiring_works(self):
         """
         Wiring and then unwiring same callable works.
         """
-        self.w.this.wire(self.returns_42_callable)
-        self.w.this.unwire(self.returns_42_callable)
+        self.w.this.wire(self.returns_42)
+        self.w.this.unwire(self.returns_42)
 
 
     def test_unwiring_unknown_callable_raises_value_error(self):
@@ -109,7 +109,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         - Starts with "unknown function ".
         """
         with self.assertRaises(ValueError) as cm:
-            self.w.this.unwire(self.returns_42_callable)
+            self.w.this.unwire(self.returns_42)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -126,8 +126,8 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         Wiring/unwiring via indexing works.
         """
         name = 'name'
-        self.w[name].wire(self.returns_42_callable)
-        self.w[name].unwire(self.returns_42_callable)
+        self.w[name].wire(self.returns_42)
+        self.w[name].unwire(self.returns_42)
 
 
 # ----------------------------------------------------------------------------

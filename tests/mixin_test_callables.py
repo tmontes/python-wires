@@ -22,11 +22,11 @@ class TestCallablesMixin(object):
     Holds test callables.
     """
 
-    THE_EXCEPTION = ValueError('test exception value error message')
-    raises_exception_callable = helpers.CallTracker(raises=THE_EXCEPTION)
+    EXCEPTION = ValueError('test exception value error message')
+    raises_exception = helpers.CallTracker(raises=EXCEPTION)
 
-    returns_42_callable = helpers.CallTracker(returns=42)
-    returns_none_callable = helpers.CallTracker(returns=None)
+    returns_42 = helpers.CallTracker(returns=42)
+    returns_none = helpers.CallTracker(returns=None)
 
 
 # ----------------------------------------------------------------------------
