@@ -12,41 +12,51 @@ Wires instance caller/callee custom coupling tests.
 
 from __future__ import absolute_import
 
+import sys
 import unittest
 
 from . import mixin_test_coupling
 
 
 
-class TestCouplingReturnsTrue(mixin_test_coupling.WireAssertCouplingTestMixin,
-                              unittest.TestCase):
+def _test_class_name(wa):
 
-    """
-    Call time coupling tests for Wiring instances initialized with:
-    - returns: True
-    """
-
-
-mixin_test_coupling.generate_tests(
-    TestCouplingReturnsTrue,
-    {"returns": True},
-)
+    class_name_part = ''.join(
+        '%s%s' % (str(k).capitalize(), str(v).capitalize())
+        for k, v in wa.items()
+    )
+    return 'TestCoupling%s' % (class_name_part,)
 
 
 
-class TestCouplingReturnsFalse(mixin_test_coupling.WireAssertCouplingTestMixin,
-                               unittest.TestCase):
+def _generate_test_classes():
 
-    """
-    Call time coupling tests for Wiring instances initialized with:
-    - returns: False
-    """
+    call_coupling_arg_combinations = [
+        {'returns': False},
+        {'returns': True},
+        {'ignore_failures': False},
+        {'ignore_failures': True},
+        {'returns': False, 'ignore_failures': False},
+        {'returns': False, 'ignore_failures': True},
+        {'returns': True, 'ignore_failures': False},
+        {'returns': True, 'ignore_failures': True},
+    ]
+
+    base_classes = (
+        mixin_test_coupling.WireAssertCouplingTestMixin,
+        unittest.TestCase,
+    )
+
+    this_module = sys.modules[__name__]
+
+    for wa in call_coupling_arg_combinations:
+        test_class_name = _test_class_name(wa)
+        test_class = type(test_class_name, base_classes, {})
+        mixin_test_coupling.generate_tests(test_class, wa)
+        setattr(this_module, test_class_name, test_class)
 
 
-mixin_test_coupling.generate_tests(
-    TestCouplingReturnsFalse,
-    {"returns": False},
-)
+_generate_test_classes()
 
 
 # ----------------------------------------------------------------------------
