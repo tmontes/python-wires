@@ -15,7 +15,7 @@ from __future__ import absolute_import
 import sys
 import unittest
 
-from . import mixin_test_coupling
+from . import mixin_test_callables, mixin_test_coupling
 
 
 
@@ -43,7 +43,7 @@ def _generate_test_classes():
     ]
 
     base_classes = (
-        mixin_test_coupling.WireAssertCouplingTestMixin,
+        mixin_test_callables.TestCallablesMixin,
         unittest.TestCase,
     )
 

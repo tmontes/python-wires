@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Caller/callee coupling test driver mixin.
+Caller/callee call time coupling test driver mixin.
 """
 
 
@@ -14,25 +14,11 @@ from __future__ import absolute_import
 
 from wires import Wiring
 
-from . import helpers
+from . import mixin_test_callables
 
 
 
-class WireAssertCouplingTestMixin(object):
-
-    """
-    Wiring and Assertion mixin for coupling tests.
-    """
-
-    EXCEPTION = ValueError('test exception message')
-
-    return_42 = helpers.CallTracker(returns=42)
-    return_none = helpers.CallTracker(returns=None)
-    raise_exception = helpers.CallTracker(raises=EXCEPTION)
-
-
-
-class TestCouplingMixin(WireAssertCouplingTestMixin):
+class TestCouplingMixin(mixin_test_callables.TestCallablesMixin):
 
     """
     Drives Wires call coupling tests.
@@ -83,7 +69,7 @@ def _test_name(wa, ctao, call):
 
 def _generate_returns_42_test(test_class, wa, ctao, returns, ignore_failures):
 
-    wire = [test_class.return_42]
+    wire = [test_class.returns_42]
     raises = None
     result = [(None, 42)] if returns else None
     call_counts = [1]
@@ -97,7 +83,7 @@ def _generate_returns_42_test(test_class, wa, ctao, returns, ignore_failures):
 
 def _generate_raises_exc_test(test_class, wa, ctao, returns, ignore_failures):
 
-    wire = [test_class.raise_exception]
+    wire = [test_class.raises_exception]
     if returns:
         if ignore_failures:
             result = [(test_class.EXCEPTION, None)] if returns else None
@@ -120,9 +106,9 @@ def _generate_raises_exc_test(test_class, wa, ctao, returns, ignore_failures):
 def _generate_2in3_raises_test(test_class, wa, ctao, returns, ignore_failures):
 
     wire = [
-        test_class.return_42,
-        test_class.raise_exception,
-        test_class.return_none,
+        test_class.returns_42,
+        test_class.raises_exception,
+        test_class.returns_none,
     ]
     if returns:
         if ignore_failures:
