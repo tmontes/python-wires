@@ -13,6 +13,10 @@ Python Wires: Simple Call Wiring
    :target: https://codecov.io/github/tmontes/python-wires
    :alt: Test Coverage
 
+.. image:: https://readthedocs.org/projects/python-wires/badge/?version=latest
+   :target: https://python-wires.readthedocs.io/
+   :alt: Documentation
+
 
 |
 
