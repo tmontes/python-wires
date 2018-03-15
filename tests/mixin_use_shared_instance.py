@@ -30,7 +30,8 @@ class UseSharedInstanceMixin(object):
         return w
 
 
-    def tearDown(self):
+    @staticmethod
+    def tearDown():
         """
         Ensures the shared instance has no pending callables.
         """
