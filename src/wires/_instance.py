@@ -74,7 +74,7 @@ class WiringInstance(object):
         try:
             return self._wiring_callables[name]
         except KeyError:
-            new_callable = _callable.WiringCallable(self)
+            new_callable = _callable.WiringCallable(self, name)
             self._wiring_callables[name] = new_callable
             return new_callable
 
@@ -84,6 +84,13 @@ class WiringInstance(object):
         # Deletes the tracked callable object.
 
         del self._wiring_callables[name]
+
+
+    def __iter__(self):
+
+        # Produces associated Callables.
+
+        return iter(self._wiring_callables.values())
 
 
 # ----------------------------------------------------------------------------

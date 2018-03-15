@@ -138,4 +138,17 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         del self.w.this
 
 
+    def test_iteration(self):
+        """
+        Iterating over a Wiring instance produces its callables.
+        """
+        self.w.callable1.wire(self.returns_42)
+        self.w.callable2.wire(self.returns_none)
+
+        created_callables = set((self.w.callable1, self.w.callable2))
+        obtained_callables = set(self.w)
+
+        self.assertEqual(created_callables, obtained_callables)
+
+
 # ----------------------------------------------------------------------------

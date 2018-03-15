@@ -106,9 +106,16 @@ class WiringShell(object):
 
     def __getitem__(self, name):
         """
-        Index based access to Instance Callables.
+        Index based access to Callables.
         """
         return self.__getattr__(name)
+
+
+    def __iter__(self):
+        """
+        Produces associated Callables.
+        """
+        return iter(self._wiring_instance)
 
 
 # ----------------------------------------------------------------------------
