@@ -84,8 +84,9 @@ from . import mixin_test_callables
 def _create_test_method(wiring_args, wire, ctao, raises, result, call_counts):
 
     def call_coupling_test_method(self):
-
-        # Generic test method, covering all possible combinations.
+        """
+        Generic test method, covering all possible combinations.
+        """
 
         # Replace the test class Wiring instance with a custom initialized one.
         if wiring_args:
@@ -97,7 +98,7 @@ def _create_test_method(wiring_args, wire, ctao, raises, result, call_counts):
             self.w.this.wire(call_tracker)
             self.addCleanup(self.w.this.unwire, call_tracker)
 
-        # Do the actual call.
+        # Do the actual call with call-time argument overriding.
         if raises:
             with self.assertRaises(raises) as cm:
                 self.w(**ctao).this()
@@ -249,6 +250,20 @@ def _create_2in3_raises_test(test_class, wa, ctao):
 
 
 
+CALL_COUPLING_ARG_COMBINATIONS = [
+    # Purposely excluding the {} entry.
+    {'returns': False},
+    {'returns': True},
+    {'ignore_failures': False},
+    {'ignore_failures': True},
+    {'returns': False, 'ignore_failures': False},
+    {'returns': False, 'ignore_failures': True},
+    {'returns': True, 'ignore_failures': False},
+    {'returns': True, 'ignore_failures': True},
+]
+
+
+
 def generate_tests(test_class, wiring_args_filter=None):
     """
     Generates three test case set combinations and adds them to `test_class`.
@@ -261,17 +276,9 @@ def generate_tests(test_class, wiring_args_filter=None):
     Test case set combinations are then generated based on `wa` (instantiation
     time arguments) and `ctao` (call time argument overrides).
     """
-    call_coupling_arg_combinations = [
-        {},
-        {'returns': False},
-        {'returns': True},
-        {'ignore_failures': False},
-        {'ignore_failures': True},
-        {'returns': False, 'ignore_failures': False},
-        {'returns': False, 'ignore_failures': True},
-        {'returns': True, 'ignore_failures': False},
-        {'returns': True, 'ignore_failures': True},
-    ]
+    call_coupling_arg_combinations = [{}]
+    call_coupling_arg_combinations.extend(CALL_COUPLING_ARG_COMBINATIONS)
+
     for wa in call_coupling_arg_combinations:
         if wiring_args_filter is None:
             if wa:

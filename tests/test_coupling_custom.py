@@ -50,17 +50,6 @@ def _generate_test_classes():
     # Uses `mixin_test_coupling.generate_tests` to populate the class with
     # test case sets.
 
-    call_coupling_arg_combinations = [
-        {'returns': False},
-        {'returns': True},
-        {'ignore_failures': False},
-        {'ignore_failures': True},
-        {'returns': False, 'ignore_failures': False},
-        {'returns': False, 'ignore_failures': True},
-        {'returns': True, 'ignore_failures': False},
-        {'returns': True, 'ignore_failures': True},
-    ]
-
     base_classes = (
         mixin_test_callables.TestCallablesMixin,
         unittest.TestCase,
@@ -68,7 +57,7 @@ def _generate_test_classes():
 
     this_module = sys.modules[__name__]
 
-    for wa in call_coupling_arg_combinations:
+    for wa in mixin_test_coupling.CALL_COUPLING_ARG_COMBINATIONS:
         test_class_name = _test_class_name(wa)
         test_class = type(test_class_name, base_classes, {})
         mixin_test_coupling.generate_tests(test_class, wa)
