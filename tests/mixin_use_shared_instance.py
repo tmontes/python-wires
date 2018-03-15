@@ -30,4 +30,13 @@ class UseSharedInstanceMixin(object):
         return w
 
 
+    def tearDown(self):
+        """
+        Ensures the shared instance has no pending callables.
+        """
+        existing_callables = set(w)
+        for existing_callable in existing_callables:
+            delattr(w, existing_callable.__name__)
+
+
 # ----------------------------------------------------------------------------
