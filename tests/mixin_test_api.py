@@ -130,4 +130,12 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.w[name].unwire(self.returns_42)
 
 
+    def test_create_and_delete_callable(self):
+        """
+        Creating and deleting a callable works.
+        """
+        self.w.this.wire(self.returns_42)
+        del self.w.this
+
+
 # ----------------------------------------------------------------------------
