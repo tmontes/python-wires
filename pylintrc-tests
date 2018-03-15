@@ -1,0 +1,10 @@
+[BASIC]
+good-names=w,
+           cm,
+           wa,
+           setUp,
+           tearDown
+
+; Allow long test method names if they fit in the 79 char limit of PEP-8.
+; (4-space indent + "def " + "(self):" is 15 columns + 64 is 79)
+method-rgx=(([a-z_][a-z0-9_]{2,64}|(__.*__)))$

@@ -1,5 +1,2 @@
 [BASIC]
-good-names=w,
-           cm,
-           setUp,
-           tearDown
+good-names=w
