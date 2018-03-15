@@ -92,9 +92,16 @@ class WiringShell(object):
 
     def __getattr__(self, name):
         """
-        Attribute based access to Instance Callables.
+        Attribute based access to Callables.
         """
         return getattr(self._wiring_instance, name)
+
+
+    def __delattr__(self, name):
+        """
+        Deletes Callable attributes.
+        """
+        delattr(self._wiring_instance, name)
 
 
     def __getitem__(self, name):

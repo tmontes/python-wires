@@ -79,4 +79,11 @@ class WiringInstance(object):
             return new_callable
 
 
+    def __delattr__(self, name):
+
+        # Deletes the tracked callable object.
+
+        del self._wiring_callables[name]
+
+
 # ----------------------------------------------------------------------------
