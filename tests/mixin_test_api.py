@@ -121,7 +121,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         )
 
 
-    def test_dynamic_name_wire_unwire(self):
+    def test_dynamic_name_wire_unwire_works(self):
         """
         Wiring/unwiring via indexing works.
         """
@@ -130,7 +130,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.w[name].unwire(self.returns_42)
 
 
-    def test_create_and_delete_callable(self):
+    def test_create_and_delete_callable_works(self):
         """
         Creating and deleting a callable works.
         """
@@ -138,7 +138,17 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         del self.w.this
 
 
-    def test_iteration(self):
+    def test_callables_have_names(self):
+        """
+        Created callables have a __name__ attribute matching their name.
+        """
+        self.w.this.wire(self.returns_42)
+        self.addCleanup(self.w.this.unwire, self.returns_42)
+
+        self.assertEqual(self.w.this.__name__, 'this')
+
+
+    def test_iteration_works(self):
         """
         Iterating over a Wiring instance produces its callables.
         """
