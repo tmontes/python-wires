@@ -46,6 +46,15 @@ class WiringCallable(object):
 
 
     @property
+    def wirings(self):
+        """
+        List of wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples,
+        where <wire-time-args> is a tuple and <wire-time-kwargs> is a dict.
+        """
+        return list(self._wirings)
+
+
+    @property
     def min_wirings(self):
         """
         Minimum number of allowed wirings. None means no limit.
