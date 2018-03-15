@@ -148,6 +148,26 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertEqual(self.w.this.__name__, 'this')
 
 
+    def test_callables_wiring_attribute(self):
+        """
+        Created callables have a `.wirings` attribute that is a list of
+        (<wired-callable>, <wired-args-tuple>, <wired-kwargs-dict>).
+        """
+        self.w.this.wire(self.returns_42)
+        self.addCleanup(self.w.this.unwire, self.returns_42)
+
+        wirings = self.w.this.wirings
+
+        self.assertEqual(len(wirings), 1)
+
+        wired_callable, wired_args, wired_kwargs = wirings[0]
+        self.assertIs(wired_callable, self.returns_42)
+        self.assertIsInstance(wired_args, tuple)
+        self.assertEqual(wired_args, ())
+        self.assertIsInstance(wired_kwargs, dict)
+        self.assertEqual(wired_kwargs, {})
+
+
     def test_iteration_works(self):
         """
         Iterating over a Wiring instance produces its callables.
