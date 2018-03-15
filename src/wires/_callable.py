@@ -169,10 +169,10 @@ class WiringCallable(object):
                 combined_args.extend(args)
                 combined_kwargs = dict(wire_kwargs)
                 combined_kwargs.update(kwargs)
-                result = wired_callable(*combined_args, **combined_kwargs)
-                call_result.append((None, result))
-            except Exception as e:
-                call_result.append((e, None))
+                wired_result = wired_callable(*combined_args, **combined_kwargs)
+                call_result.append((None, wired_result))
+            except Exception as wired_exception:
+                call_result.append((wired_exception, None))
                 if not ignore_failures:
                     if return_or_raise:
                         raise RuntimeError(*call_result)
