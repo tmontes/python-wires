@@ -24,14 +24,16 @@ class WiringCallable(object):
       combination of call-time and wire-time arguments.
     """
 
-    def __init__(self, wiring, name, settings):
+    def __init__(self, wiring, name, wiring_settings):
 
         self._wiring = wiring
         self._name = name
 
-        # Default min/max_wirings to our instance's.
-        self._min_wirings = settings['min_wirings']
-        self._max_wirings = settings['max_wirings']
+        # Default settings, from Wiring instance.
+        self._wiring_settings = wiring_settings
+
+        # Per callable settings.
+        self._callable_settings = {}
 
         # Wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples.
         self._wirings = []
@@ -59,7 +61,10 @@ class WiringCallable(object):
         """
         Minimum number of allowed wirings. None means no limit.
         """
-        return self._min_wirings
+        return self._callable_settings.get(
+            'min_wirings',
+            self._wiring_settings['min_wirings']
+        )
 
 
     @min_wirings.setter
@@ -74,12 +79,12 @@ class WiringCallable(object):
             wiring_count = len(self._wirings)
             if value <= 0:
                 raise ValueError('min_wirings must be positive or None')
-            elif self._max_wirings is not None and value > self._max_wirings:
+            elif self.max_wirings is not None and value > self.max_wirings:
                 raise ValueError('min_wirings must be <= max_wirings')
             elif wiring_count and value > wiring_count:
                 raise ValueError('too few wirings')
 
-        self._min_wirings = value
+        self._callable_settings['min_wirings'] = value
 
 
     @property
@@ -87,7 +92,10 @@ class WiringCallable(object):
         """
         Maximum number of allowed wirings. None means no limit.
         """
-        return self._max_wirings
+        return self._callable_settings.get(
+            'max_wirings',
+            self._wiring_settings['max_wirings']
+        )
 
 
     @max_wirings.setter
@@ -102,12 +110,12 @@ class WiringCallable(object):
             wiring_count = len(self._wirings)
             if value <= 0:
                 raise ValueError('max_wirings must be positive or None')
-            elif self._min_wirings is not None and value < self._min_wirings:
+            elif self.min_wirings is not None and value < self.min_wirings:
                 raise ValueError('max_wirings must be >= min_wirings')
             elif wiring_count and value < wiring_count:
                 raise ValueError('too many wirings')
 
-        self._max_wirings = value
+        self._callable_settings['max_wirings'] = value
 
 
     def wire(self, function, *args, **kwargs):
@@ -120,7 +128,7 @@ class WiringCallable(object):
             raise ValueError('argument not callable: %r' % (function,))
 
         # self._max_wirings can be None, meaning "no limit": comparison ok
-        if len(self._wirings) == self._max_wirings:
+        if len(self._wirings) == self.max_wirings:
             raise RuntimeError('max_wirings limit reached')
 
         self._wirings.append((function, args, kwargs))
@@ -136,8 +144,8 @@ class WiringCallable(object):
         if not callable(function):
             raise ValueError('argument not callable: %r' % (function,))
 
-        # self._min_wirings can be None, meaning "no limit": comparison ok
-        if len(self._wirings) == self._min_wirings:
+        # self.min_wirings can be None, meaning "no limit": comparison ok
+        if len(self._wirings) == self.min_wirings:
             raise RuntimeError('min_wirings limit reached')
 
         tuples_to_remove = [v for v in self._wirings if v[0] == function]
@@ -149,7 +157,7 @@ class WiringCallable(object):
     def __call__(self, *args, **kwargs):
 
         # Calling with wiring count < `min_wirings`, if set, is an error.
-        min_wirings = self._min_wirings
+        min_wirings = self.min_wirings
         if min_wirings and len(self._wirings) < min_wirings:
             raise RuntimeError('less than min_wirings wired')
 
