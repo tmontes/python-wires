@@ -81,7 +81,7 @@ from . import mixin_test_callables
 
 
 
-def _create_test_method(wiring_args, wire, ctao, raises, result, call_counts):
+def _create_test_method(wiring_args, wire, pca, ctao, raises, result, call_counts):
 
     def call_coupling_test_method(self):
         """
@@ -91,6 +91,10 @@ def _create_test_method(wiring_args, wire, ctao, raises, result, call_counts):
         # Replace the test class Wiring instance with a custom initialized one.
         if wiring_args:
             self.w = Wiring(**wiring_args)
+
+        # Set per-callable settings.
+        for callable_setting, callable_value in pca.items():
+            setattr(self.w.this, callable_setting, callable_value)
 
         # Wire all wirings in `wire`, assumed to be helpers.CallTrackers.
         for call_tracker in wire:
@@ -117,7 +121,7 @@ def _create_test_method(wiring_args, wire, ctao, raises, result, call_counts):
 
 
 
-def _test_method_name(wa, ctao, call):
+def _test_method_name(wa, pca, ctao, call):
 
     # Test method names include instantiation-time argument names and values,
     # as well as call-time override argument names and values.
@@ -125,42 +129,46 @@ def _test_method_name(wa, ctao, call):
     def _dict_to_method_name_part(arg_dict):
         return '_'.join('%s_%s' % (k, v) for k, v in arg_dict.items())
 
-    return 'test_wa_%s_ctao_%s_%s' % (
+    return 'test_wa_%s_pca_%s_ctao_%s_%s' % (
         _dict_to_method_name_part(wa),
+        _dict_to_method_name_part(pca),
         _dict_to_method_name_part(ctao),
         call,
     )
 
 
 
-def _effective_returns(wa, ctao):
+def _effective_returns(wa, pca, ctao):
 
     # Return the effective value of `returns` based on instantiation time
     # argument dict `wa` and call time override dict `ctao`, considering that
     # the default instantiation time value is `False`.
 
-    return ctao.get('returns', wa.get('returns', False))
+    return ctao.get('returns', pca.get('returns', wa.get('returns', False)))
 
 
 
-def _effective_ignore_failures(wa, ctao):
+def _effective_ignore_failures(wa, pca, ctao):
 
     # Return the effective value of `ingore_failures` based on instantiation
     # time argument dict `wa` and call time override dict `ctao`, considering
     # that the default instantiation time value is `True`.
 
-    return ctao.get('ignore_failures', wa.get('ignore_failures', True))
+    return ctao.get(
+        'ignore_failures',
+        pca.get('ignore_failures', wa.get('ignore_failures', True))
+    )
 
 
 
-def _create_returns_42_test(test_class, wa, ctao):
+def _create_returns_42_test(test_class, wa, pca, ctao):
 
     # Adds the first test case to `test_class`.
     # - `wa`: instance initialization arguments.
     # - `ctao`: call time argument overrides.
 
     # The effective `returns` value.
-    returns = _effective_returns(wa, ctao)
+    returns = _effective_returns(wa, pca, ctao)
 
     # Expected `result` depends on `returns`; everything else is constant.
     wire = [test_class.returns_42]
@@ -171,21 +179,21 @@ def _create_returns_42_test(test_class, wa, ctao):
     # Create and add the test to the class.
     setattr(
         test_class,
-        _test_method_name(wa, ctao, 'case1_returns_42'),
-        _create_test_method(wa, wire, ctao, raises, result, call_counts),
+        _test_method_name(wa, pca, ctao, 'case1_returns_42'),
+        _create_test_method(wa, wire, pca, ctao, raises, result, call_counts),
     )
 
 
 
-def _create_raises_exc_test(test_class, wa, ctao):
+def _create_raises_exc_test(test_class, wa, pca, ctao):
 
     # Adds the second test case to `test_class`.
     # - `wa`: instance initialization arguments.
     # - `ctao`: call time argument overrides.
 
     # The effective `returns` and `ignore_failures` values.
-    returns = _effective_returns(wa, ctao)
-    ignore_failures = _effective_ignore_failures(wa, ctao)
+    returns = _effective_returns(wa, pca, ctao)
+    ignore_failures = _effective_ignore_failures(wa, pca, ctao)
 
     wire = [test_class.raises_exception]
     # Expected `result` and `raises` depend on `returns` and `ignore_failures`.
@@ -206,21 +214,21 @@ def _create_raises_exc_test(test_class, wa, ctao):
     # Create and add the test to the class.
     setattr(
         test_class,
-        _test_method_name(wa, ctao, 'case2_raises_exception'),
-        _create_test_method(wa, wire, ctao, raises, result, call_counts),
+        _test_method_name(wa, pca, ctao, 'case2_raises_exception'),
+        _create_test_method(wa, wire, pca, ctao, raises, result, call_counts),
     )
 
 
 
-def _create_2in3_raises_test(test_class, wa, ctao):
+def _create_2in3_raises_test(test_class, wa, pca, ctao):
 
     # Adds the thrid test case to `test_class`.
     # - `wa`: instance initialization arguments.
     # - `ctao`: call time argument overrides.
 
     # The effective `returns` and `ignore_failures` values.
-    returns = _effective_returns(wa, ctao)
-    ignore_failures = _effective_ignore_failures(wa, ctao)
+    returns = _effective_returns(wa, pca, ctao)
+    ignore_failures = _effective_ignore_failures(wa, pca, ctao)
 
     wire = [
         test_class.returns_42,
@@ -244,8 +252,8 @@ def _create_2in3_raises_test(test_class, wa, ctao):
     # Create and add the test to the class.
     setattr(
         test_class,
-        _test_method_name(wa, ctao, 'case3_2in3_raises_exception'),
-        _create_test_method(wa, wire, ctao, raises, result, call_counts)
+        _test_method_name(wa, pca, ctao, 'case3_2in3_raises_exception'),
+        _create_test_method(wa, wire, pca, ctao, raises, result, call_counts)
     )
 
 
@@ -294,10 +302,11 @@ def generate_tests(test_class, wiring_args_filter=None):
             if skip:
                 continue
         # create the test methods
-        for ctao in call_coupling_arg_combinations:
-            _create_returns_42_test(test_class, wa, ctao)
-            _create_raises_exc_test(test_class, wa, ctao)
-            _create_2in3_raises_test(test_class, wa, ctao)
+        for pca in call_coupling_arg_combinations:
+            for ctao in call_coupling_arg_combinations:
+                _create_returns_42_test(test_class, wa, pca, ctao)
+                _create_raises_exc_test(test_class, wa, pca, ctao)
+                _create_2in3_raises_test(test_class, wa, pca, ctao)
 
 
 
