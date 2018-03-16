@@ -174,7 +174,8 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         """
         self.w.callable1.wire(self.returns_42)
         self.w.callable2.wire(self.returns_none)
-        # TODO: cleanup wirings?
+        self.addCleanup(self.w.callable1.unwire, self.returns_42)
+        self.addCleanup(self.w.callable2.unwire, self.returns_none)
 
         created_callables = set((self.w.callable1, self.w.callable2))
         obtained_callables = set(self.w)
