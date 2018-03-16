@@ -214,4 +214,29 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertEqual(len(self.w.callable2), 2)
 
 
+    def test_wiring_repr(self):
+        """
+        Looks like an instantiation call, which should work.
+        """
+        repr_str = repr(self.w)
+        self.assertTrue(repr_str.startswith('Wiring('), 'bad repr start')
+        self.assertTrue(repr_str.endswith(')'), 'bad repr end')
+
+        from wires import Wiring
+        eval(repr_str)
+
+
+    def test_callable_repr(self):
+        """
+        Between angle brackets, contains callable name repr.
+        """
+        self.w.callable_name.wire(self.returns_42)
+        self.addCleanup(self.w.callable_name.unwire, self.returns_42)
+
+        repr_str = repr(self.w.callable_name)
+        self.assertTrue(repr_str.startswith('<WiringCallable '), 'bad repr start')
+        self.assertTrue(repr_str.endswith('>'), 'bad repr end')
+        self.assertTrue(repr('callable_name') in repr_str, 'no name in repr')
+
+
 # ----------------------------------------------------------------------------

@@ -42,6 +42,11 @@ class WiringCallable(object):
         self._wirings = []
 
 
+    def __repr__(self):
+
+        return '<%s %r>' % (self.__class__.__name__, self._name)
+
+
     @property
     def __name__(self):
         """

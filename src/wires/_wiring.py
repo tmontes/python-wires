@@ -57,6 +57,14 @@ class Wiring(object):
         self._calltime_settings = {}
 
 
+    def __repr__(self):
+
+        return '%s(%s)' % (
+            self.__class__.__name__,
+            ', '.join('%s=%r' % (k, v) for k, v in self._settings.items())
+        )
+
+
     def __call__(self, returns=None, ignore_failures=None):
         """
         Used for call-time parameter override.
