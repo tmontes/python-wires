@@ -144,12 +144,24 @@ class WiringCallable(object):
         return self._effective_setting('returns')
 
 
+    @returns.setter
+    def returns(self, value):
+
+        self._callable_settings['returns'] = value
+
+
     @property
     def ignore_failures(self):
         """
         If False, stops calling wired callables on the first raised exception.
         """
         return self._effective_setting('ignore_failures')
+
+
+    @ignore_failures.setter
+    def ignore_failures(self, value):
+
+        self._callable_settings['ignore_failures'] = value
 
 
     def wire(self, function, *args, **kwargs):
