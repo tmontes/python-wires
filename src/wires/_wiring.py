@@ -11,24 +11,22 @@ Python Wiring Shell.
 
 from __future__ import absolute_import
 
-from . import _instance
+from . import _callable
 
 
 
-class WiringShell(object):
+class Wiring(object):
 
     """
-    Python Wiring Shell
+    Python Wiring
     """
 
     # Holds the default, per-callable, `min_wirings` and `max_wirings` as well
     # as the default caller/callee call coupling behaviour defining `returns`
     # and `ignore_failures` settings.
     #
-    # Wraps a Wiring Instance, cooperating with it by setting its `returns` and
-    # `ignore_failures` attributes, to support call-time caller/callee coupling
-    # behaviour overriding, while delegating attribute access to the wrapped
-    # Wiring Instance to expose its behaviour.
+    # Tracks wired callabes in `_wiring_callables` and call-time override
+    # settings in `_calltime_overrides`.
 
     def __init__(self, min_wirings=None, max_wirings=None, returns=False,
                  ignore_failures=True):
@@ -40,11 +38,21 @@ class WiringShell(object):
         if min_wirings and max_wirings and min_wirings > max_wirings:
             raise ValueError('max_wirings must be >= min_wirings')
 
+        # Instance wiring limits.
         self._min_wirings = min_wirings
         self._max_wirings = max_wirings
+
+        # Default call-time coupling behaviour.
         self._returns = returns
         self._ignore_failures = ignore_failures
-        self._wiring_instance = _instance.WiringInstance(self)
+
+        # Tracks known Callable instances:
+        # - Keys are callable names (this instance's dynamic attributes).
+        # - Values are WiringCallable objects.
+        self._wiring_callables = {}
+
+        # Call time override settings.
+        self._calltime_overrides = {}
 
 
     @property
@@ -79,29 +87,49 @@ class WiringShell(object):
         return self._ignore_failures
 
 
-    def __call__(self, returns=None, ignore_failures=None):
+    def __call__(self, returns=None, ignore_failures=None, _reset=False):
         """
         Used for call-time parameter override.
+        If `_reset` is True, returns the overridden paramter dict and resets
+        overrides.
         """
+        if _reset is True:
+            result = dict(self._calltime_overrides)
+            self._calltime_overrides.clear()
+            return result
+
         if returns is not None:
-            self._wiring_instance.returns = returns
+            self._calltime_overrides['returns'] = returns
         if ignore_failures is not None:
-            self._wiring_instance.ignore_failures = ignore_failures
-        return self._wiring_instance
+            self._calltime_overrides['ignore_failures'] = ignore_failures
+
+        return self
 
 
     def __getattr__(self, name):
         """
         Attribute based access to Callables.
         """
-        return getattr(self._wiring_instance, name)
+        try:
+            return self._wiring_callables[name]
+        except KeyError:
+            new_callable = _callable.WiringCallable(self, name)
+            self._wiring_callables[name] = new_callable
+            return new_callable
 
 
     def __delattr__(self, name):
         """
         Deletes Callable attributes.
         """
-        delattr(self._wiring_instance, name)
+        del self._wiring_callables[name]
+
+
+    def __iter__(self):
+        """
+        Produces associated Callables.
+        """
+        return iter(self._wiring_callables.values())
 
 
     def __getitem__(self, name):
@@ -109,13 +137,6 @@ class WiringShell(object):
         Index based access to Callables.
         """
         return self.__getattr__(name)
-
-
-    def __iter__(self):
-        """
-        Produces associated Callables.
-        """
-        return iter(self._wiring_instance)
 
 
 # ----------------------------------------------------------------------------

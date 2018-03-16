@@ -25,7 +25,7 @@ __author__ = 'Tiago Montes'
 __email__ = 'tiago.montes@gmail.com'
 
 
-from . _shell import WiringShell as Wiring
+from . _wiring import Wiring
 from . _shared import w
 
 

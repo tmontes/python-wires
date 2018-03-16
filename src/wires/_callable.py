@@ -24,14 +24,14 @@ class WiringCallable(object):
       combination of call-time and wire-time arguments.
     """
 
-    def __init__(self, wiring_instance, name):
+    def __init__(self, wiring, name):
 
-        self._wiring_instance = wiring_instance
+        self._wiring = wiring
         self._name = name
 
         # Default min/max_wirings to our instance's.
-        self._min_wirings = wiring_instance.min_wirings
-        self._max_wirings = wiring_instance.max_wirings
+        self._min_wirings = wiring.min_wirings
+        self._max_wirings = wiring.max_wirings
 
         # Wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples.
         self._wirings = []
@@ -153,12 +153,11 @@ class WiringCallable(object):
         if min_wirings and len(self._wirings) < min_wirings:
             raise RuntimeError('less than min_wirings wired')
 
-        # Get call coupling behaviour for this call from our WiringInstance and
-        # then reset it to its default value to account for correct "default"
-        # vs "overridden" call time coupling behaviour.
-        return_or_raise = self._wiring_instance.returns
-        ignore_failures = self._wiring_instance.ignore_failures
-        self._wiring_instance.coupling_reset()
+        # Get call coupling behaviour for this call from our Wiring, resetting
+        # it, to account for correct "default" vs "overridden" behaviour.
+        cto = self._wiring(_reset=True)
+        return_or_raise = cto.get('returns', self._wiring.returns)
+        ignore_failures = cto.get('ignore_failures', self._wiring.ignore_failures)
 
         # Will contain (<exception>, <result>) per-wiring tuples.
         call_result = []
