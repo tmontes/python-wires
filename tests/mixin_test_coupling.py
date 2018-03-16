@@ -185,41 +185,6 @@ def _create_returns_42_test(test_class, wa, pca, ctao):
 
 
 
-def _create_raises_exc_test(test_class, wa, pca, ctao):
-
-    # Adds the second test case to `test_class`.
-    # - `wa`: instance initialization arguments.
-    # - `ctao`: call time argument overrides.
-
-    # The effective `returns` and `ignore_failures` values.
-    returns = _effective_returns(wa, pca, ctao)
-    ignore_failures = _effective_ignore_failures(wa, pca, ctao)
-
-    wire = [test_class.raises_exception]
-    # Expected `result` and `raises` depend on `returns` and `ignore_failures`.
-    if returns:
-        if ignore_failures:
-            result = [(test_class.EXCEPTION, None)] if returns else None
-            raises = None
-        else:
-            # `raises` set to an Exception class, `result` is the expected
-            # exception instance arguments: always a tuple.
-            result = ((test_class.EXCEPTION, None),) if returns else None
-            raises = RuntimeError
-    else:
-        result = None
-        raises = None
-    call_counts = [1]
-
-    # Create and add the test to the class.
-    setattr(
-        test_class,
-        _test_method_name(wa, pca, ctao, 'case2_raises_exception'),
-        _create_test_method(wa, wire, pca, ctao, raises, result, call_counts),
-    )
-
-
-
 def _create_2in3_raises_test(test_class, wa, pca, ctao):
 
     # Adds the thrid test case to `test_class`.
@@ -231,17 +196,17 @@ def _create_2in3_raises_test(test_class, wa, pca, ctao):
     ignore_failures = _effective_ignore_failures(wa, pca, ctao)
 
     wire = [
-        test_class.returns_42,
-        test_class.raises_exception,
         test_class.returns_none,
+        test_class.raises_exception,
+        test_class.returns_42,
     ]
     # Expected `result` and `raises` depend on `returns` and `ignore_failures`.
     if returns:
         if ignore_failures:
-            result = [(None, 42), (test_class.EXCEPTION, None), (None, None)]
+            result = [(None, None), (test_class.EXCEPTION, None), (None, 42)]
             raises = None
         else:
-            result = ((None, 42), (test_class.EXCEPTION, None),)
+            result = ((None, None), (test_class.EXCEPTION, None),)
             raises = RuntimeError
     else:
         result = None
@@ -305,7 +270,6 @@ def generate_tests(test_class, wiring_args_filter=None):
         for pca in call_coupling_arg_combinations:
             for ctao in call_coupling_arg_combinations:
                 _create_returns_42_test(test_class, wa, pca, ctao)
-                _create_raises_exc_test(test_class, wa, pca, ctao)
                 _create_2in3_raises_test(test_class, wa, pca, ctao)
 
 
