@@ -239,4 +239,62 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertTrue(repr('callable_name') in repr_str, 'no name in repr')
 
 
+    def test_del_unknown_callable_attr_raises_attribute_error(self):
+        """
+        Deleting an unknown Callable attribute raises AttributeError.
+        """
+        with self.assertRaises(AttributeError) as cm:
+            del self.w.this.no_such_attribute
+
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        self.assertEqual(exception_args[0], 'no_such_attribute')
+
+
+    def test_setgetdel_unknown_callable_attribute_works(self):
+        """
+        Can set, get and del random Callable attributes: as expected.
+        """
+        with self.assertRaises(AttributeError):
+            _ = self.w.this.no_such_attribute
+
+        self.w.this.no_such_attribute = 2
+        self.assertEqual(self.w.this.no_such_attribute, 2)
+        del self.w.this.no_such_attribute
+
+        with self.assertRaises(AttributeError):
+            _ = self.w.this.no_such_attribute
+
+
+    def test_callable_setattr_delattr(self):
+        """
+        Deleting a Callable attribute reverts its value to its instance's value.
+        """
+        defaults = {
+            'min_wirings': (None, 1),
+            'max_wirings': (None, 1),
+            'returns': (False, True),
+            'ignore_failures': (True, False),
+        }
+        for attr_name, (default_value, test_value) in defaults.items():
+            value = getattr(self.w.this, attr_name)
+            self.assertEqual(
+                value,
+                default_value,
+                'starting %s should be %r' % (attr_name, default_value),
+            )
+
+            setattr(self.w.this, attr_name, test_value)
+            value = getattr(self.w.this, attr_name)
+            self.assertEqual(value, test_value)
+
+            delattr(self.w.this, attr_name)
+            value = getattr(self.w.this, attr_name)
+            self.assertEqual(
+                value,
+                default_value,
+                'final %s should be %r' % (attr_name, default_value),
+            )
+
+
 # ----------------------------------------------------------------------------

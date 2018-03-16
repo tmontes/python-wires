@@ -176,6 +176,35 @@ class WiringCallable(object):
         self._callable_settings['ignore_failures'] = value
 
 
+    def __delattr__(self, name):
+        """
+        Removes any per-Callable setting, reverting to the Wiring instance's
+        default values; raises ValueError if the resulting settings would be
+        invalid.
+        """
+        # save and discard any current per-callable setting.
+        try:
+            save_value = self._callable_settings.pop(name)
+        except KeyError:
+            # not a local setting: fallback to super's __delattr__ and get out.
+            super(WiringCallable, self).__delattr__(name)
+            return
+
+        # `next_value` would be effective after current value discarding; set
+        # it, locally, to validate or trigger failures our setters have in place
+        # (for example, can't set min_wirings to 3, with a single wiring).
+        next_value = self._effective_setting(name)
+        try:
+            setattr(self, name, next_value)
+        except ValueError:
+            # `next_value` isn't valid, revert to `saved_value` and re-raise.
+            setattr(self, name, save_value)
+            raise
+
+        # if we're here, `next_value` is valid: discard its local version.
+        del self._callable_settings[name]
+
+
     def wire(self, function, *args, **kwargs):
 
         """

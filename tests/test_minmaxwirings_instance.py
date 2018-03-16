@@ -317,4 +317,64 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         self.assertEqual(exception_args[0], 'too many wirings')
 
 
+
+class TestCombinedMinMaxWirings(mixin_test_callables.TestCallablesMixin,
+                                unittest.TestCase):
+
+    """
+    Combined wiring and callable min/max wirings tests.
+    """
+
+    def test_callable_cant_revert_to_instance_min_wirings(self):
+        """
+        Deleting callable `min_wirings` fails if the resulting value (the
+        Wiring instance's) would leave the callable in an invalid state.
+        """
+        w = Wiring(min_wirings=2)
+
+        w.this.min_wirings = None
+
+        w.this.wire(self.returns_42)
+        self.addCleanup(w.this.unwire, self.returns_42)
+
+        # Resetting per-callable min_wirings should fail: it would fallback
+        # to the instance's min_wirings=2, but there are not enough wirings.
+        with self.assertRaises(ValueError) as cm:
+            del w.this.min_wirings
+
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        self.assertEqual(exception_args[0], 'too few wirings')
+
+        # Per-callable min_wirings should be unchanged.
+        self.assertIsNone(w.this.min_wirings)
+
+
+    def test_callable_cant_revert_to_instance_max_wirings(self):
+        """
+        Deleting callable `max_wirings` fails if the resulting value (the
+        Wiring instance's) would leave the callable in an invalid state.
+        """
+        w = Wiring(max_wirings=1)
+
+        w.this.max_wirings = 2
+
+        w.this.wire(self.returns_42)
+        w.this.wire(self.returns_none)
+        self.addCleanup(w.this.unwire, self.returns_42)
+        self.addCleanup(w.this.unwire, self.returns_none)
+
+        # Resetting per-callable max_wirings should fail: it would fallback
+        # to the instance's max_wirings=1, but there are too many wirings.
+        with self.assertRaises(ValueError) as cm:
+            del w.this.max_wirings
+
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        self.assertEqual(exception_args[0], 'too many wirings')
+
+        # Per-callable max_wirings should be unchanged.
+        self.assertEqual(w.this.max_wirings, 2)
+
+
 # ----------------------------------------------------------------------------
