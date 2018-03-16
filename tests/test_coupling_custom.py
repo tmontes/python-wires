@@ -28,13 +28,14 @@ from . import mixin_test_callables, mixin_test_coupling
 
 
 
-def _test_class_name(wa):
+def _test_class_name(ita):
 
-    # Test class names include instantiation-time argument names and values.
+    # Test class names include `ita` (instantiation-time argument) names and
+    # values.
 
     class_name_part = ''.join(
         '%s%s' % (str(k).capitalize(), str(v).capitalize())
-        for k, v in wa.items()
+        for k, v in ita.items()
     )
     return 'TestCoupling%s' % (class_name_part,)
 
@@ -57,10 +58,10 @@ def _generate_test_classes():
 
     this_module = sys.modules[__name__]
 
-    for wa in mixin_test_coupling.CALL_COUPLING_ARG_COMBINATIONS:
-        test_class_name = _test_class_name(wa)
+    for ita in mixin_test_coupling.CALL_COUPLING_ARG_COMBINATIONS:
+        test_class_name = _test_class_name(ita)
         test_class = type(test_class_name, base_classes, {})
-        mixin_test_coupling.generate_tests(test_class, wa)
+        mixin_test_coupling.generate_tests(test_class, ita)
         setattr(this_module, test_class_name, test_class)
 
 

@@ -1,7 +1,6 @@
 [BASIC]
 good-names=w,
            cm,
-           wa,
            setUp,
            tearDown
 
