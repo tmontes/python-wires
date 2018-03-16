@@ -25,8 +25,8 @@ class Wiring(object):
     # as the default caller/callee call coupling behaviour defining `returns`
     # and `ignore_failures` settings.
     #
-    # Tracks wired callabes in `_wiring_callables` and call-time override
-    # settings in `_calltime_settings`.
+    # Tracks wired callabes in `_callables` and call-time override settings in
+    # `_calltime_settings`.
 
     def __init__(self, min_wirings=None, max_wirings=None, returns=False,
                  ignore_failures=True):
@@ -51,7 +51,7 @@ class Wiring(object):
         # Tracks known Callable instances:
         # - Keys are callable names (this instance's dynamic attributes).
         # - Values are WiringCallable objects.
-        self._wiring_callables = {}
+        self._callables = {}
 
         # Call time override settings.
         self._calltime_settings = {}
@@ -76,28 +76,31 @@ class Wiring(object):
         Attribute based access to Callables.
         """
         try:
-            result = self._wiring_callables[name]
+            the_callable = self._callables[name]
         except KeyError:
             new_callable = _callable.WiringCallable(self, name, self._settings)
-            self._wiring_callables[name] = new_callable
-            result = new_callable
-        result.update_calltime_settings(self._calltime_settings)
-        self._calltime_settings.clear()
-        return result
+            self._callables[name] = new_callable
+            the_callable = new_callable
+
+        if self._calltime_settings:
+            the_callable.set_next_call_settings(self._calltime_settings)
+            self._calltime_settings.clear()
+
+        return the_callable
 
 
     def __delattr__(self, name):
         """
         Deletes Callable attributes.
         """
-        del self._wiring_callables[name]
+        del self._callables[name]
 
 
     def __iter__(self):
         """
         Produces associated Callables.
         """
-        return iter(self._wiring_callables.values())
+        return iter(self._callables.values())
 
 
     def __getitem__(self, name):

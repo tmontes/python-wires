@@ -50,7 +50,7 @@ class WiringCallable(object):
         return self._name
 
 
-    def update_calltime_settings(self, settings):
+    def set_next_call_settings(self, settings):
         """
         Called by the instance to update call-time setting overrides.
         """
