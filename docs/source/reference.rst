@@ -13,19 +13,10 @@ Wires Package
 
 
 
-Wiring Shell
-^^^^^^^^^^^^
+Wiring
+^^^^^^
 
-.. automodule:: wires._shell
-   :members:
-   :special-members: 
-
-
-
-Wiring Instance
-^^^^^^^^^^^^^^^
-
-.. automodule:: wires._instance
+.. automodule:: wires._wiring
    :members:
    :special-members: 
 
