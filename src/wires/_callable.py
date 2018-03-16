@@ -35,6 +35,9 @@ class WiringCallable(object):
         # Per callable settings.
         self._callable_settings = {}
 
+        # Call-time settings.
+        self._calltime_settings = {}
+
         # Wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples.
         self._wirings = []
 
@@ -47,6 +50,13 @@ class WiringCallable(object):
         return self._name
 
 
+    def update_calltime_settings(self, settings):
+        """
+        Called by the instance to update call-time setting overrides.
+        """
+        self._calltime_settings.update(settings)
+
+
     @property
     def wirings(self):
         """
@@ -56,15 +66,26 @@ class WiringCallable(object):
         return list(self._wirings)
 
 
+    def _effective_setting(self, setting_name):
+
+        # Call-time settings take precedence over per-Callable settings, which
+        # take precedence over Wiring settings.
+
+        return self._calltime_settings.get(
+            setting_name,
+            self._callable_settings.get(
+                setting_name,
+                self._wiring_settings[setting_name]
+            )
+        )
+
+
     @property
     def min_wirings(self):
         """
         Minimum number of allowed wirings. None means no limit.
         """
-        return self._callable_settings.get(
-            'min_wirings',
-            self._wiring_settings['min_wirings']
-        )
+        return self._effective_setting('min_wirings')
 
 
     @min_wirings.setter
@@ -92,10 +113,7 @@ class WiringCallable(object):
         """
         Maximum number of allowed wirings. None means no limit.
         """
-        return self._callable_settings.get(
-            'max_wirings',
-            self._wiring_settings['max_wirings']
-        )
+        return self._effective_setting('max_wirings')
 
 
     @max_wirings.setter
@@ -116,6 +134,22 @@ class WiringCallable(object):
                 raise ValueError('too many wirings')
 
         self._callable_settings['max_wirings'] = value
+
+
+    @property
+    def returns(self):
+        """
+        If True, calling returns list of wired (<exception>, <result>) tuples.
+        """
+        return self._effective_setting('returns')
+
+
+    @property
+    def ignore_failures(self):
+        """
+        If False, stops calling wired callables on the first raised exception.
+        """
+        return self._effective_setting('ignore_failures')
 
 
     def wire(self, function, *args, **kwargs):
@@ -163,9 +197,9 @@ class WiringCallable(object):
 
         # Get call coupling behaviour for this call from our Wiring, resetting
         # it, to account for correct "default" vs "overridden" behaviour.
-        calltime = self._wiring(_reset=True)
-        return_or_raise = calltime.get('returns', self._wiring_settings['returns'])
-        ignore_failures = calltime.get('ignore_failures', self._wiring_settings['ignore_failures'])
+        return_or_raise = self.returns
+        ignore_failures = self.ignore_failures
+        self._calltime_settings.clear()
 
         # Will contain (<exception>, <result>) per-wiring tuples.
         call_result = []

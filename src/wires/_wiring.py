@@ -57,16 +57,11 @@ class Wiring(object):
         self._calltime_settings = {}
 
 
-    def __call__(self, returns=None, ignore_failures=None, _reset=False):
+    def __call__(self, returns=None, ignore_failures=None):
         """
         Used for call-time parameter override.
-        If `_reset` is True, returns the default and call-time settings dicts,
-        resetting the latter.
         """
-        if _reset is True:
-            result = dict(self._calltime_settings)
-            self._calltime_settings.clear()
-            return result
+        self._calltime_settings.clear()
 
         if returns is not None:
             self._calltime_settings['returns'] = returns
@@ -81,11 +76,14 @@ class Wiring(object):
         Attribute based access to Callables.
         """
         try:
-            return self._wiring_callables[name]
+            result = self._wiring_callables[name]
         except KeyError:
             new_callable = _callable.WiringCallable(self, name, self._settings)
             self._wiring_callables[name] = new_callable
-            return new_callable
+            result = new_callable
+        result.update_calltime_settings(self._calltime_settings)
+        self._calltime_settings.clear()
+        return result
 
 
     def __delattr__(self, name):
