@@ -66,7 +66,7 @@ class Wiring(object):
         if _reset is True:
             result = dict(self._calltime_settings)
             self._calltime_settings.clear()
-            return self._settings, result
+            return result
 
         if returns is not None:
             self._calltime_settings['returns'] = returns

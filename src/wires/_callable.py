@@ -163,9 +163,9 @@ class WiringCallable(object):
 
         # Get call coupling behaviour for this call from our Wiring, resetting
         # it, to account for correct "default" vs "overridden" behaviour.
-        settings, calltime = self._wiring(_reset=True)
-        return_or_raise = calltime.get('returns', settings['returns'])
-        ignore_failures = calltime.get('ignore_failures', settings['ignore_failures'])
+        calltime = self._wiring(_reset=True)
+        return_or_raise = calltime.get('returns', self._wiring_settings['returns'])
+        ignore_failures = calltime.get('ignore_failures', self._wiring_settings['ignore_failures'])
 
         # Will contain (<exception>, <result>) per-wiring tuples.
         call_result = []
