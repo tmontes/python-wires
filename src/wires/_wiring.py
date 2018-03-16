@@ -38,12 +38,12 @@ class Wiring(object):
         if min_wirings and max_wirings and min_wirings > max_wirings:
             raise ValueError('max_wirings must be >= min_wirings')
 
-        # Instance wiring limits.
-        self._min_wirings = min_wirings
-        self._max_wirings = max_wirings
-
-        # Default call-time coupling behaviour.
         self._settings = {
+            # Default wiring limits.
+            'min_wirings': min_wirings,
+            'max_wirings': max_wirings,
+
+            # Default call-time coupling behaviour.
             'returns': returns,
             'ignore_failures': ignore_failures,
         }
@@ -55,22 +55,6 @@ class Wiring(object):
 
         # Call time override settings.
         self._calltime_settings = {}
-
-
-    @property
-    def min_wirings(self):
-        """
-        Read-only default minimum wired callables.
-        """
-        return self._min_wirings
-
-
-    @property
-    def max_wirings(self):
-        """
-        Read-only default maximum wired callables.
-        """
-        return self._max_wirings
 
 
     def __call__(self, returns=None, ignore_failures=None, _reset=False):
@@ -99,7 +83,7 @@ class Wiring(object):
         try:
             return self._wiring_callables[name]
         except KeyError:
-            new_callable = _callable.WiringCallable(self, name)
+            new_callable = _callable.WiringCallable(self, name, self._settings)
             self._wiring_callables[name] = new_callable
             return new_callable
 

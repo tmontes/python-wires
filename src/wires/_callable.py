@@ -24,14 +24,14 @@ class WiringCallable(object):
       combination of call-time and wire-time arguments.
     """
 
-    def __init__(self, wiring, name):
+    def __init__(self, wiring, name, settings):
 
         self._wiring = wiring
         self._name = name
 
         # Default min/max_wirings to our instance's.
-        self._min_wirings = wiring.min_wirings
-        self._max_wirings = wiring.max_wirings
+        self._min_wirings = settings['min_wirings']
+        self._max_wirings = settings['max_wirings']
 
         # Wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples.
         self._wirings = []
