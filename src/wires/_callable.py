@@ -66,6 +66,13 @@ class WiringCallable(object):
         return list(self._wirings)
 
 
+    def __len__(self):
+        """
+        Wiring count.
+        """
+        return len(self._wirings)
+
+
     def _effective_setting(self, setting_name):
 
         # Call-time settings take precedence over per-Callable settings, which

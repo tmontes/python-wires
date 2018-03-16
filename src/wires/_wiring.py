@@ -103,6 +103,13 @@ class Wiring(object):
         return iter(self._callables.values())
 
 
+    def __len__(self):
+        """
+        Callable count.
+        """
+        return len(self._callables)
+
+
     def __getitem__(self, name):
         """
         Index based access to Callables.
