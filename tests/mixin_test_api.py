@@ -174,11 +174,43 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         """
         self.w.callable1.wire(self.returns_42)
         self.w.callable2.wire(self.returns_none)
+        # TODO: cleanup wirings?
 
         created_callables = set((self.w.callable1, self.w.callable2))
         obtained_callables = set(self.w)
 
         self.assertEqual(created_callables, obtained_callables)
+
+
+    def test_wiring_len(self):
+        """
+        No callables means len is 0.
+        """
+        self.assertEqual(len(self.w), 0)
+
+
+    def test_wire_wiring_len(self):
+        """
+        Rich wiring and callable length tests.
+        """
+        self.w.callable1.wire(self.returns_42)
+        self.addCleanup(self.w.callable1.unwire, self.returns_42)
+
+        self.assertEqual(len(self.w), 1)
+        self.assertEqual(len(self.w.callable1), 1)
+
+        self.w.callable2.wire(self.returns_42)
+        self.w.callable2.wire(self.returns_none)
+        self.addCleanup(self.w.callable2.unwire, self.returns_42)
+        self.addCleanup(self.w.callable2.unwire, self.returns_none)
+
+        self.assertEqual(len(self.w), 2)
+        self.assertEqual(len(self.w.callable1), 1)
+        self.assertEqual(len(self.w.callable2), 2)
+
+        del self.w.callable1
+        self.assertEqual(len(self.w), 1)
+        self.assertEqual(len(self.w.callable2), 2)
 
 
 # ----------------------------------------------------------------------------
