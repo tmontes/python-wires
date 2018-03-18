@@ -81,8 +81,9 @@ on_rtd = os.environ.get('READTHEDOCS') == 'True'
 if on_rtd:
     html_theme = 'default'
 else:
-    html_theme = 'nature'
-    html_theme = 'alabaster'
+#    html_theme = 'alabaster'
+#    html_theme = 'nature'
+    html_theme = 'sphinx_rtd_theme'
 
 
 # Theme options are theme-specific and customize the look and feel of a theme
