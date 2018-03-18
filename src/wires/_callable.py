@@ -55,11 +55,41 @@ class WiringCallable(object):
         return self._name
 
 
-    def set_next_call_settings(self, settings):
+    # Used as a guard for non-set arguments in the `set` method call; `None`
+    # would not be appropriate given than `min_wirings` and `max_wirings` take
+    # `None` as valid value.
+
+    not_set = object()
+
+    def set(self, min_wirings=not_set, max_wirings=not_set, returns=not_set,
+            ignore_failures=not_set, _next_call_only=False):
         """
-        Called by the instance to update call-time setting overrides.
+        Sets one or more per-callable settings.
+
+        The `not_set` defaults are used as a guard to identify non-set arguments.
+
+        The `_next_call_only` argument is considered private and may be removed
+        in future releases; it is used internally to override call-time settings.
         """
-        self._calltime_settings.update(settings)
+
+        # Going with a `**kwargs` like argument would make this code simpler,
+        # but the method signature would be more opaque; we prefer explicit
+        # even though the code is longer, slower and harder (even if by a small
+        # amount) to manage.
+
+        if _next_call_only is True:
+            target_settings = self._calltime_settings
+        else:
+            target_settings = self._callable_settings
+
+        if min_wirings is not self.not_set:
+            target_settings['min_wirings'] = min_wirings
+        if max_wirings is not self.not_set:
+            target_settings['max_wirings'] = max_wirings
+        if returns is not self.not_set:
+            target_settings['returns'] = returns
+        if ignore_failures is not self.not_set:
+            target_settings['ignore_failures'] = ignore_failures
 
 
     @property

@@ -297,4 +297,43 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
             )
 
 
+    def test_callable_set(self):
+        """
+        Exercises the Callable's .set method.
+        """
+        # Set multiple settings on the `this` callable.
+        self.w.this.set(
+            min_wirings=1,
+            max_wirings=1,
+            returns=True,
+            ignore_failures=False,
+        )
+
+        # Calling it raises an exception: min_wirings=1 but no wirings.
+        with self.assertRaises(RuntimeError) as cm:
+            _ = self.w.this()
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        self.assertEqual(exception_args[0], 'less than min_wirings wired')
+
+        # Wire one callable.
+        self.w.this.wire(self.raises_exception)
+        self.addCleanup(self.w.this.unwire, self.raises_exception)
+
+        # Calling it raises a different exception: returns + ignore_failures
+        with self.assertRaises(RuntimeError) as cm:
+            _ = self.w.this()
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        # (<callee-exception>, None) are the exception's arguments.
+        exception, result = exception_args[0]
+        self.assertIsInstance(exception, ValueError)
+        self.assertEqual(len(exception.args), 1)
+        self.assertEqual(exception.args[0], 'test exception value error message')
+        self.assertIsNone(result)
+
+        # Need to set min_wirings back to None such that cleanup does not fail.
+        self.w.this.set(min_wirings=None)
+
+
 # ----------------------------------------------------------------------------
