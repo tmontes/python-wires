@@ -6,7 +6,35 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wiring Shell.
+Python Wires Wiring Class.
+
+Wiring objects hold `WiringCallable`\ s: attributes that spring into existence
+on first access.
+
+>>> w = Wiring()
+>>> c = w.one_callable      # Springs into existence.
+>>> callable(c)             # Is callable.
+True
+
+`WiringCallable`\ s can then be called like regular functions:
+
+>>> w.one_callable()        # Not wired, does nothing by default.
+
+Wiring instances support introspection, via `dir` and `len`; iteration is also
+supported:
+
+>>> dir(w)                  # Get callable name list.
+['one_callable']
+>>> len(w)                  # How many callables in the instance?
+1
+>>> for c in w:            # Calling every callable in the instance.
+...     c()
+
+`WiringCallable`\ s can be deleted:
+
+>>> del w.one_callable      # Delete and check it's gone.
+>>> len(w)
+0
 """
 
 from __future__ import absolute_import
@@ -18,7 +46,7 @@ from . import _callable
 class Wiring(object):
 
     """
-    Python Wiring
+    Wiring Class.
     """
 
     # Holds the default, per-callable, `min_wirings` and `max_wirings` as well
@@ -30,7 +58,23 @@ class Wiring(object):
 
     def __init__(self, min_wirings=None, max_wirings=None, returns=False,
                  ignore_failures=True):
+        """
+        :param min_wirings: Minimum wirings that callables must have.
+        :type min_wirings: Positive integer or None, for no minimum.
 
+        :param max_wirings: Maximum wirings that callables can have.
+        :type max_wirings: Positive integer or None, for no maximum.
+
+        :param returns: Callables return/raise if `True`.
+        :type returns: Boolean.
+
+        :param ignore_failures: If `False`, all callables wired to our callables
+                                will be called, in wiring order, regardless of
+                                any of them raising exceptions. If `True`, wired
+                                callable calling will stop after the first
+                                exception.
+        :type ignore_failures: Boolean.
+        """
         if min_wirings is not None and min_wirings <= 0:
             raise ValueError('min_wirings must be positive or None')
         if max_wirings is not None and max_wirings <= 0:
