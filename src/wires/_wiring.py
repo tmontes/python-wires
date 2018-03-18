@@ -91,7 +91,7 @@ class Wiring(object):
             the_callable = new_callable
 
         if self._calltime_settings:
-            the_callable.set_next_call_settings(self._calltime_settings)
+            the_callable.set(_next_call_only=True, **self._calltime_settings)
             self._calltime_settings.clear()
 
         return the_callable
