@@ -109,23 +109,9 @@ class Wiring(object):
         )
 
 
-    def __call__(self, returns=None, ignore_failures=None):
-        """
-        Used for call-time parameter override.
-        """
-        self._calltime_settings.clear()
-
-        if returns is not None:
-            self._calltime_settings['returns'] = returns
-        if ignore_failures is not None:
-            self._calltime_settings['ignore_failures'] = ignore_failures
-
-        return self
-
-
     def __getattr__(self, name):
         """
-        Attribute based access to Callables.
+        Attribute based access to `WiringCallable`\ s.
         """
         try:
             the_callable = self._callables[name]
@@ -141,32 +127,46 @@ class Wiring(object):
         return the_callable
 
 
+    def __getitem__(self, name):
+        """
+        Index based access to `WiringCallable`\ s.
+        """
+        return self.__getattr__(name)
+
+
     def __delattr__(self, name):
         """
-        Deletes Callable attributes.
+        Deletes `WiringCallable`\ s.
         """
         del self._callables[name]
 
 
-    def __iter__(self):
-        """
-        Produces associated Callables.
-        """
-        return iter(self._callables.values())
-
-
     def __len__(self):
         """
-        Callable count.
+        Existing `WiringCallable` count.
         """
         return len(self._callables)
 
 
-    def __getitem__(self, name):
+    def __iter__(self):
         """
-        Index based access to Callables.
+        Iterate over existing `WiringCallable`\ s.
         """
-        return self.__getattr__(name)
+        return iter(self._callables.values())
+
+
+    def __call__(self, returns=None, ignore_failures=None):
+        """
+        Used for call-time parameter override.
+        """
+        self._calltime_settings.clear()
+
+        if returns is not None:
+            self._calltime_settings['returns'] = returns
+        if ignore_failures is not None:
+            self._calltime_settings['ignore_failures'] = ignore_failures
+
+        return self
 
 
 # ----------------------------------------------------------------------------
