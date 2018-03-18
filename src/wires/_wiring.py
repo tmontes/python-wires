@@ -8,7 +8,7 @@
 """
 Python Wires Wiring Class.
 
-Wiring objects hold `WiringCallable`\ s: attributes that spring into existence
+Wiring objects hold `WiringCallable`\\s: attributes that spring into existence
 on first access.
 
 >>> w = Wiring()
@@ -16,7 +16,7 @@ on first access.
 >>> callable(c)             # Is callable.
 True
 
-`WiringCallable`\ s can then be called like regular functions:
+`WiringCallable`\\s can then be called like regular functions:
 
 >>> w.one_callable()        # Not wired, does nothing by default.
 
@@ -30,7 +30,7 @@ supported:
 >>> for c in w:            # Calling every callable in the instance.
 ...     c()
 
-`WiringCallable`\ s can be deleted:
+`WiringCallable`\\s can be deleted:
 
 >>> del w.one_callable      # Delete and check it's gone.
 >>> len(w)
@@ -59,21 +59,27 @@ class Wiring(object):
     def __init__(self, min_wirings=None, max_wirings=None, returns=False,
                  ignore_failures=True):
         """
-        :param min_wirings: Minimum wirings that callables must have.
-        :type min_wirings: Positive integer or None, for no minimum.
+        Initialization arguments determine default settings for this object's
+        `WiredCallable`\\s.
 
-        :param max_wirings: Maximum wirings that callables can have.
-        :type max_wirings: Positive integer or None, for no maximum.
+        Optional, per-`WiredCallable` settings override these settings. Single
+        use, call-time overriding is supported via calls to self: see
+        :func:`__call__`.
 
-        :param returns: Callables return/raise if `True`.
-        :type returns: Boolean.
+        :param min_wirings: Minimum wiring count.
+        :type min_wirings: `int` > 0 or `None`
 
-        :param ignore_failures: If `False`, all callables wired to our callables
-                                will be called, in wiring order, regardless of
-                                any of them raising exceptions. If `True`, wired
-                                callable calling will stop after the first
+        :param max_wirings: Maximum wiring count.
+        :type max_wirings: `int` > 0 or `None`
+
+        :param returns: Calling returns results or raises exceptions if `True`.
+        :type returns: `bool`
+
+        :param ignore_failures: If `False`, all wired callables will be called,
+                                regardless of raised exceptions; if `True`,
+                                wired callable calling will stop after the first
                                 exception.
-        :type ignore_failures: Boolean.
+        :type ignore_failures: `bool`
         """
         if min_wirings is not None and min_wirings <= 0:
             raise ValueError('min_wirings must be positive or None')
@@ -102,7 +108,9 @@ class Wiring(object):
 
 
     def __repr__(self):
-
+        """
+        Evaluating creates a new object with the same initialization arguments.
+        """
         return '%s(%s)' % (
             self.__class__.__name__,
             ', '.join('%s=%r' % (k, v) for k, v in self._settings.items())
@@ -111,7 +119,7 @@ class Wiring(object):
 
     def __getattr__(self, name):
         """
-        Attribute based access to `WiringCallable`\ s.
+        Attribute based access to `WiringCallable`\\s.
         """
         try:
             the_callable = self._callables[name]
@@ -129,14 +137,14 @@ class Wiring(object):
 
     def __getitem__(self, name):
         """
-        Index based access to `WiringCallable`\ s.
+        Index based access to `WiringCallable`\\s.
         """
         return self.__getattr__(name)
 
 
     def __delattr__(self, name):
         """
-        Deletes `WiringCallable`\ s.
+        Deletes `WiringCallable`\\s.
         """
         del self._callables[name]
 
@@ -150,14 +158,22 @@ class Wiring(object):
 
     def __iter__(self):
         """
-        Iterate over existing `WiringCallable`\ s.
+        Iterate over existing `WiringCallable`\\s.
         """
         return iter(self._callables.values())
 
 
     def __call__(self, returns=None, ignore_failures=None):
         """
-        Used for call-time parameter override.
+        Call-time settings override.
+
+        Usage example:
+
+        >>> w = Wiring(returns=False)
+        >>> w.a_callable()                  # returns False
+        >>> w(returns=True).a_callable()    # returns True for this call only
+        []
+        >>> w.a_callable()                  # returns still False
         """
         self._calltime_settings.clear()
 
