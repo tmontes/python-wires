@@ -6,7 +6,14 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wiring Callable.
+Python Wires WiringCallable Class.
+
+Callable with a minimal API:
+
+- Has zero or more wirings: functions/callables wired to it.
+- Each wiring has optional wire-time arguments.
+- Calling it calls all wired functions/callables, passing them the
+  combination of call-time and wire-time arguments.
 """
 
 from __future__ import absolute_import
@@ -16,21 +23,20 @@ from __future__ import absolute_import
 class WiringCallable(object):
 
     """
-    Callable with a minimal API:
-
-    - Has zero or more wirings: functions/callables wired to it.
-    - Each wiring has optional wire-time arguments.
-    - Calling it calls all wired functions/callables, passing them the
-      combination of call-time and wire-time arguments.
+    WiringCallable Class.
     """
 
-    def __init__(self, wiring, name, wiring_settings):
-
-        self._wiring = wiring
-        self._name = name
+    def __init__(self, _wiring, _name, _wiring_settings):
+        """
+        **IMPORTANT**: Do not instantiate `WiringCallable` objects directly. The
+        `Wiring` class does that when needed. All initialization arguments are
+        considered private and may change in future releases.
+        """
+        self._wiring = _wiring
+        self._name = _name
 
         # Default settings, from Wiring instance.
-        self._wiring_settings = wiring_settings
+        self._wiring_settings = _wiring_settings
 
         # Per callable settings.
         self._callable_settings = {}
@@ -53,56 +59,6 @@ class WiringCallable(object):
         The callable name, like regular functions have.
         """
         return self._name
-
-
-    # Used as a guard for non-set arguments in the `set` method call; `None`
-    # would not be appropriate given than `min_wirings` and `max_wirings` take
-    # `None` as valid value.
-
-    not_set = object()
-
-    def set(self, min_wirings=not_set, max_wirings=not_set, returns=not_set,
-            ignore_failures=not_set, _next_call_only=False):
-        """
-        Sets one or more per-callable settings.
-
-        The `not_set` defaults are used as a guard to identify non-set arguments.
-
-        The `_next_call_only` argument is considered private and may be removed
-        in future releases; it is used internally to override call-time settings.
-        """
-
-        if _next_call_only is True:
-            target_settings = self._calltime_settings
-        else:
-            target_settings = self._callable_settings
-
-        # Going with a `**kwargs` like argument would make this code simpler,
-        # but the method signature would be more opaque; we prefer explicit
-        # even though the code needs to repeat the argument names and work
-        # at a somewhat "meta-ish" level.
-
-        local_names = locals()
-        arg_names = ('min_wirings', 'max_wirings', 'returns', 'ignore_failures')
-        for name in arg_names:
-            if local_names[name] is not self.not_set:
-                target_settings[name] = local_names[name]
-
-
-    @property
-    def wirings(self):
-        """
-        List of wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples,
-        where <wire-time-args> is a tuple and <wire-time-kwargs> is a dict.
-        """
-        return list(self._wirings)
-
-
-    def __len__(self):
-        """
-        Wiring count.
-        """
-        return len(self._wirings)
 
 
     def _effective_setting(self, setting_name):
@@ -203,6 +159,40 @@ class WiringCallable(object):
         self._callable_settings['ignore_failures'] = value
 
 
+    # Used as a guard for non-set arguments in the `set` method call; `None`
+    # would not be appropriate given than `min_wirings` and `max_wirings` take
+    # `None` as valid value.
+
+    not_set = object()
+
+    def set(self, min_wirings=not_set, max_wirings=not_set, returns=not_set,
+            ignore_failures=not_set, _next_call_only=False):
+        """
+        Sets one or more per-callable settings.
+
+        The `not_set` defaults are used as a guard to identify non-set arguments.
+
+        The `_next_call_only` argument is considered private and may be removed
+        in future releases; it is used internally to override call-time settings.
+        """
+
+        if _next_call_only is True:
+            target_settings = self._calltime_settings
+        else:
+            target_settings = self._callable_settings
+
+        # Going with a `**kwargs` like argument would make this code simpler,
+        # but the method signature would be more opaque; we prefer explicit
+        # even though the code needs to repeat the argument names and work
+        # at a somewhat "meta-ish" level.
+
+        local_names = locals()
+        arg_names = ('min_wirings', 'max_wirings', 'returns', 'ignore_failures')
+        for name in arg_names:
+            if local_names[name] is not self.not_set:
+                target_settings[name] = local_names[name]
+
+
     def __delattr__(self, name):
         """
         Removes any per-Callable setting, reverting to the Wiring instance's
@@ -268,6 +258,15 @@ class WiringCallable(object):
         self._wirings.remove(tuples_to_remove[0])
 
 
+    @property
+    def wirings(self):
+        """
+        List of wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples,
+        where <wire-time-args> is a tuple and <wire-time-kwargs> is a dict.
+        """
+        return list(self._wirings)
+
+
     def __call__(self, *args, **kwargs):
 
         # Calling with wiring count < `min_wirings`, if set, is an error.
@@ -301,6 +300,13 @@ class WiringCallable(object):
                         break
 
         return call_result if return_or_raise else None
+
+
+    def __len__(self):
+        """
+        Wiring count.
+        """
+        return len(self._wirings)
 
 
 # ----------------------------------------------------------------------------

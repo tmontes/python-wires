@@ -124,7 +124,11 @@ class Wiring(object):
         try:
             the_callable = self._callables[name]
         except KeyError:
-            new_callable = _callable.WiringCallable(self, name, self._settings)
+            new_callable = _callable.WiringCallable(
+                _wiring=self,
+                _name=name,
+                _wiring_settings=self._settings,
+            )
             self._callables[name] = new_callable
             the_callable = new_callable
 
