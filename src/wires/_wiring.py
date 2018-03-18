@@ -6,31 +6,34 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wires Wiring Class.
+Python Wires :class:`Wiring` Class.
 
-Wiring objects hold `WiringCallable`\\s: attributes that spring into existence
-on first access.
+:class:`Wiring` objects hold callables as attributes that spring into existence
+on first access; each such callable is a
+:class:`WiringCallable <wires._callable.WiringCallable>` object.
 
 >>> w = Wiring()
 >>> c = w.one_callable      # Springs into existence.
 >>> callable(c)             # Is callable.
 True
 
-`WiringCallable`\\s can then be called like regular functions:
+Callables can also be accessed via indexing:
 
->>> w.one_callable()        # Not wired, does nothing by default.
+>>> w['one_callable'] is w.one_callable
+True
 
-Wiring instances support introspection, via `dir` and `len`; iteration is also
-supported:
+:class:`Wiring` objects support :func:`dir`, :func:`len` and iteration:
 
 >>> dir(w)                  # Get callable name list.
 ['one_callable']
->>> len(w)                  # How many callables in the instance?
+>>> len(w)                  # How many callables?
 1
->>> for c in w:            # Calling every callable in the instance.
-...     c()
+>>> for c in w:             # Iterating over all callables.
+...     print(c)
+<WiringCallable 'one_callable'>
 
-`WiringCallable`\\s can be deleted:
+
+Deleting attributes deletes the associated callable:
 
 >>> del w.one_callable      # Delete and check it's gone.
 >>> len(w)
@@ -46,7 +49,7 @@ from . import _callable
 class Wiring(object):
 
     """
-    Wiring Class.
+    :class:`Wiring` Class.
     """
 
     # Holds the default, per-callable, `min_wirings` and `max_wirings` as well
@@ -60,26 +63,26 @@ class Wiring(object):
                  ignore_failures=True):
         """
         Initialization arguments determine default settings for this object's
-        `WiredCallable`\\s.
+        :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
 
-        Optional, per-`WiredCallable` settings override these settings. Single
-        use, call-time overriding is supported via calls to self: see
-        :func:`__call__`.
+        Optional, per-:class:`WiringCallable <wires._callable.WiringCallable>`
+        settings override these settings and, single use, call-time overriding
+        is supported via calls to self: see :meth:`__call__`.
 
         :param min_wirings: Minimum wiring count.
-        :type min_wirings: `int` > 0 or `None`
+        :type min_wirings: ``int`` > 0 or ``None``
 
         :param max_wirings: Maximum wiring count.
-        :type max_wirings: `int` > 0 or `None`
+        :type max_wirings: ``int`` > 0 or ``None``
 
-        :param returns: Calling returns results or raises exceptions if `True`.
-        :type returns: `bool`
+        :param returns: Calling returns results or raises exceptions if ``True``.
+        :type returns: ``bool``
 
-        :param ignore_failures: If `False`, all wired callables will be called,
-                                regardless of raised exceptions; if `True`,
+        :param ignore_failures: If ``False``, all wired callables will be called,
+                                regardless of raised exceptions; if ``True``,
                                 wired callable calling will stop after the first
                                 exception.
-        :type ignore_failures: `bool`
+        :type ignore_failures: ``bool``
         """
         if min_wirings is not None and min_wirings <= 0:
             raise ValueError('min_wirings must be positive or None')
@@ -119,7 +122,7 @@ class Wiring(object):
 
     def __getattr__(self, name):
         """
-        Attribute based access to `WiringCallable`\\s.
+        Attribute based access to :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
         """
         try:
             the_callable = self._callables[name]
@@ -141,28 +144,28 @@ class Wiring(object):
 
     def __getitem__(self, name):
         """
-        Index based access to `WiringCallable`\\s.
+        Index based access to :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
         """
         return self.__getattr__(name)
 
 
     def __delattr__(self, name):
         """
-        Deletes `WiringCallable`\\s.
+        Deletes :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
         """
         del self._callables[name]
 
 
     def __len__(self):
         """
-        Existing `WiringCallable` count.
+        Existing :class:`WiringCallable <wires._callable.WiringCallable>` count.
         """
         return len(self._callables)
 
 
     def __iter__(self):
         """
-        Iterate over existing `WiringCallable`\\s.
+        Iterate over existing :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
         """
         return iter(self._callables.values())
 
@@ -174,10 +177,10 @@ class Wiring(object):
         Usage example:
 
         >>> w = Wiring(returns=False)
-        >>> w.a_callable()                  # returns False
-        >>> w(returns=True).a_callable()    # returns True for this call only
+        >>> w.one_callable()                # returns False
+        >>> w(returns=True).one_callable()  # returns True for this call only
         []
-        >>> w.a_callable()                  # returns still False
+        >>> w.one_callable()                # returns still False
         """
         self._calltime_settings.clear()
 
