@@ -72,24 +72,21 @@ class WiringCallable(object):
         in future releases; it is used internally to override call-time settings.
         """
 
-        # Going with a `**kwargs` like argument would make this code simpler,
-        # but the method signature would be more opaque; we prefer explicit
-        # even though the code is longer, slower and harder (even if by a small
-        # amount) to manage.
-
         if _next_call_only is True:
             target_settings = self._calltime_settings
         else:
             target_settings = self._callable_settings
 
-        if min_wirings is not self.not_set:
-            target_settings['min_wirings'] = min_wirings
-        if max_wirings is not self.not_set:
-            target_settings['max_wirings'] = max_wirings
-        if returns is not self.not_set:
-            target_settings['returns'] = returns
-        if ignore_failures is not self.not_set:
-            target_settings['ignore_failures'] = ignore_failures
+        # Going with a `**kwargs` like argument would make this code simpler,
+        # but the method signature would be more opaque; we prefer explicit
+        # even though the code needs to repeat the argument names and work
+        # at a somewhat "meta-ish" level.
+
+        local_names = locals()
+        arg_names = ('min_wirings', 'max_wirings', 'returns', 'ignore_failures')
+        for name in arg_names:
+            if local_names[name] is not self.not_set:
+                target_settings[name] = local_names[name]
 
 
     @property
