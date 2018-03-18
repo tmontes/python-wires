@@ -13,7 +13,7 @@ from __future__ import absolute_import
 
 
 
-__version__ = '18.1.0b2'
+__version__ = '18.1.0rc1'
 
 __title__ = 'wires'
 __description__ = 'Python Wires'
