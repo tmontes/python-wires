@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wires WiringCallable Class.
+Python Wires :class:`WiringCallable` Class.
 
 Callable with a minimal API:
 
@@ -23,15 +23,24 @@ from __future__ import absolute_import
 class WiringCallable(object):
 
     """
-    WiringCallable Class.
+    :class:`WiringCallable` Class.
     """
 
     def __init__(self, _wiring, _name, _wiring_settings):
         """
-        **IMPORTANT**: Do not instantiate `WiringCallable` objects directly. The
-        `Wiring` class does that when needed. All initialization arguments are
-        considered private and may change in future releases.
+        **IMPORTANT**
+
+        Do not instantiate :class:`WiringCallable` objects;
+        :class:`Wiring <wires._wiring.Wiring>` objects do that, when needed. All
+        initialization arguments are considered private and may change in future
+        releases.
         """
+
+        # _wiring - The `Wiring` object we're a part of.
+        # _name - The attribute name in `_wiring` leading to us.
+        # _wiring_settings - The default callable settings in `_wiring`;
+        #                    passed because it's private to `Wiring` objects.
+
         self._wiring = _wiring
         self._name = _name
 
@@ -78,19 +87,22 @@ class WiringCallable(object):
     @property
     def min_wirings(self):
         """
-        Minimum number of allowed wirings. None means no limit.
+        Minimum number of wirings or ``None``, meaning no limit.
+
+        An assigned non-``None`` value must be:
+
+        - A positive integer.
+        - Less than or equal to :attr:`max_wirings`.
+        - Less than or equal to the wiring count, if there are wirings.
+
+        :raises ValueError: When assigned non-conforming values.
         """
         return self._effective_setting('min_wirings')
 
 
     @min_wirings.setter
     def min_wirings(self, value):
-        """
-        Minimum number of allowed wirings. None means no limit. Must be:
-        - A positive integer.
-        - Less than or equal to max_wirings
-        - Less than or equal to the current number of wirings, if any.
-        """
+
         if value is not None:
             wiring_count = len(self._wirings)
             if value <= 0:
@@ -106,19 +118,22 @@ class WiringCallable(object):
     @property
     def max_wirings(self):
         """
-        Maximum number of allowed wirings. None means no limit.
+        Maximum number of wirings or ``None``, meaning no limit.
+
+        An assigned non-``None`` value must be:
+
+        - A positive integer.
+        - Greater than or equal to :attr:`min_wirings`.
+        - Greater than or equal to the wiring count, if there are wirings.
+
+        :raises ValueError: When assigned non-conforming values.
         """
         return self._effective_setting('max_wirings')
 
 
     @max_wirings.setter
     def max_wirings(self, value):
-        """
-        Maximum number of allowed wirings. None means no limit. Must be:
-        - A positive integer.
-        - Greater than or equal to min_wirings
-        - Greater than or equal to the current number of wirings, if any.
-        """
+
         if value is not None:
             wiring_count = len(self._wirings)
             if value <= 0:
@@ -134,7 +149,8 @@ class WiringCallable(object):
     @property
     def returns(self):
         """
-        If True, calling returns list of wired (<exception>, <result>) tuples.
+        If ``True``, calling returns list of wired ``(<exception>, <result>)``
+        tuples.
         """
         return self._effective_setting('returns')
 
@@ -148,7 +164,8 @@ class WiringCallable(object):
     @property
     def ignore_failures(self):
         """
-        If False, stops calling wired callables on the first raised exception.
+        If ``False``, stops calling wired callables on the first raised
+        exception.
         """
         return self._effective_setting('ignore_failures')
 
@@ -170,10 +187,23 @@ class WiringCallable(object):
         """
         Sets one or more per-callable settings.
 
-        The `not_set` defaults are used as a guard to identify non-set arguments.
+        :param min_wirings:
+        :type min_wirings:
 
-        The `_next_call_only` argument is considered private and may be removed
-        in future releases; it is used internally to override call-time settings.
+        :param max_wirings:
+        :type max_wirings:
+
+        :param returns:
+        :type returns:
+
+        :param ignore_failures:
+        :type ignore_failures:
+
+        :param _next_call_only: **IMPORTANT**: This argumet is considered private
+                                and may change or be removed in future releases.
+        :type _next_call_only: ``bool``
+
+        The ``not_set`` defaults are used as a guard to identify non-set arguments.
         """
 
         if _next_call_only is True:
