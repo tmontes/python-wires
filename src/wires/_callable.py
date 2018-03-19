@@ -8,22 +8,22 @@
 """
 Python Wires :class:`WiringCallable` Class.
 
-:class:`WiringCallable`\\s are callable objects created and used as
+:class:`WiringCallable`\\s are callable objects used exclusively as
 :class:`Wiring <wires._wiring.Wiring>` object attributes.
 
 >>> w = Wiring()
 >>> callable(w.one_callable)
 True
 
-Each :class:`WiringCallable` can have zero or more wirings: functions/callables
-wired to it. The :meth:`wire <WiringCallable.wire>` method is used to add
-wirings, including optional wire-time arguments.
+Each :class:`WiringCallable` has zero or more wirings: functions/callables
+wired to it. Their :meth:`wire <WiringCallable.wire>` method is used to add
+wirings, including optional wire-time arguments:
 
 >>> w.one_callable.wire(print, 'hi')    # Wire `print`: one wire-time positional arg.
 >>> w.one_callable.wire(print, 'bye')   # 2nd `print` wiring: different wire-time arg.
 
 Calling a :class:`WiringCallable` calls its wirings, in wiring order, passing
-them a combination of optional wire-time and optional call-time arguments:
+them a combination of the optional wire-time and optional call-time arguments:
 
 >>> w.one_callable('world', end='!\\n') # Call with call-time positional and named args.
 hi world!
@@ -38,12 +38,12 @@ returning the wiring count:
 >>> len(w.one_callable)
 2
 
-:class:`WiringCallable` objects have several attributes that define their
-wire-time and call-time behaviour: see
+:class:`WiringCallable` objects behave differently depending on their
+:class:`Wiring <wires._wiring.Wiring>` object's settings and on their own
 :attr:`min_wirings <WiringCallable.min_wirings>`,
 :attr:`max_wirings <WiringCallable.max_wirings>`,
 :attr:`returns <WiringCallable.returns>` and
-:attr:`ignore_failures <WiringCallable.ignore_failures>`.
+:attr:`ignore_failures <WiringCallable.ignore_failures>` attributes.
 """
 
 from __future__ import absolute_import
