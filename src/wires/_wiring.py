@@ -156,6 +156,16 @@ class Wiring(object):
         del self._callables[name]
 
 
+    def __dir__(self):
+
+        # Add our WiringCallable names to the attribute list.
+        # Note: No super(...).__dir__() on Python 2!
+
+        result = dir(super(Wiring, self))
+        result.extend(self._callables.keys())
+        return result
+
+
     def __len__(self):
         """
         Existing :class:`WiringCallable <wires._callable.WiringCallable>` count.

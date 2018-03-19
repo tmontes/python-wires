@@ -183,6 +183,20 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertEqual(created_callables, obtained_callables)
 
 
+    def test_wiring_dir(self):
+        """
+        Callable names are present in a Wiring object's dir() output.
+        """
+        self.w.callable1.wire(self.returns_42)
+        self.w.callable2.wire(self.returns_none)
+        self.addCleanup(self.w.callable1.unwire, self.returns_42)
+        self.addCleanup(self.w.callable2.unwire, self.returns_none)
+
+        dir_output = dir(self.w)
+        self.assertIn('callable1', dir_output)
+        self.assertIn('callable2', dir_output)
+
+
     def test_wiring_len(self):
         """
         No callables means len is 0.
