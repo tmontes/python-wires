@@ -9,5 +9,7 @@ Contents
    reference
    thanks
    about
+   changelog
+   development
    iat
 

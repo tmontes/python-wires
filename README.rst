@@ -21,12 +21,24 @@ Python Wires: Simple Callable Wiring
 |
 
 
-Python Wires is a library to facilitate callable wiring by decoupling callers from callees. It can be used as a simple callable-based event notification system, as an in-process publish-subscribe like solution, or in any use case where callable chaining and decoupling is appropriate.
+Python Wires is a library to facilitate callable wiring by decoupling callers from callees. It can be used as a simple callable-based event notification system, as an in-process publish-subscribe like solution, or in any context where 1:N callable decoupling is appropriate.
+
+
+Installation
+------------
+
+Python Wires is a pure Python package distributed via `PyPI <https://pypi.python.org/pypi/wires>`_, best installed into a virtual environment with:
+
+.. code-block:: console
+
+	$ pip install wires
+
+
 
 Quick Start
 -----------
 
-Start off by creating a ``Wiring`` object:
+Create a ``Wiring`` object:
 
 .. code-block:: python
 
@@ -34,7 +46,7 @@ Start off by creating a ``Wiring`` object:
 
     w = Wiring()
 
-``Wiring`` object attributes are callables, auto-created on first access; each such callable can be wired to other, existing, callables:
+Its attributes are callables, and will be auto-created on first access; each can then be wired to other callables:
 
 
 .. code-block:: python
@@ -42,26 +54,34 @@ Start off by creating a ``Wiring`` object:
     def say_hello():
         print('Hello from wires!')
 
-    w.my_callable.wire(say_hello)       # Wire `say_hello` to `w.my_callable`.
+    w.my_callable.wire(say_hello)       # Wires `w.my_callable`, auto-created, to `say_hello`.
 
 
-Calling a ``Wiring`` callable attribute calls its wired callables:
+Calling such callables calls their wired callables:
 
 .. code-block:: python
 
     w.my_callable()                     # Prints 'Hello from wires!'
 
 
-Wiring multiple callables 
+Wirings can be added or removed at any time:
 
 .. code-block:: python
 
-    def say_bye():
-        print('Bye bye!')
+    def say_welcome():
+        print('Welcome!')
 
-    w.my_callable.wire(say_bye)         # Also wire `say_bye` to `w.my_callable`.
-    w.my_callable('world!')             # Now prints 'Hello world!' and 'Bye bye world!'.
+    w.my_callable.wire(say_welcome)     # Wires `w.my_callable` to `say_welcome`, as well.
+    w.my_callable()                     # Prints 'Hello from wires!' and 'Welcome!'.
 
+    w.my_callable.unwire(say_hello)     # Removes the wiring to `say_hello`.
+    w.my_callable()                     # Prints 'Welcome!'
+
+    w.my_callable.unwire(say_welcome)   # Removes the wiring to `say_welcome`.
+    w.my_callable()                     # Does nothing.
+
+
+To learn more about Python Wires, including setting wiring limits and tuning the call-time coupling behaviour, please explore the remaining documentation.
 
 
 .. marker-end-welcome-dont-remove
