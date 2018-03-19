@@ -1,5 +1,5 @@
-Python Wires: Simple Call Wiring
-================================
+Python Wires: Simple Callable Wiring
+====================================
 
 .. image:: http://img.shields.io/pypi/v/wires.svg
    :target: https://pypi.python.org/pypi/wires
@@ -21,19 +21,47 @@ Python Wires: Simple Call Wiring
 |
 
 
-``wires`` is a library to facilitate "call wiring" by decoupling callers from callees; it can be used as a callable-based event system or publish-subscribe like solution.
+Python Wires is a library to facilitate callable wiring by decoupling callers from callees. It can be used as a simple callable-based event notification system, as an in-process publish-subscribe like solution, or in any use case where callable chaining and decoupling is appropriate.
 
-Minimal example:
+Quick Start
+-----------
+
+Start off by creating a ``Wiring`` object:
 
 .. code-block:: python
 
-    from wires import w
+    from wires import Wiring
 
-    def my_callable():
+    w = Wiring()
+
+``Wiring`` object attributes are callables, auto-created on first access; each such callable can be wired to other, existing, callables:
+
+
+.. code-block:: python
+
+    def say_hello():
         print('Hello from wires!')
 
-    w.this_callable.wire(my_callable)
-    w.this_callable()
+    w.my_callable.wire(say_hello)       # Wire `say_hello` to `w.my_callable`.
+
+
+Calling a ``Wiring`` callable attribute calls its wired callables:
+
+.. code-block:: python
+
+    w.my_callable()                     # Prints 'Hello from wires!'
+
+
+Wiring multiple callables 
+
+.. code-block:: python
+
+    def say_bye():
+        print('Bye bye!')
+
+    w.my_callable.wire(say_bye)         # Also wire `say_bye` to `w.my_callable`.
+    w.my_callable('world!')             # Now prints 'Hello world!' and 'Bye bye world!'.
+
 
 
 .. marker-end-welcome-dont-remove
