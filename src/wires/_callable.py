@@ -8,12 +8,42 @@
 """
 Python Wires :class:`WiringCallable` Class.
 
-Callable with a minimal API:
+:class:`WiringCallable`\\s are callable objects created and used as
+:class:`Wiring <wires._wiring.Wiring>` object attributes.
 
-- Has zero or more wirings: functions/callables wired to it.
-- Each wiring has optional wire-time arguments.
-- Calling it calls all wired functions/callables, passing them the
-  combination of call-time and wire-time arguments.
+>>> w = Wiring()
+>>> callable(w.one_callable)
+True
+
+Each :class:`WiringCallable` can have zero or more wirings: functions/callables
+wired to it. The :meth:`wire <WiringCallable.wire>` method is used to add
+wirings, including optional wire-time arguments.
+
+>>> w.one_callable.wire(print, 'hi')    # Wire `print`: one wire-time positional arg.
+>>> w.one_callable.wire(print, 'bye')   # 2nd `print` wiring: different wire-time arg.
+
+Calling a :class:`WiringCallable` calls its wirings, in wiring order, passing
+them a combination of optional wire-time and optional call-time arguments:
+
+>>> w.one_callable('world', end='!\\n') # Call with call-time positional and named args.
+hi world!
+bye world!
+
+:class:`WiringCallable`\\s have a :attr:`wirings <WiringCallable.wirings>`
+attribute, representing all current wirings, and include support for :func:`len`,
+returning the wiring count:
+
+>>> w.one_callable.wirings
+[(<built-in function print>, ('hi',), {}), (<built-in function print>, ('bye',), {})]
+>>> len(w.one_callable)
+2
+
+:class:`WiringCallable` objects have several attributes that define their
+wire-time and call-time behaviour: see
+:attr:`min_wirings <WiringCallable.min_wirings>`,
+:attr:`max_wirings <WiringCallable.max_wirings>`,
+:attr:`returns <WiringCallable.returns>` and
+:attr:`ignore_failures <WiringCallable.ignore_failures>`.
 """
 
 from __future__ import absolute_import
@@ -94,7 +124,7 @@ class WiringCallable(object):
         Writing assigns a per-:class:`WiringCallable` value that, if
         non-``None``, must be:
 
-        - A positive integer.
+        - An ``int`` > 0.
         - Less than or equal to :attr:`max_wirings`.
         - Less than or equal to the wiring count, if there are wirings.
 
@@ -128,7 +158,7 @@ class WiringCallable(object):
         Writing assigns a per-:class:`WiringCallable` value that, if
         non-``None``, must be:
 
-        - A positive integer.
+        - An ``int`` > 0.
         - Greater than or equal to :attr:`min_wirings`.
         - Greater than or equal to the wiring count, if there are wirings.
 
@@ -267,7 +297,6 @@ class WiringCallable(object):
 
 
     def wire(self, function, *args, **kwargs):
-
         """
         Adds a new wiring to ``function``, with ``args`` and ``kwargs`` as
         wire-time arguments.
@@ -275,7 +304,6 @@ class WiringCallable(object):
         :raises TypeError: If ``function`` is not :func:`callable`.
         :raises RuntimeError: If :attr:`max_wirings` would be violated.
         """
-
         if not callable(function):
             raise TypeError('argument not callable: %r' % (function,))
 
@@ -287,7 +315,6 @@ class WiringCallable(object):
 
 
     def unwire(self, function):
-
         """
         Removes the first wiring to ``function``.
 
@@ -295,7 +322,6 @@ class WiringCallable(object):
         :raises ValueError: If ``function`` is not wired.
         :raises RuntimeError: If :attr:`min_wirings` would be violated.
         """
-
         if not callable(function):
             raise TypeError('argument not callable: %r' % (function,))
 
@@ -312,30 +338,53 @@ class WiringCallable(object):
     @property
     def wirings(self):
         """
-        List of ``(<function>, <wire-time-args>, <wire-time-kwargs>)`` wiring
-        tuples, in wiring order.
+        List of ``(<function>, <args>, <kwargs>)`` wiring tuples, in wiring
+        order, where ``<args>`` and ``<kwargs>`` are the wire-time arguments
+        passed to :meth:`wire`.
         """
         return list(self._wirings)
 
 
     def __call__(self, *args, **kwargs):
         """
-        Calls all wirings, in wiring order.
+        Calls wirings, in wiring order.
 
-        * If ``False``, calling returns ``None``.
-        * If ``True`` and :attr:`ignore_failures` is ``True``, calling returns a
-          list of ``(<exception>, <result>)`` tuples, one per wiring, where:
+        :raises ValueError: If the wiring count is lower than
+                            :attr:`min_wirings`, when set to an ``int`` > 0.
 
-          * ``<exception>`` will be ``None`` for wirings that did not raise an
-             exception
+        Argument passing:
 
-        * If ``True`` and :attr:`ignore_failures` is ``Fase``, batatas.
+        * Wired functions are passed a combination of the wire-time and
+          call-time arguments; wire-time positional arguments will be passed
+          first, followed by the call-time ones; wire-time named arguments may
+          be overridden by call-time ones.
+
+        Call-time coupling. Depends on:
+
+        * :attr:`returns`: if ``False``, calling returns ``None``; otherwise,
+          returns or raises (see below).
+        * :attr:`ignore_failures`: if ``False``, calling wirings stops on the
+          first wiring-raised exception; otherwise, all wirings will be called.
+
+        :returns: A list of ``(<exception>, <result>)`` tuples, in wiring order,
+                  where: ``<exception>`` is ``None`` and ``<result>`` holds the
+                  returned value from that wiring, if no exception was raised;
+                  otherwise, ``<exception>`` is the raised exception and
+                  ``<result>`` is ``None``.
+
+        :raises RuntimeError: Only if :attr:`returns` is ``True``,
+                              :attr:`ignore_failures` is ``False``, and a
+                              wiring raises an exception. The exception
+                              arguments will be a tuple of
+                              ``(<exception>, <result>)`` tuples, much like the
+                              returned ones, where only the last one will have
+                              ``<exception>`` as a non-``None`` value.
         """
 
         # Calling with wiring count < `min_wirings`, if set, is an error.
         min_wirings = self.min_wirings
         if min_wirings and len(self._wirings) < min_wirings:
-            raise RuntimeError('less than min_wirings wired')
+            raise ValueError('less than min_wirings wired')
 
         # Get call coupling behaviour for this call from our Wiring, resetting
         # it, to account for correct "default" vs "overridden" behaviour.

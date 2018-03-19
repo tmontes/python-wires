@@ -310,7 +310,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         )
 
         # Calling it raises an exception: min_wirings=1 but no wirings.
-        with self.assertRaises(RuntimeError) as cm:
+        with self.assertRaises(ValueError) as cm:
             _ = self.w.this()
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
