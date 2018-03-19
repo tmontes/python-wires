@@ -89,13 +89,16 @@ class WiringCallable(object):
         """
         Minimum number of wirings or ``None``, meaning no limit.
 
-        An assigned non-``None`` value must be:
+        Reading returns the per-:class:`WiringCallable` value, if set, falling
+        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
+        Writing assigns a per-:class:`WiringCallable` value that, if
+        non-``None``, must be:
 
         - A positive integer.
         - Less than or equal to :attr:`max_wirings`.
         - Less than or equal to the wiring count, if there are wirings.
 
-        :raises ValueError: When assigned non-conforming values.
+        :raises ValueError: When assigned invalid values.
         """
         return self._effective_setting('min_wirings')
 
@@ -120,7 +123,10 @@ class WiringCallable(object):
         """
         Maximum number of wirings or ``None``, meaning no limit.
 
-        An assigned non-``None`` value must be:
+        Reading returns the per-:class:`WiringCallable` value, if set, falling
+        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
+        Writing assigns a per-:class:`WiringCallable` value that, if
+        non-``None``, must be:
 
         - A positive integer.
         - Greater than or equal to :attr:`min_wirings`.
@@ -149,8 +155,11 @@ class WiringCallable(object):
     @property
     def returns(self):
         """
-        If ``True``, calling returns list of wired ``(<exception>, <result>)``
-        tuples.
+        ``bool`` value defining call-time coupling behaviour: see :meth:`__call__`.
+
+        Reading returns the per-:class:`WiringCallable` value, if set, falling
+        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
+        Writing assigns a per-:class:`WiringCallable` value.
         """
         return self._effective_setting('returns')
 
@@ -164,8 +173,11 @@ class WiringCallable(object):
     @property
     def ignore_failures(self):
         """
-        If ``False``, stops calling wired callables on the first raised
-        exception.
+        ``bool`` value defining call-time coupling behaviour: see :meth:`__call__`.
+
+        Reading returns the per-:class:`WiringCallable` value, if set, falling
+        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
+        Writing assigns a per-:class:`WiringCallable` value.
         """
         return self._effective_setting('ignore_failures')
 
@@ -180,30 +192,29 @@ class WiringCallable(object):
     # would not be appropriate given than `min_wirings` and `max_wirings` take
     # `None` as valid value.
 
-    not_set = object()
+    _not_set = object()
 
-    def set(self, min_wirings=not_set, max_wirings=not_set, returns=not_set,
-            ignore_failures=not_set, _next_call_only=False):
+    def set(self, min_wirings=_not_set, max_wirings=_not_set, returns=_not_set,
+            ignore_failures=_not_set, _next_call_only=False):
         """
-        Sets one or more per-callable settings.
+        Sets one or more per-:class:`WiringCallable` settings.
 
-        :param min_wirings:
-        :type min_wirings:
+        :param min_wirings: See :attr:`min_wirings`.
 
-        :param max_wirings:
-        :type max_wirings:
+        :param max_wirings: See :attr:`max_wirings`.
 
-        :param returns:
-        :type returns:
+        :param returns: See :attr:`returns`.
 
-        :param ignore_failures:
-        :type ignore_failures:
+        :param ignore_failures: See :attr:`ignore_failures`.
 
-        :param _next_call_only: **IMPORTANT**: This argumet is considered private
-                                and may change or be removed in future releases.
-        :type _next_call_only: ``bool``
+        :param _next_call_only: **IMPORTANT**: This argument is considered
+                                private and may be changed or removed in future
+                                releases.
 
-        The ``not_set`` defaults are used as a guard to identify non-set arguments.
+        :raises: May raise exceptions. Refer to the per-attribute documentation.
+
+        The uncommon defaults are used as a guard to identify non-set arguments,
+        given than ``None`` is a valid value for ``min_wirings`` and ``max_wirings``.
         """
 
         if _next_call_only is True:
@@ -219,15 +230,18 @@ class WiringCallable(object):
         local_names = locals()
         arg_names = ('min_wirings', 'max_wirings', 'returns', 'ignore_failures')
         for name in arg_names:
-            if local_names[name] is not self.not_set:
+            if local_names[name] is not self._not_set:
                 target_settings[name] = local_names[name]
 
 
     def __delattr__(self, name):
         """
-        Removes any per-Callable setting, reverting to the Wiring instance's
-        default values; raises ValueError if the resulting settings would be
-        invalid.
+        Removes per-:class:`WiringCallable` settings.
+
+        :param name: An existing attribute name.
+        :type name:  ``str``
+
+        :raises: May raise exceptions if the resulting settings would be invalid.
         """
         # save and discard any current per-callable setting.
         try:
@@ -255,11 +269,15 @@ class WiringCallable(object):
     def wire(self, function, *args, **kwargs):
 
         """
-        Wires `function` with `args` and `kwargs` as wire-time arguments.
+        Adds a new wiring to ``function``, with ``args`` and ``kwargs`` as
+        wire-time arguments.
+
+        :raises TypeError: If ``function`` is not :func:`callable`.
+        :raises RuntimeError: If :attr:`max_wirings` would be violated.
         """
 
         if not callable(function):
-            raise ValueError('argument not callable: %r' % (function,))
+            raise TypeError('argument not callable: %r' % (function,))
 
         # self._max_wirings can be None, meaning "no limit": comparison ok
         if len(self._wirings) == self.max_wirings:
@@ -271,12 +289,15 @@ class WiringCallable(object):
     def unwire(self, function):
 
         """
-        Unwires `function`.
-        If `function` is wired multiple times, just unwires the first wiring.
+        Removes the first wiring to ``function``.
+
+        :raises TypeError: If ``function`` is not :func:`callable`.
+        :raises ValueError: If ``function`` is not wired.
+        :raises RuntimeError: If :attr:`min_wirings` would be violated.
         """
 
         if not callable(function):
-            raise ValueError('argument not callable: %r' % (function,))
+            raise TypeError('argument not callable: %r' % (function,))
 
         # self.min_wirings can be None, meaning "no limit": comparison ok
         if len(self._wirings) == self.min_wirings:
@@ -291,13 +312,25 @@ class WiringCallable(object):
     @property
     def wirings(self):
         """
-        List of wired (<callable>, <wire-time-args>, <wire-time-kwargs>) tuples,
-        where <wire-time-args> is a tuple and <wire-time-kwargs> is a dict.
+        List of ``(<function>, <wire-time-args>, <wire-time-kwargs>)`` wiring
+        tuples, in wiring order.
         """
         return list(self._wirings)
 
 
     def __call__(self, *args, **kwargs):
+        """
+        Calls all wirings, in wiring order.
+
+        * If ``False``, calling returns ``None``.
+        * If ``True`` and :attr:`ignore_failures` is ``True``, calling returns a
+          list of ``(<exception>, <result>)`` tuples, one per wiring, where:
+
+          * ``<exception>`` will be ``None`` for wirings that did not raise an
+             exception
+
+        * If ``True`` and :attr:`ignore_failures` is ``Fase``, batatas.
+        """
 
         # Calling with wiring count < `min_wirings`, if set, is an error.
         min_wirings = self.min_wirings
