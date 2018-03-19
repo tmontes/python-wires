@@ -13,8 +13,8 @@ Wires Package
 
 
 
-Wiring
-^^^^^^
+Wiring  Class
+^^^^^^^^^^^^^
 
 .. automodule:: wires._wiring
    :members:
@@ -23,8 +23,8 @@ Wiring
 
 
 
-Wiring Callable
-^^^^^^^^^^^^^^^
+WiringCallable Class
+^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: wires._callable
    :members:

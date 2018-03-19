@@ -32,16 +32,16 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.w.unwired_call()
 
 
-    def test_wiring_non_callable_raises_value_error(self):
+    def test_wiring_non_callable_raises_type_error(self):
         """
-        Wiring a call to a non-callable raises ValueError.
+        Wiring a call to a non-callable raises TypeError.
         The exception argument (message):
         - Starts with "argument not callable: ".
         - Contains repr(argument).
         """
         for non_callable in (None, True, 42, 2.3, (), [], {}, set()):
 
-            with self.assertRaises(ValueError) as cm:
+            with self.assertRaises(TypeError) as cm:
                 self.w.this.wire(non_callable)
 
             exception_args = cm.exception.args
@@ -59,16 +59,16 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
             )
 
 
-    def test_unwiring_non_callable_raises_value_error(self):
+    def test_unwiring_non_callable_raises_type_error(self):
         """
-        Unwiring a call from a non-callable raises ValueError.
+        Unwiring a call from a non-callable raises TypeError.
         The exception argument (message):
         - Starts with "argument not callable: ".
         - Contains repr(argument).
         """
         for non_callable in (None, True, 42, 2.3, (), [], {}, set()):
 
-            with self.assertRaises(ValueError) as cm:
+            with self.assertRaises(TypeError) as cm:
                 self.w.this.unwire(non_callable)
 
             exception_args = cm.exception.args
@@ -310,7 +310,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         )
 
         # Calling it raises an exception: min_wirings=1 but no wirings.
-        with self.assertRaises(RuntimeError) as cm:
+        with self.assertRaises(ValueError) as cm:
             _ = self.w.this()
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)

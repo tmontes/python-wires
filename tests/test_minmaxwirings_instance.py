@@ -103,13 +103,13 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         self.assertEqual(exception_args[0], 'max_wirings limit reached')
 
 
-    def test_min_1_call_raises_runtime_error(self):
+    def test_min_1_call_raises_value_error(self):
         """
-        Calling an unwired callable with min_wirings set raises RuntimeError.
+        Calling an unwired callable with min_wirings set raises ValueError.
         """
         w = Wiring(min_wirings=1)
 
-        with self.assertRaises(RuntimeError) as cm:
+        with self.assertRaises(ValueError) as cm:
             w.this()
 
         exception_args = cm.exception.args
@@ -254,14 +254,14 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         self.assertEqual(exception_args[0], 'max_wirings limit reached')
 
 
-    def test_min_1_call_raises_runtime_error(self):
+    def test_min_1_call_raises_value_error(self):
         """
-        Calling an unwired callable with min_wirings set raises RuntimeError.
+        Calling an unwired callable with min_wirings set raises ValueError.
         """
         self.w.this.min_wirings = 1
         self.addCleanup(self.reset_min_max_wirings)
 
-        with self.assertRaises(RuntimeError) as cm:
+        with self.assertRaises(ValueError) as cm:
             self.w.this()
 
         exception_args = cm.exception.args
