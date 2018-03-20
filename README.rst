@@ -27,7 +27,7 @@ Python Wires is a library to facilitate callable wiring by decoupling callers fr
 Installation
 ------------
 
-Python Wires is a pure Python package distributed via `PyPI <https://pypi.python.org/pypi/wires>`_, best installed into a virtual environment with:
+Python Wires is a pure Python package distributed via `PyPI <https://pypi.python.org/pypi/wires>`_. Install it with:
 
 .. code-block:: console
 
@@ -46,7 +46,7 @@ Create a ``Wiring`` object:
 
     w = Wiring()
 
-Its attributes are callables, and will be auto-created on first access; each can then be wired to other callables:
+Its attributes are callables, auto-created on first access, that can be wired to other callables:
 
 
 .. code-block:: python
@@ -64,7 +64,7 @@ Calling such callables calls their wired callables:
     w.my_callable()                     # Prints 'Hello from wires!'
 
 
-Wirings can be added or removed at any time:
+More wirings can be added:
 
 .. code-block:: python
 
@@ -74,6 +74,11 @@ Wirings can be added or removed at any time:
     w.my_callable.wire(say_welcome)     # Wires `w.my_callable` to `say_welcome`, as well.
     w.my_callable()                     # Prints 'Hello from wires!' and 'Welcome!'.
 
+
+Wirings can also be removed:
+
+.. code-block:: python
+
     w.my_callable.unwire(say_hello)     # Removes the wiring to `say_hello`.
     w.my_callable()                     # Prints 'Welcome!'
 
@@ -81,7 +86,7 @@ Wirings can be added or removed at any time:
     w.my_callable()                     # Does nothing.
 
 
-To learn more about Python Wires, including setting wiring limits and tuning the call-time coupling behaviour, please explore the remaining documentation.
+To learn more about Python Wires, including passing parameters, setting wiring limits and tuning the call-time coupling behaviour, please refer to the remaining documentation.
 
 
 .. marker-end-welcome-dont-remove
