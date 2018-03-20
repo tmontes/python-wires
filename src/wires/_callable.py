@@ -89,7 +89,7 @@ class WiringCallable(object):
 
     def __repr__(self):
 
-        return '<%s %r>' % (self.__class__.__name__, self._name)
+        return '<%s %r at 0x%x>' % (self.__class__.__name__, self._name, id(self))
 
 
     @property

@@ -242,15 +242,16 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
 
     def test_callable_repr(self):
         """
-        Between angle brackets, contains callable name repr.
+        Between angle brackets, contains callable name repr and id(self).
         """
         self.w.callable_name.wire(self.returns_42)
         self.addCleanup(self.w.callable_name.unwire, self.returns_42)
 
         repr_str = repr(self.w.callable_name)
         self.assertTrue(repr_str.startswith('<WiringCallable '), 'bad repr start')
-        self.assertTrue(repr_str.endswith('>'), 'bad repr end')
         self.assertTrue(repr('callable_name') in repr_str, 'no name in repr')
+        ending = ' at 0x%x>' % id(self.w.callable_name)
+        self.assertTrue(repr_str.endswith(ending), 'bad repr end')
 
 
     def test_del_unknown_callable_attr_raises_attribute_error(self):
