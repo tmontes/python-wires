@@ -9,7 +9,7 @@ Versions and Platforms
 
 Following a strict `Backwards Compatibility Policy`_, Python Wires strives to work on as many Python interpreters and underlying platforms as possible. For that, care is taken in crafting and maintaining a clean, documented code base, that respects and uses safe, non-depcrecated Python programming APIs and conventions.
 
-There is, however, a limited set of interpreters and platforms where development and automated testing takes place, under which "correctness assertions" [#correctness]_ and human based diagnostics can take place.
+There is, however, a limited set of interpreters and platforms where development and automated testing takes place; these are the only ones where, respectively, human based diagnostics are completed, and where "correctness assertions" [#correctness]_ can be made.
 
 .. important::
 
@@ -78,6 +78,9 @@ If something is not working as expected, please also include:
 * The Python Wires version (eg. 18.1.0).
 * The Python interpreter version (eg. CPython 3.5.2 64 bit).
 * The operating system version (eg. Debian 9 "stretch" 64 bit).
+
+.. note::
+    Addressing requests targeting unsupported versions, interpreters or platforms may require additional efforts and non-trivial amounts of time. Besides that, they will be equally welcome.
 
 
 .. [#correctness] Whatever that means, without implying any guarantees other than the ones expressed in the :doc:`license`.
