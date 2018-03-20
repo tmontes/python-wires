@@ -12,8 +12,8 @@ Substantiated contributions and discussions on this topic will be welcome.
 
 
 
-Development Environment
------------------------
+Environment
+-----------
 
 Setting up a development enviroment should be done under a Python virtual environment:
 
@@ -55,8 +55,8 @@ Running the test suite with `tox <https://pypi.python.org/pypi/tox>`_:
 
 
 
-Process Overview
-----------------
+Process 
+-------
 
 GitHub Issues, Labels, Milestones, and Pull Requests are used to track Python Wires development.
 
@@ -68,36 +68,36 @@ GitHub Issues, Labels, Milestones, and Pull Requests are used to track Python Wi
 
 
 Milestones
-----------
+^^^^^^^^^^
 
 The following `GitHub Milestones <https://github.com/tmontes/python-wires/milestones>`_ are tracked:
 
-==========  ================================================================================
-**NEXT**    Issues and Pull Requests that will be included in the next release.
-**DEFER**   Issues and Pull Requests that will be worked on, but will not be included in the next release.
-**TBD**     Issues and Pull Requests that will not be worked on until future decision.
-==========  ================================================================================
+==================  ================================================================================
+:guilabel:`NEXT`    Issues and Pull Requests that will be included in the next release.
+:guilabel:`DEFER`   Issues and Pull Requests that will be worked on, but will not be included in the next release.
+:guilabel:`TBD`     Issues and Pull Requests that will not be worked on until future decision.
+==================  ================================================================================
 
 .. note::
-    Unassigned Issues and Pull Requests will be assigned to the **TBD** milestone.
+    Unassigned Issues and Pull Requests will be assigned to the :guilabel:`TBD` milestone.
 
 At release time:
 
-* The **NEXT** milestone is renamed to the release version and closed.
-* A new **NEXT** milestone is created, with no associated Issues or Pull Requests.
+* The :guilabel:`NEXT` milestone is renamed to the release version and closed.
+* A new :guilabel:`NEXT` milestone is created, with no associated Issues or Pull Requests.
 
 
 
 Issues and Labels
------------------
+^^^^^^^^^^^^^^^^^
 
 All development issues will be `labelled <https://github.com/tmontes/python-wires/labels>`_ one of:
 
-=============== =================================================================================
-**enhancement** Describing a new feature or capability.
-**bug**         Describing something that isn't working as documented.
-**develop**     Describing other development related issues: refactors, automation, process, etc.
-=============== =================================================================================
+======================= =================================================================================
+:guilabel:`enhancement` Describing a new feature or capability.
+:guilabel:`bug`         Describing something that isn't working as documented.
+:guilabel:`develop`     Describing other development related issues: refactors, automation, process, etc.
+======================= =================================================================================
 
 
 .. note::
@@ -110,7 +110,7 @@ General requirements:
 
 * Complex issues should be split into simpler, possibly related, issues.
 
-* **enhancement** issues:
+* :guilabel:`enhancement` issues:
 
   * Must describe the use-case, benefits and tradeoffs.
 
@@ -118,7 +118,7 @@ General requirements:
 
   * Should take the `Checklist for Python library APIs <http://python.apichecklist.com>`_ into consideration.
 
-* **bug** issues must:
+* :guilabel:`bug` issues must:
 
   * Be explicitly reported against either the latest `PyPI released version <https://pypi.python.org/pypi/wires>`_ or the current `GitHub master branch <https://github.com/tmontes/python-wires/tree/master>`_.
 
@@ -129,18 +129,18 @@ General requirements:
   * Include a reference to where the documentation is inconsistent with the actual results.
 
 
-* **development** issues:
+* :guilabel:`development` issues:
 
   * Must describe the purpose, benefits and trade-offs.
 
 
 .. warning::
-    Open development issues not fulfilling these requirements will be either discarded and closed, or worked on, at the maintainer's discretion.
+    Open development issues not meeting these requirements will be either discarded and closed, or worked on, at the maintainer's discretion.
 
 
 
 Pull Requests
--------------
+^^^^^^^^^^^^^
 
 Pull Requests are `tracked here <https://github.com/tmontes/python-wires/pulls>`_ and:
 
@@ -151,16 +151,4 @@ Pull Requests are `tracked here <https://github.com/tmontes/python-wires/pulls>`
 * Must be assigned to the same milestone as the referenced open issue.
 * May be labelled.
 
-
-
-Versioning
-----------
-
-Python Wires is versioned according to a `Calendar Versioning <https://calver.org/>`_ scheme, with versions being tagged ``YY`` . ``MINOR`` . ``MICRO``, where:
-
-=========== ============================================================
-**YY**      Is the two digit year of the release.
-**MINOR**   Is the release number, starting at 1 every year.
-**MICRO**   Is the bugfix release, being 0 for non-bugfix only releases.
-=========== ============================================================
 
