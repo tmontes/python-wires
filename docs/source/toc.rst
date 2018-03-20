@@ -11,5 +11,6 @@ Contents
    about
    changelog
    development
+   license
    iat
 
