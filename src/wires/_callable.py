@@ -61,9 +61,13 @@ class WiringCallable(object):
         **IMPORTANT**
 
         Do not instantiate :class:`WiringCallable` objects;
-        :class:`Wiring <wires._wiring.Wiring>` objects do that, when needed. All
-        initialization arguments are considered private and may change in future
-        releases.
+        :class:`Wiring <wires._wiring.Wiring>` objects do that, when needed. The
+        class name and all its initialization arguments are considered private
+        and may change in the future without prior notice.
+
+        To ensure future compatibility, it should be used strictly in the
+        context of :class:`Wiring <wires._wiring.Wiring>` objects, along with
+        its public attributes, properties and methods.
         """
 
         # _wiring - The `Wiring` object we're a part of.
