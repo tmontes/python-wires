@@ -29,6 +29,7 @@ INSTALL_REQUIRES = [
 EXTRAS_REQUIRE = {
     "docs": [
         "sphinx",
+        "sphinx-rtd-theme",
     ],
     "tests": [
         "coverage",

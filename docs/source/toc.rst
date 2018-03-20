@@ -9,5 +9,8 @@ Contents
    reference
    thanks
    about
+   license
+   changelog
+   development
    iat
 
