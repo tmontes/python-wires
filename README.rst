@@ -86,15 +86,9 @@ Wirings can also be removed:
     w.my_callable()                     # Does nothing.
 
 
-To learn more about Python Wires, including passing parameters, setting wiring limits and tuning the call-time coupling behaviour, please refer to the remaining documentation.
-
+To learn more about Python Wires, including passing parameters, setting wiring limits and tuning the call-time coupling behaviour, please refer to the remaining documentation at https://python-wires.readthedocs.org/.
 
 .. marker-end-welcome-dont-remove
-
-
-Full documentation at https://python-wires.readthedocs.org/.
-
-
 
 
 Thanks
