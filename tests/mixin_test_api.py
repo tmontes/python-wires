@@ -19,10 +19,9 @@ from . import mixin_test_callables
 class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
 
     """
-    Drives Wires API tests requiring mixed class to:
-    - Have a Wiring instance at self.w.
-    - Allow wiring via self.wire.
-    - Allow unwiring via self.unwire.
+    Drives Wires API tests.
+
+    Requires the mixed class provide a Wiring instance at `self.w`.
     """
 
     def test_unwired_call_does_not_fail(self):
@@ -94,6 +93,54 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.addCleanup(self.w.this.unwire, self.returns_42)
 
 
+    def test_wiring_with_args_and_plain_unwiring_works(self):
+        """
+        Unwiring a plain callable after wiring it with wire-time args works.
+        """
+        self.w.this.wire(self.returns_42, 42, value=42)
+        self.w.this.unwire(self.returns_42)
+
+        # len(callable) is the number of wirings
+        self.assertEqual(len(self.w.this), 0)
+
+
+    def test_unwiring_matching_args_works(self):
+        """
+        Unwiring with args unwires the matching wiring and raises ValueError
+        if no wirings with such wire-time args are found.
+        """
+        self.w.this.wire(self.returns_42, 42, value=42)
+        self.w.this.wire(self.returns_42, 24, value=24)
+
+        # unwires the 2nd wiring: should work
+        self.w.this.unwire(self.returns_42, 24, value=24)
+
+        # assert one wiring
+        wirings = self.w.this.wirings
+        self.assertEqual(len(wirings), 1)
+
+        # assert we're left with the correct wiring/wire-time args
+        func, args, kwargs = wirings[0]
+        self.assertIs(func, self.returns_42)
+        self.assertEqual(args, (42,))
+        self.assertEqual(kwargs, {'value': 42})
+
+        # this wiring is now gone, should raise
+        with self.assertRaises(ValueError):
+            self.w.this.unwire(self.returns_42, 24, value=24)
+
+        # no such wire-time positional/named args, should raise
+        with self.assertRaises(ValueError):
+            self.w.this.unwire(self.returns_42, 'nswtpa', value='nswtna')
+
+        # unwire the 1st wiring, matching these wire-time args
+        self.w.this.unwire(self.returns_42, 42, value=42)
+
+        # assert no wirings
+        self.assertEqual(len(self.w.this), 0)
+
+
+
     def test_wiring_unwiring_works(self):
         """
         Wiring and then unwiring same callable works.
@@ -116,7 +163,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
 
         msg = exception_args[0]
         self.assertTrue(
-            msg.startswith('unknown function '),
+            msg.startswith('unwired function '),
             'wrong exception message: %r' % (msg,),
         )
 
