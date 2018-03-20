@@ -1,7 +1,7 @@
 Development
 ===========
 
-Python Wires is openly developed at https://github.com/tmontes/python-wires, following a process that strives to be:
+Python Wires is openly developed on `GitHub <https://github.com/tmontes/python-wires>`_, following a process that strives to be:
 
 * As simple as possible, but not simpler.
 * Easy to understand.
@@ -15,7 +15,7 @@ Substantiated contributions and discussions on this topic will be welcome.
 Development Environment
 -----------------------
 
-*write me*
+Setting up a development enviroment should be done under a Python virtual environment:
 
 .. code-block:: console
 
@@ -24,7 +24,14 @@ Development Environment
     $ pip install -e .[dev]
 
 
-*write me before coverage*
+Running the test suite:
+
+.. code-block:: console
+
+    $ python -m unittest discover
+
+
+Running the test suite with code coverage and branch reporting:
 
 .. code-block:: console
 
@@ -32,7 +39,14 @@ Development Environment
     $ coverage report
 
 
-*write me before tox*
+Building the documentation, which will be available under ``docs/build/html/``:
+
+.. code-block:: console
+
+    $ cd docs && make html
+
+
+Running the test suite with `tox <https://pypi.python.org/pypi/tox>`_:
 
 .. code-block:: console
 
@@ -44,10 +58,19 @@ Development Environment
 Process Overview
 ----------------
 
-Milestones
-^^^^^^^^^^
+GitHub Issues, Labels, Milestones, and Pull Requests are used to track Python Wires development.
 
-The following `milestones <https://github.com/tmontes/python-wires/milestones>`_ are tracked:
+* Issues must be labelled and associated to a milestone.
+* Pull Requests must reference, at least, one issue (and preferably only one).
+* Pull Requests will not be merged if any of the GitHub checks fails.
+* Pull Requests will not necessarily be merged if all of the GitHub checks pass.
+
+
+
+Milestones
+----------
+
+The following `GitHub Milestones <https://github.com/tmontes/python-wires/milestones>`_ are tracked:
 
 ==========  ================================================================================
 **NEXT**    Issues and Pull Requests that will be included in the next release.
@@ -65,8 +88,8 @@ At release time:
 
 
 
-Issues
-^^^^^^
+Issues and Labels
+-----------------
 
 All development issues will be `labelled <https://github.com/tmontes/python-wires/labels>`_ one of:
 
@@ -117,7 +140,7 @@ General requirements:
 
 
 Pull Requests
-^^^^^^^^^^^^^
+-------------
 
 Pull Requests are `tracked here <https://github.com/tmontes/python-wires/pulls>`_ and:
 
@@ -128,4 +151,16 @@ Pull Requests are `tracked here <https://github.com/tmontes/python-wires/pulls>`
 * Must be assigned to the same milestone as the referenced open issue.
 * May be labelled.
 
+
+
+Versioning
+----------
+
+Python Wires is versioned according to a `Calendar Versioning <https://calver.org/>`_ scheme, with versions being tagged ``YY`` . ``MINOR`` . ``MICRO``, where:
+
+=========== ============================================================
+**YY**      Is the two digit year of the release.
+**MINOR**   Is the release number, starting at 1 every year.
+**MICRO**   Is the bugfix release, being 0 for non-bugfix only releases.
+=========== ============================================================
 
