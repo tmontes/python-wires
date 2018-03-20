@@ -67,8 +67,17 @@ If a non-backwards compatible API change is planned:
 Requesting Support
 ------------------
 
-asdasdasd
+Before moving forward, please review the documentation: it may include the answers you're looking for. After that, if still in need of support, `take this guide into consideration <https://opensource.guide/how-to-contribute/#how-to-submit-a-contribution>`_, and then open a new issue `here <https://github.com/tmontes/python-wires/issues/new>`_, taking care to submit:
 
+* A clear and concise summary.
+* A detailed description, including snippets of code, if considered useful.
+
+If something is not working as expected, please also include:
+
+* A short code sample demonstrating the behaviour, along with the actual and expected results.
+* The Python Wires version (eg. 18.1.0).
+* The Python interpreter version (eg. CPython 3.5.2 64 bit).
+* The operating system version (eg. Debian 9 "stretch" 64 bit).
 
 
 .. [#correctness] Whatever that means, without implying any guarantees other than the ones expressed in the :doc:`license`.
