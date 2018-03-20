@@ -314,12 +314,16 @@ class WiringCallable(object):
         self._wirings.append((function, args, kwargs))
 
 
-    def unwire(self, function):
+    def unwire(self, function, *args, **kwargs):
         """
         Removes the first wiring to ``function``.
 
+        If ``args`` or ``kwargs`` are passed, unwires the first wired
+        ``function`` with those wire-time arguments; otherwise, unwires the
+        first wired ``function``, regardless of wire-time arguments.
+
         :raises TypeError: If ``function`` is not :func:`callable`.
-        :raises ValueError: If ``function`` is not wired.
+        :raises ValueError: If no matching wiring is found.
         :raises RuntimeError: If :attr:`min_wirings` would be violated.
         """
         if not callable(function):
@@ -329,10 +333,13 @@ class WiringCallable(object):
         if len(self._wirings) == self.min_wirings:
             raise RuntimeError('min_wirings limit reached')
 
-        tuples_to_remove = [v for v in self._wirings if v[0] == function]
-        if not tuples_to_remove:
-            raise ValueError('unknown function %r' % (function,))
-        self._wirings.remove(tuples_to_remove[0])
+        if args or kwargs:
+            self._wirings.remove((function, args, kwargs))
+        else:
+            tuples_to_remove = [v for v in self._wirings if v[0] == function]
+            if not tuples_to_remove:
+                raise ValueError('unwired function %r' % (function,))
+            self._wirings.remove(tuples_to_remove[0])
 
 
     @property
