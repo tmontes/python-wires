@@ -129,7 +129,7 @@ General requirements:
   * Include a reference to where the documentation is inconsistent with the actual results.
 
 
-* :guilabel:`development` issues:
+* :guilabel:`develop` issues:
 
   * Must describe the purpose, benefits and trade-offs.
 
