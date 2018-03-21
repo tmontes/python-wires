@@ -336,7 +336,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
             'min_wirings': (None, 1),
             'max_wirings': (None, 1),
             'returns': (False, True),
-            'ignore_failures': (True, False),
+            'ignore_exceptions': (True, False),
         }
         for attr_name, (default_value, test_value) in defaults.items():
             value = getattr(self.w.this, attr_name)
@@ -368,7 +368,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
             min_wirings=1,
             max_wirings=1,
             returns=True,
-            ignore_failures=False,
+            ignore_exceptions=False,
         )
 
         # Calling it raises an exception: min_wirings=1 but no wirings.
@@ -382,7 +382,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.w.this.wire(self.raises_exception)
         self.addCleanup(self.w.this.unwire, self.raises_exception)
 
-        # Calling it raises a different exception: returns + ignore_failures
+        # Calling it raises a different exception: returns + ignore_exceptions
         with self.assertRaises(RuntimeError) as cm:
             _ = self.w.this()
         exception_args = cm.exception.args

@@ -53,14 +53,14 @@ class Wiring(object):
     """
 
     # Holds the default, per-callable, `min_wirings` and `max_wirings` as well
-    # as the default caller/callee call coupling behaviour defining `returns`
-    # and `ignore_failures` settings.
+    # as the default caller/callee call-time coupling settings `returns` and
+    # `ignore_exceptions` settings.
     #
     # Tracks wired callabes in `_callables` and call-time override settings in
     # `_calltime_settings`.
 
     def __init__(self, min_wirings=None, max_wirings=None, returns=False,
-                 ignore_failures=True):
+                 ignore_exceptions=True):
         """
         Initialization arguments determine default settings for this object's
         :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
@@ -78,11 +78,11 @@ class Wiring(object):
         :param returns: Calling returns results or raises exceptions if ``True``.
         :type returns: ``bool``
 
-        :param ignore_failures: If ``False``, all wired callables will be called,
-                                regardless of raised exceptions; if ``True``,
-                                wired callable calling will stop after the first
-                                exception.
-        :type ignore_failures: ``bool``
+        :param ignore_exceptions: If ``True``, all wired callables will be
+                                  called, regardless of raised exceptions;
+                                  if ``False``, wired callable calling will stop
+                                  after the first exception.
+        :type ignore_exceptions: ``bool``
         """
         if min_wirings is not None and min_wirings <= 0:
             raise ValueError('min_wirings must be positive or None')
@@ -98,7 +98,7 @@ class Wiring(object):
 
             # Default call-time coupling behaviour.
             'returns': returns,
-            'ignore_failures': ignore_failures,
+            'ignore_exceptions': ignore_exceptions,
         }
 
         # Tracks known Callable instances:
@@ -180,24 +180,24 @@ class Wiring(object):
         return iter(self._callables.values())
 
 
-    def __call__(self, returns=None, ignore_failures=None):
+    def __call__(self, returns=None, ignore_exceptions=None):
         """
         Call-time settings override.
 
         Usage example:
 
         >>> w = Wiring(returns=False)
-        >>> w.one_callable()                # returns False
-        >>> w(returns=True).one_callable()  # returns True for this call only
+        >>> w.one_callable()                # returns is False
+        >>> w(returns=True).one_callable()  # returns is True for this call only
         []
-        >>> w.one_callable()                # returns still False
+        >>> w.one_callable()                # returns is still False
         """
         self._calltime_settings.clear()
 
         if returns is not None:
             self._calltime_settings['returns'] = returns
-        if ignore_failures is not None:
-            self._calltime_settings['ignore_failures'] = ignore_failures
+        if ignore_exceptions is not None:
+            self._calltime_settings['ignore_exceptions'] = ignore_exceptions
 
         return self
 

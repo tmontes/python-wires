@@ -21,11 +21,11 @@ from . import mixin_test_callables
 # Overview
 # --------
 # Caller/callee call-time coupling behaviour is defined by two boolean
-# parameters: `returns` and `ignore_failures`.
+# parameters: `returns` and `ignore_exceptions`.
 #
 # Depending on their values, call-time behaviour is:
 #
-#                | ignore_failures=False       | ignore_failures=True
+#                | ignore_exceptions=False     | ignore_exceptions=True
 # ---------------+-----------------------------+------------------------------
 # returns=False  | All wired callables are     | Stops calling wired callables
 #                | called.                     | after first exception.
@@ -48,16 +48,16 @@ from . import mixin_test_callables
 #
 # 1. When initializng a `Wiring` instance, via its initializer arguments:
 #
-#    >>> w = Wiring(returns=<bool>, ignore_failures=<bool>)
+#    >>> w = Wiring(returns=<bool>, ignore_exceptions=<bool>)
 #
 # 2. As a per-Callable setting:
 #
 #    >>> w.some_callable.returns = <bool>
-#    >>> w.some_callable.ignore_failures = <bool>
+#    >>> w.some_callable.ignore_exceptions = <bool>
 #
 # 3. At call-time, overriding the instance/callable's default behaviour:
 #
-#    >>> w(returns=<bool>, ignore_failures=<bool>).some_callable()
+#    >>> w(returns=<bool>, ignore_exceptions=<bool>).some_callable()
 #
 #
 # About the tests
@@ -155,16 +155,16 @@ def _effective_returns(ita, pca, cta):
 
 
 
-def _effective_ignore_failures(ita, pca, cta):
+def _effective_ignore_exceptions(ita, pca, cta):
 
-    # Return the effective value of `ignore_failures` based on instantiation-
+    # Return the effective value of `ignore_exceptions` based on instantiation-
     # time argument dict `ita`, per-callable argument dict `pca` and call-time
     # override dict `cta`, considering that the default, instantiation time,
     # value is `True`.
 
     return cta.get(
-        'ignore_failures',
-        pca.get('ignore_failures', ita.get('ignore_failures', True))
+        'ignore_exceptions',
+        pca.get('ignore_exceptions', ita.get('ignore_exceptions', True))
     )
 
 
@@ -201,18 +201,18 @@ def _create_2in3_raises_test(test_class, ita, pca, cta):
     # - `pca`: per-callable arguments
     # - `cta`: call-time argument overrides.
 
-    # The effective `returns` and `ignore_failures` values.
+    # The effective `returns` and `ignore_exceptions` values.
     returns = _effective_returns(ita, pca, cta)
-    ignore_failures = _effective_ignore_failures(ita, pca, cta)
+    ignore_exceptions = _effective_ignore_exceptions(ita, pca, cta)
 
     wirings = [
         test_class.returns_none,
         test_class.raises_exception,
         test_class.returns_42,
     ]
-    # Expected `result` and `raises` depend on `returns` and `ignore_failures`.
+    # Expected `result` and `raises` depend on `returns` and `ignore_exceptions`.
     if returns:
-        if ignore_failures:
+        if ignore_exceptions:
             result = [(None, None), (test_class.EXCEPTION, None), (None, 42)]
             raises = None
         else:
@@ -221,8 +221,8 @@ def _create_2in3_raises_test(test_class, ita, pca, cta):
     else:
         result = None
         raises = None
-    # Expected `call_counts` depend on `ignore_failures`.
-    call_counts = [1, 1, 1] if ignore_failures else [1, 1, 0]
+    # Expected `call_counts` depend on `ignore_exceptions`.
+    call_counts = [1, 1, 1] if ignore_exceptions else [1, 1, 0]
 
     # Create and add the test to the class.
     setattr(
@@ -237,12 +237,12 @@ CALL_COUPLING_ARG_COMBINATIONS = [
     # Purposely excluding the {} entry.
     {'returns': False},
     {'returns': True},
-    {'ignore_failures': False},
-    {'ignore_failures': True},
-    {'returns': False, 'ignore_failures': False},
-    {'returns': False, 'ignore_failures': True},
-    {'returns': True, 'ignore_failures': False},
-    {'returns': True, 'ignore_failures': True},
+    {'ignore_exceptions': False},
+    {'ignore_exceptions': True},
+    {'returns': False, 'ignore_exceptions': False},
+    {'returns': False, 'ignore_exceptions': True},
+    {'returns': True, 'ignore_exceptions': False},
+    {'returns': True, 'ignore_exceptions': True},
 ]
 
 
