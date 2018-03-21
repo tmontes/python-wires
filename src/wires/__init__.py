@@ -29,4 +29,7 @@ from . _wiring import Wiring
 from . _shared import w
 
 
+__all__ = ['Wiring', 'w']
+
+
 # ----------------------------------------------------------------------------
