@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Shared Wiring instance argument passing tests.
+Shared Wires instance argument passing tests.
 """
 
 

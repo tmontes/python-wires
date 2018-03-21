@@ -6,25 +6,25 @@ Wires Package
 ^^^^^^^^^^^^^
 
 .. automodule:: wires
-   :members: Wiring, w
+   :members: Wires, w
 
 .. autodata:: w
-   :annotation: = Shared Wiring instance.
+   :annotation: = Shared Wires instance.
 
 
 
-Wiring  Class
+Wires Class
 ^^^^^^^^^^^^^
 
-.. automodule:: wires._wiring
+.. automodule:: wires._wires
    :members:
    :special-members: 
    :exclude-members: __weakref__
 
 
 
-WiringCallable Class
-^^^^^^^^^^^^^^^^^^^^
+WiresCallable Class
+^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: wires._callable
    :members:

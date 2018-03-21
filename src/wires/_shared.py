@@ -11,11 +11,11 @@ Python Wires shared instance.
 
 from __future__ import absolute_import
 
-from . import _wiring
+from . import _wires
 
 
 
-w = _wiring.Wiring()
+w = _wires.Wires()
 
 
 # ----------------------------------------------------------------------------

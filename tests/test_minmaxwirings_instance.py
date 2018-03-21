@@ -14,7 +14,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from wires import Wiring
+from wires import Wires
 
 from . import mixin_test_callables
 
@@ -32,7 +32,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         Passing N <= 0 as `min_wirings` raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            _ = Wiring(min_wirings=-42)
+            _ = Wires(min_wirings=-42)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -44,7 +44,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         Passing N <= 0 as `max_wirings` raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            _ = Wiring(max_wirings=-42)
+            _ = Wires(max_wirings=-42)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -56,7 +56,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         Passing `min_wirings` > `max_wirings` raises a ValueError.
         """
         with self.assertRaises(ValueError) as cm:
-            _ = Wiring(min_wirings=42, max_wirings=24)
+            _ = Wires(min_wirings=42, max_wirings=24)
 
         exception_args = cm.exception.args
         self.assertEqual(len(exception_args), 1)
@@ -67,7 +67,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         """
         Wiring a single callable works.
         """
-        w = Wiring(min_wirings=None, max_wirings=None)
+        w = Wires(min_wirings=None, max_wirings=None)
 
         w.this.wire(self.returns_42)
         w.this.unwire(self.returns_42)
@@ -77,7 +77,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         """
         Wiring then unwiring with min_wirings=1 raises a RuntimeError.
         """
-        w = Wiring(min_wirings=1)
+        w = Wires(min_wirings=1)
 
         w.this.wire(self.returns_42)
         with self.assertRaises(RuntimeError) as cm:
@@ -92,7 +92,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         """
         Wiring two callables with max_wirings=1 raises a RuntimeError.
         """
-        w = Wiring(max_wirings=1)
+        w = Wires(max_wirings=1)
 
         w.this.wire(self.returns_42)
         with self.assertRaises(RuntimeError) as cm:
@@ -107,7 +107,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         """
         Calling an unwired callable with min_wirings set raises ValueError.
         """
-        w = Wiring(min_wirings=1)
+        w = Wires(min_wirings=1)
 
         with self.assertRaises(ValueError) as cm:
             w.this()
@@ -121,7 +121,7 @@ class TestInstanceMinMaxWirings(mixin_test_callables.TestCallablesMixin,
         """
         Calling a wired callable with min_wirings works.
         """
-        w = Wiring(min_wirings=1)
+        w = Wires(min_wirings=1)
 
         w.this.wire(self.returns_42)
         result = w.this()
@@ -139,7 +139,7 @@ class TestCallableMinMaxWirings(mixin_test_callables.TestCallablesMixin,
 
     def setUp(self):
 
-        self.w = Wiring()
+        self.w = Wires()
 
 
     def test_min_wirings_defaults_to_none(self):
@@ -328,9 +328,9 @@ class TestCombinedMinMaxWirings(mixin_test_callables.TestCallablesMixin,
     def test_callable_cant_revert_to_instance_min_wirings(self):
         """
         Deleting callable `min_wirings` fails if the resulting value (the
-        Wiring instance's) would leave the callable in an invalid state.
+        Wires instance's) would leave the callable in an invalid state.
         """
-        w = Wiring(min_wirings=2)
+        w = Wires(min_wirings=2)
 
         w.this.min_wirings = None
 
@@ -353,9 +353,9 @@ class TestCombinedMinMaxWirings(mixin_test_callables.TestCallablesMixin,
     def test_callable_cant_revert_to_instance_max_wirings(self):
         """
         Deleting callable `max_wirings` fails if the resulting value (the
-        Wiring instance's) would leave the callable in an invalid state.
+        Wires instance's) would leave the callable in an invalid state.
         """
-        w = Wiring(max_wirings=1)
+        w = Wires(max_wirings=1)
 
         w.this.max_wirings = 2
 

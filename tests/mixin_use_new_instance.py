@@ -12,7 +12,7 @@ Wires instance test mixin.
 
 from __future__ import absolute_import
 
-from wires import Wiring
+from wires import Wires
 
 
 
@@ -26,13 +26,13 @@ class UseNewInstanceMixin(object):
         """
         Need a per-test instance: classes we mixin with must call this.
         """
-        self._w = Wiring()
+        self._w = Wires()
 
 
     @property
     def w(self):
         """
-        Per test mixin contract: self.w is a Wiring instance.
+        Per test mixin contract: self.w is a Wires instance.
         """
         return self._w
 

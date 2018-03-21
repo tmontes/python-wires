@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Shared Wiring instance caller/callee tests.
+Shared Wires instance caller/callee tests.
 """
 
 
@@ -23,7 +23,7 @@ class TestWiresCoupling(mixin_use_shared_instance.UseSharedInstanceMixin,
                         unittest.TestCase):
 
     """
-    Call-time coupling tests for the shared Wiring instance.
+    Call-time coupling tests for the shared Wires instance.
     """
 
 

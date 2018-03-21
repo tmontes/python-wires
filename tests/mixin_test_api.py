@@ -21,7 +21,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
     """
     Drives Wires API tests.
 
-    Requires the mixed class provide a Wiring instance at `self.w`.
+    Requires the mixed class provide a Wires instance at `self.w`.
     """
 
     def test_unwired_call_does_not_fail(self):
@@ -217,7 +217,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
 
     def test_iteration_works(self):
         """
-        Iterating over a Wiring instance produces its callables.
+        Iterating over a Wires instance produces its callables.
         """
         self.w.callable1.wire(self.returns_42)
         self.w.callable2.wire(self.returns_none)
@@ -230,9 +230,9 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertEqual(created_callables, obtained_callables)
 
 
-    def test_wiring_dir_callables(self):
+    def test_wires_object_dir_callables(self):
         """
-        Callable names are present in a Wiring object's dir() output.
+        Callable names are present in a Wires object's dir() output.
         """
         self.w.callable1.wire(self.returns_42)
         self.w.callable2.wire(self.returns_none)
@@ -244,9 +244,9 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertIn('callable2', dir_output)
 
 
-    def test_wiring_dir_normal_attrs(self):
+    def test_wires_object_dir_normal_attrs(self):
         """
-        Regular attributes are present in a Wiring object's dir() output.
+        Regular attributes are present in a Wires object's dir() output.
         """
         self.w.attr1 = 42
         self.w.attr2 = 24
@@ -256,9 +256,9 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertIn('attr2', dir_output)
 
 
-    def test_wiring_dir_callables_and_normal_attrs(self):
+    def test_wires_object_dir_callables_and_normal_attrs(self):
         """
-        All attribute names (callables or not) are present in a Wiring object's
+        All attribute names (callables or not) are present in a Wires object's
         dir() output.
         """
         self.w.callable1.wire(self.returns_42)
@@ -276,7 +276,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertIn('attr2', dir_output)
 
 
-    def test_wiring_len(self):
+    def test_wires_object_len(self):
         """
         No callables means len is 0.
         """
@@ -307,15 +307,15 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertEqual(len(self.w.callable2), 2)
 
 
-    def test_wiring_repr(self):
+    def test_wires_object_repr(self):
         """
         Looks like an instantiation call, which should work.
         """
         repr_str = repr(self.w)
-        self.assertTrue(repr_str.startswith('Wiring('), 'bad repr start')
+        self.assertTrue(repr_str.startswith('Wires('), 'bad repr start')
         self.assertTrue(repr_str.endswith(')'), 'bad repr end')
 
-        from wires import Wiring
+        from wires import Wires
         eval(repr_str)
 
 
@@ -327,15 +327,15 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.addCleanup(self.w.callable_name.unwire, self.returns_42)
 
         repr_str = repr(self.w.callable_name)
-        self.assertTrue(repr_str.startswith('<WiringCallable '), 'bad repr start')
+        self.assertTrue(repr_str.startswith('<WiresCallable '), 'bad repr start')
         self.assertTrue(repr('callable_name') in repr_str, 'no name in repr')
         ending = ' at 0x%x>' % id(self.w.callable_name)
         self.assertTrue(repr_str.endswith(ending), 'bad repr end')
 
 
-    def test_wiring_set_del_regular_attr_works(self):
+    def test_wires_object_set_del_regular_attr_works(self):
         """
-        Setting a Wiring attribute to something, then deleting it, then
+        Setting a Wires attribute to something, then deleting it, then
         accessing it, creates a "normal" callable object, as expected.
         """
         self.w.what_for = 42
@@ -345,9 +345,9 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertTrue(callable(self.w.what_for), 'non-callable attribute')
 
 
-    def test_wiring_del_nonsuch_attr_raises_attribute_error(self):
+    def test_wires_object_del_nonsuch_attr_raises_attribute_error(self):
         """
-        Deleting a non-existing Wiring attribute raises an AttributeError.
+        Deleting a non-existing Wires object attribute raises an AttributeError.
         """
         with self.assertRaises(AttributeError) as cm:
             del self.w.no_such_attribute

@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Shared Wiring instance generic usage tests.
+Shared Wires instance generic usage tests.
 """
 
 
@@ -23,7 +23,7 @@ class TestWiresUtilization(mixin_use_shared_instance.UseSharedInstanceMixin,
                            unittest.TestCase):
 
     """
-    Utilization tests for the shared Wiring instance.
+    Utilization tests for the shared Wires instance.
     """
 
 

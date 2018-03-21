@@ -23,7 +23,7 @@ class TestWiresCoupling(mixin_use_new_instance.UseNewInstanceMixin,
                         unittest.TestCase):
 
     """
-    Call-time coupling tests for Wiring instances.
+    Call-time coupling tests for Wires instances.
     """
 
 

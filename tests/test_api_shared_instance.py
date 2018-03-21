@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Shared Wiring instance API tests.
+Shared Wires instance API tests.
 """
 
 from __future__ import absolute_import
@@ -22,7 +22,7 @@ class TestWiresAPI(mixin_test_api.TestWiresAPIMixin,
                    unittest.TestCase):
 
     """
-    API tests for the shared Wiring instance.
+    API tests for the shared Wires instance.
     """
 
 

@@ -20,7 +20,7 @@ class _TestWiresArgPassingMixin(mixin_test_callables.TestCallablesMixin,
                                 helpers.CallTrackerAssertMixin):
 
     """
-    Argument passing utilization tests for the shared Wiring instance.
+    Argument passing utilization tests for the shared Wires instance.
     """
 
     wire1_args = ()
