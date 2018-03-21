@@ -230,7 +230,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertEqual(created_callables, obtained_callables)
 
 
-    def test_wiring_dir(self):
+    def test_wiring_dir_callables(self):
         """
         Callable names are present in a Wiring object's dir() output.
         """
@@ -242,6 +242,38 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         dir_output = dir(self.w)
         self.assertIn('callable1', dir_output)
         self.assertIn('callable2', dir_output)
+
+
+    def test_wiring_dir_normal_attrs(self):
+        """
+        Regular attributes are present in a Wiring object's dir() output.
+        """
+        self.w.attr1 = 42
+        self.w.attr2 = 24
+
+        dir_output = dir(self.w)
+        self.assertIn('attr1', dir_output)
+        self.assertIn('attr2', dir_output)
+
+
+    def test_wiring_dir_callables_and_normal_attrs(self):
+        """
+        All attribute names (callables or not) are present in a Wiring object's
+        dir() output.
+        """
+        self.w.callable1.wire(self.returns_42)
+        self.w.callable2.wire(self.returns_none)
+        self.addCleanup(self.w.callable1.unwire, self.returns_42)
+        self.addCleanup(self.w.callable2.unwire, self.returns_none)
+
+        self.w.attr1 = 42
+        self.w.attr2 = 24
+
+        dir_output = dir(self.w)
+        self.assertIn('callable1', dir_output)
+        self.assertIn('callable2', dir_output)
+        self.assertIn('attr1', dir_output)
+        self.assertIn('attr2', dir_output)
 
 
     def test_wiring_len(self):

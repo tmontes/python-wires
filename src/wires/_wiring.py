@@ -167,6 +167,7 @@ class Wiring(object):
 
         result = dir(super(Wiring, self))
         result.extend(self._callables.keys())
+        result.extend(k for k in self.__dict__ if not k.startswith('_'))
         return result
 
 
