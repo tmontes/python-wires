@@ -43,7 +43,7 @@ returning the wiring count:
 :attr:`min_wirings <WiringCallable.min_wirings>`,
 :attr:`max_wirings <WiringCallable.max_wirings>`,
 :attr:`returns <WiringCallable.returns>` and
-:attr:`ignore_failures <WiringCallable.ignore_failures>` attributes.
+:attr:`ignore_exceptions <WiringCallable.ignore_exceptions>` attributes.
 """
 
 from __future__ import absolute_import
@@ -205,7 +205,7 @@ class WiringCallable(object):
 
 
     @property
-    def ignore_failures(self):
+    def ignore_exceptions(self):
         """
         ``bool`` value defining call-time coupling behaviour: see :meth:`__call__`.
 
@@ -213,13 +213,13 @@ class WiringCallable(object):
         back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
         Writing assigns a per-:class:`WiringCallable` value.
         """
-        return self._effective_setting('ignore_failures')
+        return self._effective_setting('ignore_exceptions')
 
 
-    @ignore_failures.setter
-    def ignore_failures(self, value):
+    @ignore_exceptions.setter
+    def ignore_exceptions(self, value):
 
-        self._callable_settings['ignore_failures'] = value
+        self._callable_settings['ignore_exceptions'] = value
 
 
     # Used as a guard for non-set arguments in the `set` method call; `None`
@@ -229,7 +229,7 @@ class WiringCallable(object):
     _not_set = object()
 
     def set(self, min_wirings=_not_set, max_wirings=_not_set, returns=_not_set,
-            ignore_failures=_not_set, _next_call_only=False):
+            ignore_exceptions=_not_set, _next_call_only=False):
         """
         Sets one or more per-:class:`WiringCallable` settings.
 
@@ -239,7 +239,7 @@ class WiringCallable(object):
 
         :param returns: See :attr:`returns`.
 
-        :param ignore_failures: See :attr:`ignore_failures`.
+        :param ignore_exceptions: See :attr:`ignore_exceptions`.
 
         :param _next_call_only: **IMPORTANT**: This argument is considered
                                 private and may be changed or removed in future
@@ -262,7 +262,7 @@ class WiringCallable(object):
         # at a somewhat "meta-ish" level.
 
         local_names = locals()
-        arg_names = ('min_wirings', 'max_wirings', 'returns', 'ignore_failures')
+        arg_names = ('min_wirings', 'max_wirings', 'returns', 'ignore_exceptions')
         for name in arg_names:
             if local_names[name] is not self._not_set:
                 target_settings[name] = local_names[name]
@@ -358,23 +358,23 @@ class WiringCallable(object):
 
     def __call__(self, *args, **kwargs):
         """
-        Calls wirings, in wiring order.
+        Calls wired callables, in wiring order.
 
         :raises ValueError: If the wiring count is lower than
                             :attr:`min_wirings`, when set to an ``int`` > 0.
 
         Argument passing:
 
-        * Wired functions are passed a combination of the wire-time and
+        * Wired callables are passed a combination of the wire-time and
           call-time arguments; wire-time positional arguments will be passed
           first, followed by the call-time ones; wire-time named arguments may
           be overridden by call-time ones.
 
-        Call-time coupling. Depends on:
+        Call-time coupling depends on:
 
         * :attr:`returns`: if ``False``, calling returns ``None``; otherwise,
           returns or raises (see below).
-        * :attr:`ignore_failures`: if ``False``, calling wirings stops on the
+        * :attr:`ignore_exceptions`: if ``False``, calling wirings stops on the
           first wiring-raised exception; otherwise, all wirings will be called.
 
         :returns: A list of ``(<exception>, <result>)`` tuples, in wiring order,
@@ -384,7 +384,7 @@ class WiringCallable(object):
                   ``<result>`` is ``None``.
 
         :raises RuntimeError: Only if :attr:`returns` is ``True``,
-                              :attr:`ignore_failures` is ``False``, and a
+                              :attr:`ignore_exceptions` is ``False``, and a
                               wiring raises an exception. The exception
                               arguments will be a tuple of
                               ``(<exception>, <result>)`` tuples, much like the
@@ -400,7 +400,7 @@ class WiringCallable(object):
         # Get call coupling behaviour for this call from our Wiring, resetting
         # it, to account for correct "default" vs "overridden" behaviour.
         return_or_raise = self.returns
-        ignore_failures = self.ignore_failures
+        ignore_exceptions = self.ignore_exceptions
         self._calltime_settings.clear()
 
         # Will contain (<exception>, <result>) per-wiring tuples.
@@ -416,7 +416,7 @@ class WiringCallable(object):
                 call_result.append((None, wired_result))
             except Exception as wired_exception:
                 call_result.append((wired_exception, None))
-                if not ignore_failures:
+                if not ignore_exceptions:
                     if return_or_raise:
                         raise RuntimeError(*call_result)
                     else:
