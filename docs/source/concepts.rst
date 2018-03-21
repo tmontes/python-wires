@@ -15,7 +15,7 @@ Python Wires provides a single, public :class:`Wires <wires._wires.Wires>` class
 
 Being callable, :class:`Wires <wires._wires.Wires>` object attributes will be referred to as **wires callables**, from here on.
 
-:class:`Wires <wires._wires.Wires>` objects and their *wires callables* behave differently depending on initialization arguments. These can be overridden on a per-callable-attribute basis or even at call-time.
+:class:`Wires <wires._wires.Wires>` objects and their *wires callables* behave differently depending on initialization arguments. These can be overridden on a per-*wires callable* basis or even at call-time.
 
 
 
@@ -68,5 +68,40 @@ Handling arguments is up to each individual wired callable. The way failures are
 Call-time Coupling
 ------------------
 
-*contents for section*
+Call-time coupling defines how coupled/decoupled are the callers of *wires callables* from the respective wired callables.
+
+By default, call-time coupling is fully decoupled:
+
+* Calling a *wires callable* returns ``None``, regardless of what each wired callable
+  returns or whether or not calling a given wired callable raises an exception.
+
+* All wired callables will be called, in order, regardless of the fact that calling a
+  given wired callable may raise an exception.
+
+
+Call-time coupling behaviour can be changed with two independent flags:
+
+* **Ignore Exceptions**
+
+    * When *on*, all wired callables are called, in order, regardless
+      of the fact that calling a given wired callable may raise an exception.
+
+    * When *off*, no further wired callables will be called once calling a given
+      wired callable raises an exception.
+
+* **Returns**
+
+    * When *off*, calling a *wires callable* always returns ``None``.
+    * When *on*, calling a *wires callable* will return a value or raise an
+      exception:
+
+        * An exception will be raised when **Ignore Exceptions** is *off* and
+          calling a wired callable raises an exception.
+
+        * A value is returned in every other case: a list of ``(<exception>, <result>)``
+          tuples containing either the raised ``<exception>`` or returned ``<result>``
+          for each wired callable, in the wiring order.
+
+
+Call-time coupling flags can be set at :class:`Wires <wires._wires.Wires>` objects initialization time (applicable to all *wires callables* on that object), defined on a per-*wires callable* basis, or overridden at call-time.
 
