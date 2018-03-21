@@ -75,7 +75,8 @@ class Wires(object):
         :param max_wirings: Maximum wiring count.
         :type max_wirings: ``int`` > 0 or ``None``
 
-        :param returns: Calling returns results or raises exceptions if ``True``.
+        :param returns: If ``True``, calling callables returns results/raises
+                        exceptions.
         :type returns: ``bool``
 
         :param ignore_exceptions: If ``True``, all wired callables will be
@@ -188,6 +189,16 @@ class Wires(object):
     def __call__(self, returns=None, ignore_exceptions=None):
         """
         Call-time settings override.
+
+        :param returns: If ``True``, calling callables returns results/raises
+                        exceptions.
+        :type returns: ``bool``
+
+        :param ignore_exceptions: If ``True``, all wired callables will be
+                                  called, regardless of raised exceptions;
+                                  if ``False``, wired callable calling will stop
+                                  after the first exception.
+        :type ignore_exceptions: ``bool``
 
         Usage example:
 
