@@ -301,6 +301,30 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
         self.assertTrue(repr_str.endswith(ending), 'bad repr end')
 
 
+    def test_wiring_set_del_regular_attr_works(self):
+        """
+        Setting a Wiring attribute to something, then deleting it, then
+        accessing it, creates a "normal" callable object, as expected.
+        """
+        self.w.what_for = 42
+        self.assertEqual(self.w.what_for, 42)
+
+        del self.w.what_for
+        self.assertTrue(callable(self.w.what_for), 'non-callable attribute')
+
+
+    def test_wiring_del_nonsuch_attr_raises_attribute_error(self):
+        """
+        Deleting a non-existing Wiring attribute raises an AttributeError.
+        """
+        with self.assertRaises(AttributeError) as cm:
+            del self.w.no_such_attribute
+
+        exception_args = cm.exception.args
+        self.assertEqual(len(exception_args), 1)
+        self.assertIn('no_such_attribute', exception_args[0])
+
+
     def test_del_unknown_callable_attr_raises_attribute_error(self):
         """
         Deleting an unknown Callable attribute raises AttributeError.

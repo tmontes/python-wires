@@ -151,9 +151,13 @@ class Wiring(object):
 
     def __delattr__(self, name):
         """
-        Deletes :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
+        Deletes :class:`WiringCallable <wires._callable.WiringCallable>`\\s
+        or any other attributes.
         """
-        del self._callables[name]
+        try:
+            del self._callables[name]
+        except KeyError:
+            super(Wiring, self).__delattr__(name)
 
 
     def __dir__(self):
