@@ -30,7 +30,7 @@ True
 1
 >>> for c in w:             # Iterating over all callables.
 ...     print(c)
-<WiresCallable 'one_callable'>
+<WiresCallable 'one_callable' at 0x1018d4a90>
 
 
 Deleting attributes deletes the associated callable:
