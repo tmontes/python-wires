@@ -25,11 +25,11 @@ __author__ = 'Tiago Montes'
 __email__ = 'tiago.montes@gmail.com'
 
 
-from . _wiring import Wiring
+from . _wires import Wires
 from . _shared import w
 
 
-__all__ = ['Wiring', 'w']
+__all__ = ['Wires', 'w']
 
 
 # ----------------------------------------------------------------------------

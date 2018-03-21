@@ -38,13 +38,13 @@ Python Wires is a pure Python package distributed via `PyPI <https://pypi.python
 Quick Start
 -----------
 
-Create a ``Wiring`` object:
+Create a ``Wires`` object:
 
 .. code-block:: python
 
-    from wires import Wiring
+    from wires import Wires
 
-    w = Wiring()
+    w = Wires()
 
 Its attributes are callables, auto-created on first access, that can be wired to other callables:
 

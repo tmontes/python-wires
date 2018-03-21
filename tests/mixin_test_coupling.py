@@ -12,7 +12,7 @@ Caller/callee call-time coupling test driver mixin.
 
 from __future__ import absolute_import
 
-from wires import Wiring
+from wires import Wires
 
 from . import mixin_test_callables
 
@@ -46,9 +46,9 @@ from . import mixin_test_callables
 # -----
 # The call-time coupling parameters can be used at three levels:
 #
-# 1. When initializng a `Wiring` instance, via its initializer arguments:
+# 1. When initializng a `Wires` instance, via its initializer arguments:
 #
-#    >>> w = Wiring(returns=<bool>, ignore_exceptions=<bool>)
+#    >>> w = Wires(returns=<bool>, ignore_exceptions=<bool>)
 #
 # 2. As a per-Callable setting:
 #
@@ -80,8 +80,8 @@ from . import mixin_test_callables
 #
 # This module contains two sets of objects:
 # - Functions that add combinations of the two-test-set to a given class.
-# - A Mixin class used with the bundled shared Wiring instance tests as well
-#   as with a non-customized Wiring instance (like most other test Mixins are
+# - A Mixin class used with the bundled shared Wires instance tests as well
+#   as with a non-customized Wires instance (like most other test Mixins are
 #   used).
 
 
@@ -93,9 +93,9 @@ def _create_test_method(ita, wirings, pca, cta, raises, result, call_counts):
         Generic test method, covering all possible combinations.
         """
 
-        # Replace the test class Wiring instance with a custom initialized one.
+        # Replace the test class Wires instance with a custom initialized one.
         if ita:
-            self.w = Wiring(**ita)
+            self.w = Wires(**ita)
 
         # Set per-callable settings.
         for callable_setting, callable_value in pca.items():
@@ -251,7 +251,7 @@ def generate_tests(test_class, ita_filter=None):
     """
     Generates three test case set combinations and adds them to `test_class`.
 
-    Considers all combinations of Wiring instantiation time, per-callable and
+    Considers all combinations of Wires instantiation time, per-callable and
     call-time arguments in a combinatoric product, filtering out instantiation
     time combinations based on `ita_filter`; this is used to target test
     generation to varying "starting points".
@@ -288,7 +288,7 @@ def generate_tests(test_class, ita_filter=None):
 class TestCouplingMixin(mixin_test_callables.TestCallablesMixin):
 
     """
-    Drives Wiring call coupling tests.
+    Drives Wires call coupling tests.
     """
 
 

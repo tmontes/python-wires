@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 """
-Shared Wiring instance test mixin.
+Shared Wires instance test mixin.
 """
 
 
@@ -25,7 +25,7 @@ class UseSharedInstanceMixin(object):
     @property
     def w(self):
         """
-        Per test mixin contract: self.w is a Wiring instance.
+        Per test mixin contract: self.w is a Wires instance.
         """
         return w
 

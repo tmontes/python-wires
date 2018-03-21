@@ -20,7 +20,7 @@ class TestWiresUsageMixin(helpers.CallTrackerAssertMixin):
 
     """
     Drives Wires usage tests requiring mixed class to:
-    - Have a Wiring instance at self.w.
+    - Have a Wires instance at self.w.
     - Allow wiring via self.wire.
     - Allow unwiring via self.unwire.
     """

@@ -23,7 +23,7 @@ class TestWiresAPI(mixin_test_api.TestWiresAPIMixin,
                    unittest.TestCase):
 
     """
-    API tests for new Wiring instances.
+    API tests for new Wires instances.
     """
 
 

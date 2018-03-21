@@ -6,30 +6,30 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wires :class:`WiringCallable` Class.
+Python Wires :class:`WiresCallable` Class.
 
-:class:`WiringCallable`\\s are callable objects used exclusively as
-:class:`Wiring <wires._wiring.Wiring>` object attributes.
+:class:`WiresCallable`\\s are callable objects used exclusively as
+:class:`Wires <wires._wires.Wires>` object attributes.
 
->>> w = Wiring()
+>>> w = Wires()
 >>> callable(w.one_callable)
 True
 
-Each :class:`WiringCallable` has zero or more wirings: functions/callables
-wired to it. Their :meth:`wire <WiringCallable.wire>` method is used to add
+Each :class:`WiresCallable` has zero or more wirings: functions/callables
+wired to it. Their :meth:`wire <WiresCallable.wire>` method is used to add
 wirings, including optional wire-time arguments:
 
 >>> w.one_callable.wire(print, 'hi')    # Wire `print`: one wire-time positional arg.
 >>> w.one_callable.wire(print, 'bye')   # 2nd `print` wiring: different wire-time arg.
 
-Calling a :class:`WiringCallable` calls its wirings, in wiring order, passing
+Calling a :class:`WiresCallable` calls its wirings, in wiring order, passing
 them a combination of the optional wire-time and optional call-time arguments:
 
 >>> w.one_callable('world', end='!\\n') # Call with call-time positional and named args.
 hi world!
 bye world!
 
-:class:`WiringCallable`\\s have a :attr:`wirings <WiringCallable.wirings>`
+:class:`WiresCallable`\\s have a :attr:`wirings <WiresCallable.wirings>`
 attribute, representing all current wirings, and include support for :func:`len`,
 returning the wiring count:
 
@@ -38,48 +38,48 @@ returning the wiring count:
 >>> len(w.one_callable)
 2
 
-:class:`WiringCallable` objects behave differently depending on their
-:class:`Wiring <wires._wiring.Wiring>` object's settings and on their own
-:attr:`min_wirings <WiringCallable.min_wirings>`,
-:attr:`max_wirings <WiringCallable.max_wirings>`,
-:attr:`returns <WiringCallable.returns>` and
-:attr:`ignore_exceptions <WiringCallable.ignore_exceptions>` attributes.
+:class:`WiresCallable` objects behave differently depending on their
+:class:`Wires <wires._wires.Wires>` object's settings and on their own
+:attr:`min_wirings <WiresCallable.min_wirings>`,
+:attr:`max_wirings <WiresCallable.max_wirings>`,
+:attr:`returns <WiresCallable.returns>` and
+:attr:`ignore_exceptions <WiresCallable.ignore_exceptions>` attributes.
 """
 
 from __future__ import absolute_import
 
 
 
-class WiringCallable(object):
+class WiresCallable(object):
 
     """
-    :class:`WiringCallable` Class.
+    :class:`WiresCallable` Class.
     """
 
-    def __init__(self, _wiring, _name, _wiring_settings):
+    def __init__(self, _wires, _name, _wires_settings):
         """
         **IMPORTANT**
 
-        Do not instantiate :class:`WiringCallable` objects;
-        :class:`Wiring <wires._wiring.Wiring>` objects do that, when needed. The
+        Do not instantiate :class:`WiresCallable` objects;
+        :class:`Wires <wires._wires.Wires>` objects do that, when needed. The
         class name and all its initialization arguments are considered private
         and may change in the future without prior notice.
 
         To ensure future compatibility, it should be used strictly in the
-        context of :class:`Wiring <wires._wiring.Wiring>` objects, along with
+        context of :class:`Wires <wires._wires.Wires>` objects, along with
         its public attributes, properties and methods.
         """
 
-        # _wiring - The `Wiring` object we're a part of.
-        # _name - The attribute name in `_wiring` leading to us.
-        # _wiring_settings - The default callable settings in `_wiring`;
-        #                    passed because it's private to `Wiring` objects.
+        # _wires - The `Wires` object we're a part of.
+        # _name - The attribute name in `_wires` leading to us.
+        # _wires_settings - The default callable settings in `_wires`;
+        #                   passed because it's private to `Wires` objects.
 
-        self._wiring = _wiring
+        self._wires = _wires
         self._name = _name
 
-        # Default settings, from Wiring instance.
-        self._wiring_settings = _wiring_settings
+        # Default settings, from Wires instance.
+        self._wires_settings = _wires_settings
 
         # Per callable settings.
         self._callable_settings = {}
@@ -107,13 +107,13 @@ class WiringCallable(object):
     def _effective_setting(self, setting_name):
 
         # Call-time settings take precedence over per-Callable settings, which
-        # take precedence over Wiring settings.
+        # take precedence over Wires settings.
 
         return self._calltime_settings.get(
             setting_name,
             self._callable_settings.get(
                 setting_name,
-                self._wiring_settings[setting_name]
+                self._wires_settings[setting_name]
             )
         )
 
@@ -123,9 +123,9 @@ class WiringCallable(object):
         """
         Minimum number of wirings or ``None``, meaning no limit.
 
-        Reading returns the per-:class:`WiringCallable` value, if set, falling
-        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
-        Writing assigns a per-:class:`WiringCallable` value that, if
+        Reading returns the per-:class:`WiresCallable` value, if set, falling
+        back to the containing :class:`Wires <wires._wires.Wires>`'s setting.
+        Writing assigns a per-:class:`WiresCallable` value that, if
         non-``None``, must be:
 
         - An ``int`` > 0.
@@ -157,9 +157,9 @@ class WiringCallable(object):
         """
         Maximum number of wirings or ``None``, meaning no limit.
 
-        Reading returns the per-:class:`WiringCallable` value, if set, falling
-        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
-        Writing assigns a per-:class:`WiringCallable` value that, if
+        Reading returns the per-:class:`WiresCallable` value, if set, falling
+        back to the containing :class:`Wires <wires._wires.Wires>`'s setting.
+        Writing assigns a per-:class:`WiresCallable` value that, if
         non-``None``, must be:
 
         - An ``int`` > 0.
@@ -191,9 +191,9 @@ class WiringCallable(object):
         """
         ``bool`` value defining call-time coupling behaviour: see :meth:`__call__`.
 
-        Reading returns the per-:class:`WiringCallable` value, if set, falling
-        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
-        Writing assigns a per-:class:`WiringCallable` value.
+        Reading returns the per-:class:`WiresCallable` value, if set, falling
+        back to the containing :class:`Wires <wires._wires.Wires>`'s setting.
+        Writing assigns a per-:class:`WiresCallable` value.
         """
         return self._effective_setting('returns')
 
@@ -209,9 +209,9 @@ class WiringCallable(object):
         """
         ``bool`` value defining call-time coupling behaviour: see :meth:`__call__`.
 
-        Reading returns the per-:class:`WiringCallable` value, if set, falling
-        back to the containing :class:`Wiring <wires._wiring.Wiring>`'s setting.
-        Writing assigns a per-:class:`WiringCallable` value.
+        Reading returns the per-:class:`WiresCallable` value, if set, falling
+        back to the containing :class:`Wires <wires._wires.Wires>`'s setting.
+        Writing assigns a per-:class:`WiresCallable` value.
         """
         return self._effective_setting('ignore_exceptions')
 
@@ -231,7 +231,7 @@ class WiringCallable(object):
     def set(self, min_wirings=_not_set, max_wirings=_not_set, returns=_not_set,
             ignore_exceptions=_not_set, _next_call_only=False):
         """
-        Sets one or more per-:class:`WiringCallable` settings.
+        Sets one or more per-:class:`WiresCallable` settings.
 
         :param min_wirings: See :attr:`min_wirings`.
 
@@ -270,7 +270,7 @@ class WiringCallable(object):
 
     def __delattr__(self, name):
         """
-        Removes per-:class:`WiringCallable` settings.
+        Removes per-:class:`WiresCallable` settings.
 
         :param name: An existing attribute name.
         :type name:  ``str``
@@ -282,7 +282,7 @@ class WiringCallable(object):
             save_value = self._callable_settings.pop(name)
         except KeyError:
             # not a local setting: fallback to super's __delattr__ and get out.
-            super(WiringCallable, self).__delattr__(name)
+            super(WiresCallable, self).__delattr__(name)
             return
 
         # `next_value` would be effective after current value discarding; set
@@ -397,7 +397,7 @@ class WiringCallable(object):
         if min_wirings and len(self._wirings) < min_wirings:
             raise ValueError('less than min_wirings wired')
 
-        # Get call coupling behaviour for this call from our Wiring, resetting
+        # Get call coupling behaviour for this call from our Wires, resetting
         # it, to account for correct "default" vs "overridden" behaviour.
         return_or_raise = self.returns
         ignore_exceptions = self.ignore_exceptions

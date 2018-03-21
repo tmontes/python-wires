@@ -6,13 +6,13 @@
 # ----------------------------------------------------------------------------
 
 """
-Python Wires :class:`Wiring` Class.
+Python Wires :class:`Wires` Class.
 
-:class:`Wiring` objects hold callables as attributes that spring into existence
+:class:`Wires` objects hold callables as attributes that spring into existence
 on first access; each such callable is a
-:class:`WiringCallable <wires._callable.WiringCallable>` object.
+:class:`WiresCallable <wires._callable.WiresCallable>` object.
 
->>> w = Wiring()
+>>> w = Wires()
 >>> c = w.one_callable      # Springs into existence.
 >>> callable(c)             # Is callable.
 True
@@ -22,7 +22,7 @@ Callables can also be accessed via indexing:
 >>> w['one_callable'] is w.one_callable
 True
 
-:class:`Wiring` objects support :func:`dir`, :func:`len` and iteration:
+:class:`Wires` objects support :func:`dir`, :func:`len` and iteration:
 
 >>> dir(w)                  # Get callable name list.
 ['one_callable']
@@ -30,7 +30,7 @@ True
 1
 >>> for c in w:             # Iterating over all callables.
 ...     print(c)
-<WiringCallable 'one_callable'>
+<WiresCallable 'one_callable'>
 
 
 Deleting attributes deletes the associated callable:
@@ -46,10 +46,10 @@ from . import _callable
 
 
 
-class Wiring(object):
+class Wires(object):
 
     """
-    :class:`Wiring` Class.
+    :class:`Wires` Class.
     """
 
     # Holds the default, per-callable, `min_wirings` and `max_wirings` as well
@@ -63,9 +63,9 @@ class Wiring(object):
                  ignore_exceptions=True):
         """
         Initialization arguments determine default settings for this object's
-        :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
+        :class:`WiresCallable <wires._callable.WiresCallable>`\\s.
 
-        Optional, per-:class:`WiringCallable <wires._callable.WiringCallable>`
+        Optional, per-:class:`WiresCallable <wires._callable.WiresCallable>`
         settings override these settings and, single use, call-time overriding
         is supported via calls to self: see :meth:`__call__`.
 
@@ -103,7 +103,7 @@ class Wiring(object):
 
         # Tracks known Callable instances:
         # - Keys are callable names (this instance's dynamic attributes).
-        # - Values are WiringCallable objects.
+        # - Values are WiresCallable objects.
         self._callables = {}
 
         # Call time override settings.
@@ -122,15 +122,15 @@ class Wiring(object):
 
     def __getattr__(self, name):
         """
-        Attribute based access to :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
+        Attribute based access to :class:`WiresCallable <wires._callable.WiresCallable>`\\s.
         """
         try:
             the_callable = self._callables[name]
         except KeyError:
-            new_callable = _callable.WiringCallable(
-                _wiring=self,
+            new_callable = _callable.WiresCallable(
+                _wires=self,
                 _name=name,
-                _wiring_settings=self._settings,
+                _wires_settings=self._settings,
             )
             self._callables[name] = new_callable
             the_callable = new_callable
@@ -144,28 +144,28 @@ class Wiring(object):
 
     def __getitem__(self, name):
         """
-        Index based access to :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
+        Index based access to :class:`WiresCallable <wires._callable.WiresCallable>`\\s.
         """
         return self.__getattr__(name)
 
 
     def __delattr__(self, name):
         """
-        Deletes :class:`WiringCallable <wires._callable.WiringCallable>`\\s
+        Deletes :class:`WiresCallable <wires._callable.WiresCallable>`\\s
         or any other attributes.
         """
         try:
             del self._callables[name]
         except KeyError:
-            super(Wiring, self).__delattr__(name)
+            super(Wires, self).__delattr__(name)
 
 
     def __dir__(self):
 
-        # Add our WiringCallable names to the attribute list.
+        # Add our WiresCallable names to the attribute list.
         # Note: No super(...).__dir__() on Python 2!
 
-        result = dir(super(Wiring, self))
+        result = dir(super(Wires, self))
         result.extend(self._callables.keys())
         result.extend(k for k in self.__dict__ if not k.startswith('_'))
         return result
@@ -173,14 +173,14 @@ class Wiring(object):
 
     def __len__(self):
         """
-        Existing :class:`WiringCallable <wires._callable.WiringCallable>` count.
+        Existing :class:`WiresCallable <wires._callable.WiresCallable>` count.
         """
         return len(self._callables)
 
 
     def __iter__(self):
         """
-        Iterate over existing :class:`WiringCallable <wires._callable.WiringCallable>`\\s.
+        Iterate over existing :class:`WiresCallable <wires._callable.WiresCallable>`\\s.
         """
         return iter(self._callables.values())
 
@@ -191,7 +191,7 @@ class Wiring(object):
 
         Usage example:
 
-        >>> w = Wiring(returns=False)
+        >>> w = Wires(returns=False)
         >>> w.one_callable()                # returns is False
         >>> w(returns=True).one_callable()  # returns is True for this call only
         []
