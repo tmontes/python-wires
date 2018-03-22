@@ -309,6 +309,40 @@ Wiring actions can include wire-time arguments, later combined with call-time ar
     w.another_callable(42, a=24)        # prints: args=(42,) kw={'a': 24}
 
 
+Unwiring actions can include wire-time arguments in the :meth:`unwire <wires._callable.WiresCallable.unwire>` call:
+
+* If no positional/keyword arguments are passed (other than the mandatory callable argument) the first wiring to that callable is removed.
+
+* If positional/keyword arguments are passed, the specific wiring to that callable with the provided wire-time arguments is removed.
+
+In either case, an :class:`ValueError` is raised when no matching wiring exists.
+
+
+.. code-block:: python
+
+    from wires import w
+
+    def p_arg(arg):
+        print(arg)
+
+    w.one_callable.wire(p_arg, 'a')
+    w.one_callable()                    # prints 'a'
+
+    w.one_callable.wire(p_arg, 'b')
+    w.one_callable()                    # prints 'a', then prints 'b'
+
+    w.one_callable.unwire(p_arg, 'b')
+    w.one_callable()                    # prints 'a'
+
+    w.one_callable.unwire(p_arg)
+    w.one_callable()                    # does nothing
+
+    w.one_callable.unwire(p_arg, 'c')   # raises ValueError: no such wiring
+    
+
+    
+
+
 
 
 Call-time coupling
