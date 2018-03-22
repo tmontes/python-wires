@@ -267,9 +267,47 @@ Calling a *wires callable* where the current number of wirings is below the mini
 
 
 
-
 Argument Passing
 ----------------
+
+Call-time arguments are passed to each wired callable:
+
+.. code-block:: python
+
+    from wires import w
+
+    def a_print(*args, **kw):
+        print('args=%r kw=%r' % (args, kw))
+
+    w.one_callable.wire(a_print)
+    w.one_callable()                    # prints: args=() kw={}
+    w.one_callable(42, 24)              # prints: args=(42, 24) kw={}
+    w.one_callable(a=42, b=24)          # prints: args=() kw={'a': 42, 'b': 24}
+    w.one_callable(42, a=24)            # prints: args=(42,) kw={'a': 24}
+
+
+Wiring actions can include wire-time arguments, later combined with call-time arguments:
+
+.. code-block:: python
+
+    from wires import w
+
+    def a_print(*args, **kw):
+        print('args=%r kw=%r' % (args, kw))
+
+    w.one_callable.wire(a_print, 'one')
+    w.another_callable.wire(a_print, a='nother')
+
+    w.one_callable()                    # prints: args=('one',) kw={}
+    w.one_callable(42, 24)              # prints: args=('one', 42, 24) kw={}
+    w.one_callable(a=42, b=24)          # prints: args=('one',) kw={'a': 42, 'b': 24}
+    w.one_callable(42, a=24)            # prints: args=('one', 42) kw={'a': 24}
+
+    w.another_callable()                # prints: args=() kw={'a': 'nother'}
+    w.another_callable(42, 24)          # prints: args=(42, 24) kw={'a': 'nother'}
+    w.another_callable(a=42, b=24)      # prints: args=() kw={'a': 42, 'b': 24}
+    w.another_callable(42, a=24)        # prints: args=(42,) kw={'a': 24}
+
 
 
 
