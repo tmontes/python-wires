@@ -21,7 +21,7 @@ Python Wires ships with a built-in, shared, readily usable :class:`Wires <wires.
 
 .. code-block:: python
 
-    from wires import w
+    from wires import w             # `w` is a built-in, shared `Wires` object
 
 
 Alternatively, :class:`Wires <wires._wires.Wires>` objects are created with:
@@ -179,6 +179,33 @@ Overriding wiring limits on a per-*wires callable* basis:
     w.another_callable.unwire(say_hi)   # works, no limits on `w.another_callable`
 
 
+Clearing wiring limits on a per-*wires callable* basis:
+
+.. code-block:: python
+
+    from wires import Wires
+
+    def say_hi():
+        print('Hello from wires!')
+
+    def say_bye():
+        print('Bye, see you soon.')
+
+    w = Wires(min_wirings=1, max_wirings=1)
+
+    w.one_callable.min_wirings = None   # no min wiring limit on `w.one_callable`
+    w.one_callable.max_wirings = None   # no max wiring limit on `w.one_callable`
+
+    w.one_callable.wire(say_hi)
+    w.one_callable.wire(say_bye)        # works, no limits on `w.one_callable`
+    w.one_callable.unwire(say_bye)      # works, no limits on `w.one_callable`
+    w.one_callable.unwire(say_hi)       # works, no limits on `w.one_callable`
+
+    w.another_callable.wire(say_hi)
+    w.another_callable.wire(say_bye)    # raises RuntimeError: max_wirings limit reached
+    w.another_callable.unwire(say_hi)   # raises RuntimeError: min_wirings limit reached
+
+
 Overriding per-*wires callable* wiring limits raises a :class:`ValueError` when:
 
     * There is at least one wiring.
@@ -222,14 +249,11 @@ Calling a *wires callable* calls its wired callables, in wiring order:
 
     w.one_callable.wire(say_hi)
     w.one_callable.wire(say_bye)
-    w.one_callable()                # calls `say_hi` first, then `say_bye`
+    w.one_callable()                    # calls `say_hi` first, then `say_bye`
 
-    w.one_callable.unwire(say_hi)
-    w.one_callable.unwire(say_bye)
-
-    w.one_callable.wire(say_bye)
-    w.one_callable.wire(say_hi)
-    w.one_callable()                # calls `say_bye` first, then `say_hi`
+    w.another_callable.wire(say_bye)
+    w.another_callable.wire(say_hi)
+    w.another_callable()                # calls `say_bye` first, then `say_hi`
 
 
 Calling a *wires callable* where the current number of wirings is below the minimum wiring limit raises a :class:`ValueError` (set by the :class:`Wires <wires._wires.Wires>` object or overriden at the *wires callable* level):
@@ -239,7 +263,7 @@ Calling a *wires callable* where the current number of wirings is below the mini
     from wires import w
 
     w.one_callable.min_wirings = 1
-    w.one_callable()                # raises ValueError: less than min_wirings wired
+    w.one_callable()                    # raises ValueError: less than min_wirings wired
 
 
 
@@ -260,4 +284,4 @@ Introspection
 
 
 
-.. [#wirescallable] *Wires callables* are :class:`Wires <wires._wires.Wires>` object auto-created attributes. Refer to the :doc:`concepts` section for further information.
+.. [#wirescallable] Per the :doc:`concepts` section, *wires callables* are :class:`Wires <wires._wires.Wires>` object auto-created attributes.
