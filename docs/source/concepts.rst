@@ -64,6 +64,7 @@ At call-time, each wired callable is passed a combination of its wire-time argum
 Handling arguments is up to each individual wired callable. The way failures are handled, including argument mismatching ones is described next.
 
 
+.. _concepts-calltime-coupling:
 
 Call-time Coupling
 ------------------

@@ -163,7 +163,7 @@ class TestWiresAPIMixin(mixin_test_callables.TestCallablesMixin):
 
         msg = exception_args[0]
         self.assertTrue(
-            msg.startswith('unwired function '),
+            msg.startswith('non-wired function '),
             'wrong exception message: %r' % (msg,),
         )
 

@@ -342,7 +342,7 @@ class WiresCallable(object):
         else:
             tuples_to_remove = [v for v in self._wirings if v[0] == function]
             if not tuples_to_remove:
-                raise ValueError('unwired function %r' % (function,))
+                raise ValueError('non-wired function %r' % (function,))
             self._wirings.remove(tuples_to_remove[0])
 
 
