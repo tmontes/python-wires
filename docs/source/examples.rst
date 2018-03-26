@@ -585,6 +585,11 @@ Overriding both **returns** and **ignore exceptions** at the *wires callable* le
     w.callable()                        # prints 'about to raise' only
                                         # raises RuntimeError((ZeroDivisionError(), None),)
 
+.. note::
+
+    Overriding multiple per *wires callable* settings can also be done with a
+    single call to :meth:`set <wires._callable.WiresCallable.set>`.
+
 
 Overriding both **returns** and **ignore exceptions** at call-time:
 
@@ -614,6 +619,142 @@ Overriding both **returns** and **ignore exceptions** at call-time:
 
 Introspection
 -------------
+
+:class:`Wires <wires._wires.Wires>` objects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Using :func:`dir` to obtain all attributes:
+
+.. code-block:: python
+
+    from wires import w
+
+    def say_hi():
+        print('Hello from wires!')
+
+    w.callable1.wire(say_hi)
+    w.callable2.wire(say_hi)
+
+    dir(w)                              # 'callable1' and 'callable2' in resulting list
+
+
+Using :func:`len` to get the *wires callables* count:
+
+.. code-block:: python
+
+    from wires import w
+
+    def say_hi():
+        print('Hello from wires!')
+
+    w.callable1.wire(say_hi)
+    w.callable2.wire(say_hi)
+
+    len(w)                                  # returns 2
+
+
+Iterating over a :class:`Wires <wires._wires.Wires>` object produces each *wires callable*:
+
+.. code-block:: python
+
+    from wires import w
+
+    def say_hi():
+        print('Hello from wires!')
+
+    w.callable1.wire(say_hi)
+    w.callable2.wire(say_hi)
+
+    for wcallable in w:
+        wcallable()                         # calls `w.callable1` and `w.callable2`
+                                            # order not guaranteed
+
+
+
+*Wires callable* objects
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Each holds a ``__name__`` attribute, like regular Python functions:
+
+.. code-block:: python
+
+    from wires import w
+
+    w.callable.__name__                     # returns 'callable'
+
+
+Getting ``min_wirings`` and ``max_wirings``, falling back to the :class:`Wires <wires._wires.Wires>` object settings:
+
+.. code-block:: python
+
+    from wires import Wires
+
+    w = Wires(min_wirings=1, max_wirings=1)
+
+    w.callable1.min_wirings                 # returns 1
+    w.callable1.max_wirings                 # returns 1
+
+    w.callable2.min_wirings = None
+    w.callable2.max_wirings = None
+    w.callable2.min_wirings                 # returns None
+    w.callable2.max_wirings                 # returns None
+
+
+Getting ``returns`` and ``ignore_exceptions``, falling back to the :class:`Wires <wires._wires.Wires>` object settings:
+
+.. code-block:: python
+
+    from wires import Wires
+
+    w = Wires(returns=True, ignore_exceptions=False)
+
+    w.callable1.returns                     # returns True
+    w.callable1.ignore_exceptions           # returns False
+
+    w.callable2.returns = False
+    w.callable2.ignore_exceptions = True
+    w.callable2.returns                     # returns False
+    w.callable2.ignore_exceptions           # returns True
+
+
+
+Using :func:`len` to get number wirings:
+
+.. code-block:: python
+
+    from wires import w
+
+    def say_hi():
+        print('Hello from wires!')
+
+    def say_bye():
+        print('Bye, see you soon.')
+
+    w.callable.wire(say_hi)
+    w.callable.wire(say_bye)
+
+    len(w.callable)                         # returns 2
+
+
+
+Using :attr:`wirings <wires._callable.WiresCallable.wirings>` to get the current list of wired callables and wire-time arguments:
+
+.. code-block:: python
+
+    from wires import w
+
+    def a_print(*args, **kw):
+        print('args=%r kw=%r' % (args, kw))
+
+    w.callable.wire(a_print)
+    w.callable.wire(a_print, 42, 24)
+    w.callable.wire(a_print, a=42, b=24)
+
+    w.callable.wirings          # returns [
+                                #   (<function a_print at ...>, (), {}),
+                                #   (<function a_print at ...>, (42, 24), {}),
+                                #   (<function a_print at ...>, (), {'a': 42, 'b': 24}),
+                                # ]
 
 
 
