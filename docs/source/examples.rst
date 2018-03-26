@@ -114,7 +114,7 @@ If multiple wirings exist, :meth:`unwire <wires._callable.WiresCallable.unwire>`
 
 
 
-Unwiring a non-wired callable raises a :class:`ValueError`
+Unwiring a non-wired callable raises a :class:`ValueError`:
 
 .. code-block:: python
 
@@ -152,7 +152,7 @@ Using a custom-initialized :class:`Wires <wires._wires.Wires>` object, its *wire
     w.one_callable.unwire(say_hi)       # raises RuntimeError: min_wirings limit reached
 
 
-Overriding wiring limits on a per-*wires callable* basis:
+Overriding wiring limits on a *wires callable* basis:
 
 .. code-block:: python
 
@@ -315,7 +315,7 @@ Unwiring actions can include wire-time arguments in the :meth:`unwire <wires._ca
 
 * If positional/keyword arguments are passed, the specific wiring to that callable with the provided wire-time arguments is removed.
 
-In either case, an :class:`ValueError` is raised when no matching wiring exists.
+In either case, a :class:`ValueError` is raised when no matching wiring exists.
 
 
 .. code-block:: python
@@ -338,15 +338,203 @@ In either case, an :class:`ValueError` is raised when no matching wiring exists.
     w.one_callable()                    # does nothing
 
     w.one_callable.unwire(p_arg, 'c')   # raises ValueError: no such wiring
-    
-
-    
 
 
 
 
 Call-time coupling
 ------------------
+
+.. note::
+
+    For a description of possible behaviours, refer to :ref:`Call-time Coupling Concepts <concepts-calltime-coupling>`.
+
+
+By default, calling a *wires callable* calls all its wirings and returns ``None``:
+
+
+.. code-block:: python
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires()                     # Default call-coupling.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w.callable()                    # prints 'about to raise', then 'about to return'
+                                    # returns None
+
+
+Call-time coupling can be:
+
+* Set at the :class:`Wires <wires._wires.Wires>` object level, applicable to all its *wired callables*.
+* Overridden on a *wires callable* basis.
+* Overridden at call-time.
+
+
+
+Overriding **returns** at the :class:`Wires <wires._wires.Wires>` level:
+
+.. code-block:: python
+    :emphasize-lines: 11
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires(returns=True)         # Non-default call-coupling.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w.callable()                    # prints 'about to raise', then 'about to return'
+                                    # returns [(ZeroDivisionError(), None), (None, 42)]
+
+
+Overriding **returns** at the *wires callable* level:
+
+.. code-block:: python
+    :emphasize-lines: 11-12
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires()                     # Default call-coupling.
+    w.callable.returns = True       # Override call-coupling for `callable`.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w.callable()                    # prints 'about to raise', then 'about to return'
+                                    # returns [(ZeroDivisionError(), None), (None, 42)]
+
+
+
+Overriding **returns** at call-time:
+
+.. code-block:: python
+    :emphasize-lines: 16
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires()                     # Default call-coupling.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w(returns=True).callable()      # Override call-coupling at calltime.
+                                    # prints 'about to raise', then 'about to return'
+                                    # returns [(ZeroDivisionError(), None), (None, 42)]
+
+
+
+
+Overriding **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` level:
+
+.. code-block:: python
+    :emphasize-lines: 11
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires(ignore_exceptions=False)  # Non-default call-coupling.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w.callable()                        # prints 'about to raise' only
+                                        # returns None
+
+
+Overriding **ignore exceptions** at the *wires callable* level:
+
+.. code-block:: python
+    :emphasize-lines: 11-12
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires()                             # Default call-coupling.
+    w.callable.ignore_exceptions = False    # Override call-coupling for `callable`.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w.callable()                            # prints 'about to raise' only
+                                            # returns None
+
+
+
+Overriding **ignore exceptions** at call-time:
+
+.. code-block:: python
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires()                     # Default call-coupling.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w(returns=True).callable()      # Override call-coupling at calltime.
+                                    # prints 'about to raise', then 'about to return'
+                                    # returns [(ZeroDivisionError(), None), (None, 42)]
+
+
+
+
 
 
 
