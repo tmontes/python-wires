@@ -8,7 +8,7 @@ Python Wires is openly developed on `GitHub <https://github.com/tmontes/python-w
 * Structured.
 * Flexible.
 
-Substantiated contributions and discussions on this topic will be welcome.
+Substantiated contributions to its improvement and related discussions will be welcome.
 
 
 
@@ -101,7 +101,7 @@ All development issues will be `labelled <https://github.com/tmontes/python-wire
 
 
 .. note::
-    The key motivation for having mandatory labels in development issues is to simplify filtering support related ones which submitters will tend to leave unlabelled.
+    The key motivation for having mandatory labels in development issues is to simplify filtering support related ones which submitters will leave unlabelled.
 
 
 General requirements:
@@ -151,4 +151,19 @@ Pull Requests are `tracked here <https://github.com/tmontes/python-wires/pulls>`
 * Must be assigned to the same milestone as the referenced open issue.
 * May be labelled.
 
+
+
+
+Release Procedure
+-----------------
+
+Mostly as a note to maintainers.
+
+Confirm that the :guilabel:`NEXT` milestone contains:
+
+- No open issues.
+- One or more closed issues, each associated with one or more merged Pull Requests.
+
+
+If any of the above is not confirmed, the release must be deferred.
 
