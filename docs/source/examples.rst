@@ -51,6 +51,7 @@ Wiring and Unwiring
 The :meth:`wire <wires._callable.WiresCallable.wire>` method wires a callable to a *wires callable* [#wirescallable]_:
 
 .. code-block:: python
+    :emphasize-lines: 6
 
     from wires import w
 
@@ -63,6 +64,7 @@ The :meth:`wire <wires._callable.WiresCallable.wire>` method wires a callable to
 Multiple wirings to the same callable are allowed:
 
 .. code-block:: python
+    :emphasize-lines: 6-7
 
     from wires import w
 
@@ -87,6 +89,7 @@ Wiring a non-callable raises a :class:`TypeError` exception:
 The :meth:`unwire <wires._callable.WiresCallable.unwire>` method unwires a given callable:
 
 .. code-block:: python
+    :emphasize-lines: 7
 
     from wires import w
 
@@ -136,6 +139,7 @@ Limiting the number of wirings on *wires callables* can be done in two different
 Using a custom-initialized :class:`Wires <wires._wires.Wires>` object, its *wires callables* default to its wiring limits:
 
 .. code-block:: python
+    :emphasize-lines: 9
 
     from wires import Wires
 
@@ -155,6 +159,7 @@ Using a custom-initialized :class:`Wires <wires._wires.Wires>` object, its *wire
 Overriding wiring limits on a *wires callable* basis:
 
 .. code-block:: python
+    :emphasize-lines: 11-12
 
     from wires import Wires
 
@@ -182,6 +187,7 @@ Overriding wiring limits on a *wires callable* basis:
 Clearing wiring limits on a per-*wires callable* basis:
 
 .. code-block:: python
+    :emphasize-lines: 11-12
 
     from wires import Wires
 
@@ -212,6 +218,7 @@ Overriding per-*wires callable* wiring limits raises a :class:`ValueError` when:
     * The current wirings don't meet the limit trying to be set.
 
 .. code-block:: python
+    :emphasize-lines: 7
 
     from wires import w
 
@@ -238,6 +245,7 @@ Calling a just-created, default *wires callable* works:
 Calling a *wires callable* calls its wired callables, in wiring order:
 
 .. code-block:: python
+    :emphasize-lines: 11,15
 
     from wires import w
 
@@ -273,6 +281,7 @@ Argument Passing
 Call-time arguments are passed to each wired callable:
 
 .. code-block:: python
+    :emphasize-lines: 7-10
 
     from wires import w
 
@@ -289,6 +298,7 @@ Call-time arguments are passed to each wired callable:
 Wiring actions can include wire-time arguments, later combined with call-time arguments:
 
 .. code-block:: python
+    :emphasize-lines: 6-7
 
     from wires import w
 
@@ -319,6 +329,7 @@ In either case, a :class:`ValueError` is raised when no matching wiring exists.
 
 
 .. code-block:: python
+    :emphasize-lines: 12,15,18
 
     from wires import w
 
@@ -354,7 +365,7 @@ By default, calling a *wires callable* calls all its wirings and returns ``None`
 
 
 .. code-block:: python
-    :emphasize-lines: 11
+    :emphasize-lines: 11,16
 
     from wires import Wires
 
@@ -386,7 +397,7 @@ Call-time coupling can be:
 Setting **returns** at the :class:`Wires <wires._wires.Wires>` object level:
 
 .. code-block:: python
-    :emphasize-lines: 11
+    :emphasize-lines: 11,16
 
     from wires import Wires
 
@@ -410,7 +421,7 @@ Setting **returns** at the :class:`Wires <wires._wires.Wires>` object level:
 Overriding **returns** at the *wires callable* level:
 
 .. code-block:: python
-    :emphasize-lines: 11-12
+    :emphasize-lines: 11-12,17
 
     from wires import Wires
 
@@ -463,7 +474,7 @@ Overriding **returns** at call-time:
 Setting **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` object level:
 
 .. code-block:: python
-    :emphasize-lines: 11
+    :emphasize-lines: 11,16
 
     from wires import Wires
 
@@ -487,7 +498,7 @@ Setting **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` object 
 Overriding **ignore exceptions** at the *wires callable* level:
 
 .. code-block:: python
-    :emphasize-lines: 11-12
+    :emphasize-lines: 11-12,17
 
     from wires import Wires
 
@@ -539,7 +550,7 @@ Overriding **ignore exceptions** at call-time:
 Setting both **returns** and **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` level:
 
 .. code-block:: python
-    :emphasize-lines: 11
+    :emphasize-lines: 11,16
 
     from wires import Wires
 
@@ -563,7 +574,7 @@ Setting both **returns** and **ignore exceptions** at the :class:`Wires <wires._
 Overriding both **returns** and **ignore exceptions** at the *wires callable* level:
 
 .. code-block:: python
-    :emphasize-lines: 11-13
+    :emphasize-lines: 11-13,18
 
     from wires import Wires
 
@@ -626,6 +637,7 @@ Introspection
 Using :func:`dir` to obtain all attributes:
 
 .. code-block:: python
+    :emphasize-lines: 9
 
     from wires import w
 
@@ -641,6 +653,7 @@ Using :func:`dir` to obtain all attributes:
 Using :func:`len` to get the *wires callables* count:
 
 .. code-block:: python
+    :emphasize-lines: 9
 
     from wires import w
 
@@ -656,6 +669,7 @@ Using :func:`len` to get the *wires callables* count:
 Iterating over a :class:`Wires <wires._wires.Wires>` object produces each *wires callable*:
 
 .. code-block:: python
+    :emphasize-lines: 9-10
 
     from wires import w
 
@@ -686,6 +700,7 @@ Each holds a ``__name__`` attribute, like regular Python functions:
 Getting ``min_wirings`` and ``max_wirings``, falling back to the :class:`Wires <wires._wires.Wires>` object settings:
 
 .. code-block:: python
+    :emphasize-lines: 5-6,10-11
 
     from wires import Wires
 
@@ -703,6 +718,7 @@ Getting ``min_wirings`` and ``max_wirings``, falling back to the :class:`Wires <
 Getting ``returns`` and ``ignore_exceptions``, falling back to the :class:`Wires <wires._wires.Wires>` object settings:
 
 .. code-block:: python
+    :emphasize-lines: 5-6,10-11
 
     from wires import Wires
 
@@ -721,6 +737,7 @@ Getting ``returns`` and ``ignore_exceptions``, falling back to the :class:`Wires
 Using :func:`len` to get number wirings:
 
 .. code-block:: python
+    :emphasize-lines: 12
 
     from wires import w
 
@@ -740,6 +757,7 @@ Using :func:`len` to get number wirings:
 Using :attr:`wirings <wires._callable.WiresCallable.wirings>` to get the current list of wired callables and wire-time arguments:
 
 .. code-block:: python
+    :emphasize-lines: 10
 
     from wires import w
 
