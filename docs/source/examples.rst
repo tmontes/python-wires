@@ -354,6 +354,7 @@ By default, calling a *wires callable* calls all its wirings and returns ``None`
 
 
 .. code-block:: python
+    :emphasize-lines: 11
 
     from wires import Wires
 
@@ -365,7 +366,7 @@ By default, calling a *wires callable* calls all its wirings and returns ``None`
         print('about to return')
         return 42
 
-    w = Wires()                     # Default call-coupling.
+    w = Wires()                     # Default call coupling.
 
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
@@ -382,7 +383,7 @@ Call-time coupling can be:
 
 
 
-Overriding **returns** at the :class:`Wires <wires._wires.Wires>` level:
+Setting **returns** at the :class:`Wires <wires._wires.Wires>` object level:
 
 .. code-block:: python
     :emphasize-lines: 11
@@ -397,7 +398,7 @@ Overriding **returns** at the :class:`Wires <wires._wires.Wires>` level:
         print('about to return')
         return 42
 
-    w = Wires(returns=True)         # Non-default call-coupling.
+    w = Wires(returns=True)         # Non-default call coupling.
 
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
@@ -421,8 +422,8 @@ Overriding **returns** at the *wires callable* level:
         print('about to return')
         return 42
 
-    w = Wires()                     # Default call-coupling.
-    w.callable.returns = True       # Override call-coupling for `callable`.
+    w = Wires()                     # Default call coupling.
+    w.callable.returns = True       # Override call coupling for `callable`.
 
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
@@ -435,7 +436,7 @@ Overriding **returns** at the *wires callable* level:
 Overriding **returns** at call-time:
 
 .. code-block:: python
-    :emphasize-lines: 16
+    :emphasize-lines: 11,16
 
     from wires import Wires
 
@@ -447,19 +448,19 @@ Overriding **returns** at call-time:
         print('about to return')
         return 42
 
-    w = Wires()                     # Default call-coupling.
+    w = Wires()                     # Default call coupling.
 
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
 
-    w(returns=True).callable()      # Override call-coupling at calltime.
+    w(returns=True).callable()      # Override call coupling at calltime.
                                     # prints 'about to raise', then 'about to return'
                                     # returns [(ZeroDivisionError(), None), (None, 42)]
 
 
 
 
-Overriding **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` level:
+Setting **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` object level:
 
 .. code-block:: python
     :emphasize-lines: 11
@@ -474,7 +475,7 @@ Overriding **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` leve
         print('about to return')
         return 42
 
-    w = Wires(ignore_exceptions=False)  # Non-default call-coupling.
+    w = Wires(ignore_exceptions=False)  # Non-default call coupling.
 
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
@@ -498,8 +499,8 @@ Overriding **ignore exceptions** at the *wires callable* level:
         print('about to return')
         return 42
 
-    w = Wires()                             # Default call-coupling.
-    w.callable.ignore_exceptions = False    # Override call-coupling for `callable`.
+    w = Wires()                             # Default call coupling.
+    w.callable.ignore_exceptions = False    # Override call coupling for `callable`.
 
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
@@ -512,6 +513,7 @@ Overriding **ignore exceptions** at the *wires callable* level:
 Overriding **ignore exceptions** at call-time:
 
 .. code-block:: python
+    :emphasize-lines: 11,16
 
     from wires import Wires
 
@@ -523,19 +525,90 @@ Overriding **ignore exceptions** at call-time:
         print('about to return')
         return 42
 
-    w = Wires()                     # Default call-coupling.
+    w = Wires()                             # Default call coupling.
 
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
 
-    w(returns=True).callable()      # Override call-coupling at calltime.
-                                    # prints 'about to raise', then 'about to return'
-                                    # returns [(ZeroDivisionError(), None), (None, 42)]
+    w(ignore_exceptions=False).callable()   # Override call coupling at calltime.
+                                            # prints 'about to raise' only
+                                            # returns None
 
 
 
+Setting both **returns** and **ignore exceptions** at the :class:`Wires <wires._wires.Wires>` level:
+
+.. code-block:: python
+    :emphasize-lines: 11
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires(returns=True, ignore_exceptions=False)    # Non-default call coupling.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w.callable()                        # prints 'about to raise' only
+                                        # raises RuntimeError((ZeroDivisionError(), None),)
 
 
+Overriding both **returns** and **ignore exceptions** at the *wires callable* level:
+
+.. code-block:: python
+    :emphasize-lines: 11-13
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires()                             # Default call coupling.
+    w.callable.returns = True               # Override call coupling for `callable`.
+    w.callable.ignore_exceptions = False    # Override call coupling for `callable`.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w.callable()                        # prints 'about to raise' only
+                                        # raises RuntimeError((ZeroDivisionError(), None),)
+
+
+Overriding both **returns** and **ignore exceptions** at call-time:
+
+.. code-block:: python
+    :emphasize-lines: 11,16
+
+    from wires import Wires
+
+    def raise_exception():
+        print('about to raise')
+        raise ZeroDivisionError()
+
+    def return_42():
+        print('about to return')
+        return 42
+
+    w = Wires()                         # Default call coupling.
+
+    w.callable.wire(raise_exception)
+    w.callable.wire(return_42)
+
+    w(returns=True, ignore_exceptions=False).callable()
+                                        # prints 'about to raise' only
+                                        # raises RuntimeError((ZeroDivisionError(), None),)
 
 
 
