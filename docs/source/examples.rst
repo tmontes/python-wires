@@ -57,7 +57,7 @@ The :meth:`wire <wires._callable.WiresCallable.wire>` method wires a callable to
     def say_hi():
         print('Hello from wires!')
 
-    w.one_callable.wire(say_hi)         # calling `w.one_callable` will call `say_hi`
+    w.callable.wire(say_hi)             # calling `w.callable` will call `say_hi`
 
 
 Multiple wirings to the same callable are allowed:
@@ -69,8 +69,8 @@ Multiple wirings to the same callable are allowed:
     def say_hi():
         print('Hello from wires!')
 
-    w.one_callable.wire(say_hi)         # calling `w.one_callable` will call `say_hi`
-    w.one_callable.wire(say_hi)         # calling `w.one_callable` will call `say_hi` twice
+    w.callable.wire(say_hi)             # calling `w.callable` will call `say_hi`
+    w.callable.wire(say_hi)             # calling `w.callable` will call `say_hi` twice
 
 
 
@@ -81,7 +81,7 @@ Wiring a non-callable raises a :class:`TypeError` exception:
 
     from wires import w
 
-    w.one_callable.wire(42)             # raises TypeError: 42 isn't callable
+    w.callable.wire(42)                 # raises TypeError: 42 isn't callable
 
 
 The :meth:`unwire <wires._callable.WiresCallable.unwire>` method unwires a given callable:
@@ -93,8 +93,8 @@ The :meth:`unwire <wires._callable.WiresCallable.unwire>` method unwires a given
     def say_hi():
         print('Hello from wires!')
 
-    w.one_callable.wire(say_hi)         # calling `w.one_callable` will call `say_hi`
-    w.one_callable.unwire(say_hi)       # calling `w.one_callable` no longer calls `say_hi`
+    w.callable.wire(say_hi)             # calling `w.callable` will call `say_hi`
+    w.callable.unwire(say_hi)           # calling `w.callable` no longer calls `say_hi`
 
 
 
@@ -107,10 +107,10 @@ If multiple wirings exist, :meth:`unwire <wires._callable.WiresCallable.unwire>`
     def say_hi():
         print('Hello from wires!')
 
-    w.one_callable.wire(say_hi)         # calling `w.one_callable` will call `say_hi`
-    w.one_callable.wire(say_hi)         # calling `w.one_callable` will call `say_hi` twice
-    w.one_callable.unwire(say_hi)       # calling `w.one_callable` will call `say_hi` once
-    w.one_callable.unwire(say_hi)       # calling `w.one_callable` no longer calls `say_hi`
+    w.callable.wire(say_hi)             # calling `w.callable` will call `say_hi`
+    w.callable.wire(say_hi)             # calling `w.callable` will call `say_hi` twice
+    w.callable.unwire(say_hi)           # calling `w.callable` will call `say_hi` once
+    w.callable.unwire(say_hi)           # calling `w.callable` no longer calls `say_hi`
 
 
 
@@ -123,7 +123,7 @@ Unwiring a non-wired callable raises a :class:`ValueError`:
     def say_hi():
         print('Hello from wires!')
 
-    w.one_callable.unwire(say_hi)       # raises ValueError: non-wired `say_hi`
+    w.callable.unwire(say_hi)           # raises ValueError: non-wired `say_hi`
 
 
 
@@ -147,9 +147,9 @@ Using a custom-initialized :class:`Wires <wires._wires.Wires>` object, its *wire
 
     w = Wires(min_wirings=1, max_wirings=1)
 
-    w.one_callable.wire(say_hi)
-    w.one_callable.wire(say_bye)        # raises RuntimeError: max_wirings limit reached
-    w.one_callable.unwire(say_hi)       # raises RuntimeError: min_wirings limit reached
+    w.callable.wire(say_hi)
+    w.callable.wire(say_bye)            # raises RuntimeError: max_wirings limit reached
+    w.callable.unwire(say_hi)           # raises RuntimeError: min_wirings limit reached
 
 
 Overriding wiring limits on a *wires callable* basis:
@@ -166,17 +166,17 @@ Overriding wiring limits on a *wires callable* basis:
 
     w = Wires()                         # defaults to no wiring limits
 
-    w.one_callable.min_wirings = 1      # set `w.one_callable`'s min wirings
-    w.one_callable.max_wirings = 1      # set `w.one_callable`'s max wirings
+    w.callable1.min_wirings = 1         # set `w.callable1`'s min wirings
+    w.callable1.max_wirings = 1         # set `w.callable1`'s max wirings
 
-    w.one_callable.wire(say_hi)
-    w.one_callable.wire(say_bye)        # raises RuntimeError: max_wirings limit reached
-    w.one_callable.unwire(say_hi)       # raises RuntimeError: min_wirings limit reached
+    w.callable1.wire(say_hi)
+    w.callable1.wire(say_bye)           # raises RuntimeError: max_wirings limit reached
+    w.callable1.unwire(say_hi)          # raises RuntimeError: min_wirings limit reached
 
-    w.another_callable.wire(say_hi)
-    w.another_callable.wire(say_bye)    # works, no limits on `w.another_callable`
-    w.another_callable.unwire(say_bye)  # works, no limits on `w.another_callable`
-    w.another_callable.unwire(say_hi)   # works, no limits on `w.another_callable`
+    w.callable2.wire(say_hi)
+    w.callable2.wire(say_bye)           # works, no limits on `w.callable2`
+    w.callable2.unwire(say_bye)         # works, no limits on `w.callable2`
+    w.callable2.unwire(say_hi)          # works, no limits on `w.callable2`
 
 
 Clearing wiring limits on a per-*wires callable* basis:
@@ -193,17 +193,17 @@ Clearing wiring limits on a per-*wires callable* basis:
 
     w = Wires(min_wirings=1, max_wirings=1)
 
-    w.one_callable.min_wirings = None   # no min wiring limit on `w.one_callable`
-    w.one_callable.max_wirings = None   # no max wiring limit on `w.one_callable`
+    w.callable1.min_wirings = None      # no min wiring limit on `w.callable1`
+    w.callable1.max_wirings = None      # no max wiring limit on `w.callable1`
 
-    w.one_callable.wire(say_hi)
-    w.one_callable.wire(say_bye)        # works, no limits on `w.one_callable`
-    w.one_callable.unwire(say_bye)      # works, no limits on `w.one_callable`
-    w.one_callable.unwire(say_hi)       # works, no limits on `w.one_callable`
+    w.callable1.wire(say_hi)
+    w.callable1.wire(say_bye)           # works, no limits on `w.callable1`
+    w.callable1.unwire(say_bye)         # works, no limits on `w.callable1`
+    w.callable1.unwire(say_hi)          # works, no limits on `w.callable1`
 
-    w.another_callable.wire(say_hi)
-    w.another_callable.wire(say_bye)    # raises RuntimeError: max_wirings limit reached
-    w.another_callable.unwire(say_hi)   # raises RuntimeError: min_wirings limit reached
+    w.callable2.wire(say_hi)
+    w.callable2.wire(say_bye)           # raises RuntimeError: max_wirings limit reached
+    w.callable2.unwire(say_hi)          # raises RuntimeError: min_wirings limit reached
 
 
 Overriding per-*wires callable* wiring limits raises a :class:`ValueError` when:
@@ -218,8 +218,8 @@ Overriding per-*wires callable* wiring limits raises a :class:`ValueError` when:
     def say_hi():
         print('Hello from wires!')
 
-    w.one_callable.wire(say_hi)
-    w.one_callable.min_wirings = 2      # raises ValueError: too few wirings
+    w.callable.wire(say_hi)
+    w.callable.min_wirings = 2          # raises ValueError: too few wirings
 
 
 
@@ -232,7 +232,7 @@ Calling a just-created, default *wires callable* works:
 
     from wires import w
 
-    w.one_callable()
+    w.callable()
 
 
 Calling a *wires callable* calls its wired callables, in wiring order:
@@ -247,13 +247,13 @@ Calling a *wires callable* calls its wired callables, in wiring order:
     def say_bye():
         print('Bye, see you soon.')
 
-    w.one_callable.wire(say_hi)
-    w.one_callable.wire(say_bye)
-    w.one_callable()                    # calls `say_hi` first, then `say_bye`
+    w.callable1.wire(say_hi)
+    w.callable1.wire(say_bye)
+    w.callable1()                       # calls `say_hi` first, then `say_bye`
 
-    w.another_callable.wire(say_bye)
-    w.another_callable.wire(say_hi)
-    w.another_callable()                # calls `say_bye` first, then `say_hi`
+    w.callable2.wire(say_bye)
+    w.callable2.wire(say_hi)
+    w.callable2()                       # calls `say_bye` first, then `say_hi`
 
 
 Calling a *wires callable* where the current number of wirings is below the minimum wiring limit raises a :class:`ValueError` (set by the :class:`Wires <wires._wires.Wires>` object or overriden at the *wires callable* level):
@@ -262,8 +262,8 @@ Calling a *wires callable* where the current number of wirings is below the mini
 
     from wires import w
 
-    w.one_callable.min_wirings = 1
-    w.one_callable()                    # raises ValueError: less than min_wirings wired
+    w.callable.min_wirings = 1
+    w.callable()                        # raises ValueError: less than min_wirings wired
 
 
 
@@ -279,11 +279,11 @@ Call-time arguments are passed to each wired callable:
     def a_print(*args, **kw):
         print('args=%r kw=%r' % (args, kw))
 
-    w.one_callable.wire(a_print)
-    w.one_callable()                    # prints: args=() kw={}
-    w.one_callable(42, 24)              # prints: args=(42, 24) kw={}
-    w.one_callable(a=42, b=24)          # prints: args=() kw={'a': 42, 'b': 24}
-    w.one_callable(42, a=24)            # prints: args=(42,) kw={'a': 24}
+    w.callable.wire(a_print)
+    w.callable()                        # prints: args=() kw={}
+    w.callable(42, 24)                  # prints: args=(42, 24) kw={}
+    w.callable(a=42, b=24)              # prints: args=() kw={'a': 42, 'b': 24}
+    w.callable(42, a=24)                # prints: args=(42,) kw={'a': 24}
 
 
 Wiring actions can include wire-time arguments, later combined with call-time arguments:
@@ -295,18 +295,18 @@ Wiring actions can include wire-time arguments, later combined with call-time ar
     def a_print(*args, **kw):
         print('args=%r kw=%r' % (args, kw))
 
-    w.one_callable.wire(a_print, 'one')
-    w.another_callable.wire(a_print, a='nother')
+    w.callable1.wire(a_print, 'one')
+    w.callable2.wire(a_print, a='nother')
 
-    w.one_callable()                    # prints: args=('one',) kw={}
-    w.one_callable(42, 24)              # prints: args=('one', 42, 24) kw={}
-    w.one_callable(a=42, b=24)          # prints: args=('one',) kw={'a': 42, 'b': 24}
-    w.one_callable(42, a=24)            # prints: args=('one', 42) kw={'a': 24}
+    w.callable1()                       # prints: args=('one',) kw={}
+    w.callable1(42, 24)                 # prints: args=('one', 42, 24) kw={}
+    w.callable1(a=42, b=24)             # prints: args=('one',) kw={'a': 42, 'b': 24}
+    w.callable1(42, a=24)               # prints: args=('one', 42) kw={'a': 24}
 
-    w.another_callable()                # prints: args=() kw={'a': 'nother'}
-    w.another_callable(42, 24)          # prints: args=(42, 24) kw={'a': 'nother'}
-    w.another_callable(a=42, b=24)      # prints: args=() kw={'a': 42, 'b': 24}
-    w.another_callable(42, a=24)        # prints: args=(42,) kw={'a': 24}
+    w.callable2()                       # prints: args=() kw={'a': 'nother'}
+    w.callable2(42, 24)                 # prints: args=(42, 24) kw={'a': 'nother'}
+    w.callable2(a=42, b=24)             # prints: args=() kw={'a': 42, 'b': 24}
+    w.callable2(42, a=24)               # prints: args=(42,) kw={'a': 24}
 
 
 Unwiring actions can include wire-time arguments in the :meth:`unwire <wires._callable.WiresCallable.unwire>` call:
@@ -325,19 +325,19 @@ In either case, a :class:`ValueError` is raised when no matching wiring exists.
     def p_arg(arg):
         print(arg)
 
-    w.one_callable.wire(p_arg, 'a')
-    w.one_callable()                    # prints 'a'
+    w.callable.wire(p_arg, 'a')
+    w.callable()                        # prints 'a'
 
-    w.one_callable.wire(p_arg, 'b')
-    w.one_callable()                    # prints 'a', then prints 'b'
+    w.callable.wire(p_arg, 'b')
+    w.callable()                        # prints 'a', then prints 'b'
 
-    w.one_callable.unwire(p_arg, 'b')
-    w.one_callable()                    # prints 'a'
+    w.callable.unwire(p_arg, 'b')
+    w.callable()                        # prints 'a'
 
-    w.one_callable.unwire(p_arg)
-    w.one_callable()                    # does nothing
+    w.callable.unwire(p_arg)
+    w.callable()                        # does nothing
 
-    w.one_callable.unwire(p_arg, 'c')   # raises ValueError: no such wiring
+    w.callable.unwire(p_arg, 'c')       # raises ValueError: no such wiring
 
 
 
