@@ -35,7 +35,7 @@ Running the test suite with code coverage and branch reporting:
 
 .. code-block:: console
 
-    $ coverage run -m unittest discover
+    $ coverage run --branch -m unittest discover
     $ coverage report
 
 
@@ -96,7 +96,8 @@ All development issues will be `labelled <https://github.com/tmontes/python-wire
 ======================= =================================================================================
 :guilabel:`enhancement` Describing a new feature or capability.
 :guilabel:`bug`         Describing something that isn't working as documented.
-:guilabel:`develop`     Describing other development related issues: refactors, automation, process, etc.
+:guilabel:`release`     Describing release process issues.
+:guilabel:`dev-misc`    Describing other development related issues: refactors, automation, process, etc.
 ======================= =================================================================================
 
 
@@ -129,7 +130,7 @@ General requirements:
   * Include a reference to where the documentation is inconsistent with the actual results.
 
 
-* :guilabel:`develop` issues:
+* :guilabel:`dev-misc` issues:
 
   * Must describe the purpose, benefits and trade-offs.
 
@@ -163,7 +164,7 @@ Confirm that the :guilabel:`NEXT` milestone contains:
 - One or more closed issues, each associated with one or more merged Pull Requests.
 
 
-Then create a new issue in the :guilabel:`NEXT` milestone, named "Release YY.MINOR.MICRO", and:
+Once confirmed, rename the :guilabel:`NEXT` milestone to :guilabel:`YY.MINOR.MICRO` and create a new issue in it, labelled :guilabel:`release` and named "Release". Then:
 
 - Update ``__version__`` in ``src/wires/__init__.py`` to ``YY.MINOR.MICRO``.
 - Confirm that the documentation builds successfully, making adjustments if needed.
@@ -174,7 +175,7 @@ Then create a new issue in the :guilabel:`NEXT` milestone, named "Release YY.MIN
   - Once the draft output looks correct, run ``towncrier``.
 
 - Commit the version, documentation and changelog changes, tagging it :guilabel:`YY.MINOR.MICRO`.
-- Create Pull Request against the "Release YY.MINOR.MICRO" issue.
+- Create Pull Request against the "Release" issue.
 - Once all the GitHub checks pass, merge the Pull Request.
 - Update the local repository with the GitHub merged changes.
 - Release in PyPI:
@@ -217,4 +218,6 @@ Then create a new issue in the :guilabel:`NEXT` milestone, named "Release YY.MIN
         $ rm -r build/ dist/
 
 - Confirm the versioned documentation is available at `Read the Docs <https://python-wires.readthedocs.org/>`_.
+
+- Lastly, create a new :guilabel:`NEXT` milestone.
 
