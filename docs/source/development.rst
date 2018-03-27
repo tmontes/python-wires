@@ -157,13 +157,64 @@ Pull Requests are `tracked here <https://github.com/tmontes/python-wires/pulls>`
 Release Procedure
 -----------------
 
-Mostly as a note to maintainers.
-
 Confirm that the :guilabel:`NEXT` milestone contains:
 
 - No open issues.
 - One or more closed issues, each associated with one or more merged Pull Requests.
 
 
-If any of the above is not confirmed, the release must be deferred.
+Then create a new issue in the :guilabel:`NEXT` milestone, named "Release YY.MINOR.MICRO", and:
+
+- Update ``__version__`` in ``src/wires/__init__.py`` to ``YY.MINOR.MICRO``.
+- Confirm that the documentation builds successfully, making adjustments if needed.
+- Update the :doc:`changelog`:
+
+  - Run ``towncrier --draft`` and confirm the output.
+  - If needed, add missing ``.deprecate``, ``.enhancement``, ``.bug`` or ``.other`` newsfragment files under ``docs/newsfragments``.
+  - Once the draft output looks correct, run ``towncrier``.
+
+- Commit the version, documentation and changelog changes, tagging it :guilabel:`YY.MINOR.MICRO`.
+- Create Pull Request against the "Release YY.MINOR.MICRO" issue.
+- Once all the GitHub checks pass, merge the Pull Request.
+- Update the local repository with the GitHub merged changes.
+- Release in PyPI:
+
+  - Build the release artifacts:
+
+    .. code-block:: console
+
+        $ rm -r build/ dist/
+        $ python setup.py sdist bdist_wheel
+
+  - Upload to test PyPI:
+
+    .. code-block:: console
+
+        $ twine upload -r test dist/wires-*
+
+  - Test the installation into a freshly created virtual environment:
+
+    .. code-block:: console
+
+        $ pip install -i https://testpypi.python.org/pypi wires
+
+  - If ok, upload to PyPI:
+
+    .. code-block:: console
+
+        $ twine upload -r pypi dist/wires-*
+
+  - Confirm the installation into a freshly created virtual environment:
+
+    .. code-block:: console
+
+        $ pip install wires
+
+  - Lastly, cleanup again:
+
+    .. code-block:: console
+
+        $ rm -r build/ dist/
+
+- Confirm the versioned documentation is available at `Read the Docs <https://python-wires.readthedocs.org/>`_.
 
