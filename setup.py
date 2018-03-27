@@ -30,6 +30,7 @@ EXTRAS_REQUIRE = {
     "docs": [
         "sphinx",
         "sphinx-rtd-theme",
+        "towncrier",
     ],
     "tests": [
         "coverage",
