@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-*write me*
-
+.. include:: ../../CHANGELOG.rst
+   :start-after: marker-start-of-change-log
 
 
