@@ -7,7 +7,7 @@ Python Wires support is based on volunteer effort, delivered on an availability 
 Versions and Platforms
 ----------------------
 
-Following a strict `Backwards Compatibility Policy`_, Python Wires strives to work on as many Python interpreters and underlying platforms as possible. For that, care is taken in crafting and maintaining a clean, documented code base, that respects and uses safe, non-depcrecated Python programming APIs and conventions.
+Following a strict `Backwards Compatibility Policy`_, Python Wires strives to work on as many Python interpreters and underlying platforms as possible. For that, care is taken in crafting and maintaining a clean, documented code base, that respects and uses safe, non-deprecated Python programming APIs and conventions.
 
 There is, however, a limited set of interpreters and platforms where development and automated testing takes place; these are the only ones where, respectively, human based diagnostics are completed, and where "correctness assertions" [#correctness]_ can be made.
 
@@ -34,7 +34,7 @@ Python Wires versions follow a `Calendar Versioning <https://calver.org/>`_ sche
 Backwards Compatibility Policy
 ------------------------------
 
-* A given release is API compatible with the release preceeding it, possibly including new backwards-compatible features: codebases depending on a given Python Wires release should be able to use a later release, with no changes.
+* A given release is API compatible with the release preceding it, possibly including new backwards-compatible features: codebases depending on a given Python Wires release should be able to use a later release, with no changes.
 
 * Notable exceptions:
 

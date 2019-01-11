@@ -15,7 +15,7 @@ Substantiated contributions to its improvement and related discussions will be w
 Environment
 -----------
 
-Setting up a development enviroment should be done under a Python virtual environment:
+Setting up a development environment should be done under a Python virtual environment:
 
 .. code-block:: console
 
@@ -171,7 +171,7 @@ Once confirmed, rename the :guilabel:`NEXT` milestone to :guilabel:`YY.MINOR.MIC
 - Update the :doc:`changelog`:
 
   - Run ``towncrier --draft`` and confirm the output.
-  - If needed, add missing ``.deprecate``, ``.enhancement``, ``.bug`` or ``.other`` newsfragment files under ``docs/newsfragments``.
+  - If needed, add missing ``.deprecate``, ``.enhancement``, ``.bug`` or ``.other`` news-fragment files under ``docs/newsfragments``.
   - Once the draft output looks correct, run ``towncrier``.
 
 - Commit the version, documentation and changelog changes, tagging it :guilabel:`YY.MINOR.MICRO`.
