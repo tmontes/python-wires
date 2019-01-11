@@ -2,7 +2,7 @@ Python Wires: Simple Callable Wiring
 ====================================
 
 .. image:: http://img.shields.io/pypi/v/wires.svg
-   :target: https://pypi.python.org/pypi/wires
+   :target: https://pypi.org/pypi/wires
    :alt: PyPI
 
 .. image:: https://img.shields.io/travis/tmontes/python-wires.svg
@@ -27,7 +27,7 @@ Python Wires is a library to facilitate callable wiring by decoupling callers fr
 Installation
 ------------
 
-Python Wires is a pure Python package distributed via `PyPI <https://pypi.python.org/pypi/wires>`_. Install it with:
+Python Wires is a pure Python package distributed via `PyPI <https://pypi.org/pypi/wires>`_. Install it with:
 
 .. code-block:: console
 
