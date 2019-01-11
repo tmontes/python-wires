@@ -46,7 +46,7 @@ Building the documentation, which will be available under ``docs/build/html/``:
     $ cd docs && make html
 
 
-Running the test suite with `tox <https://pypi.python.org/pypi/tox>`_:
+Running the test suite with `tox <https://pypi.org/pypi/tox>`_:
 
 .. code-block:: console
 
@@ -121,7 +121,7 @@ General requirements:
 
 * :guilabel:`bug` issues must:
 
-  * Be explicitly reported against either the latest `PyPI released version <https://pypi.python.org/pypi/wires>`_ or the current `GitHub master branch <https://github.com/tmontes/python-wires/tree/master>`_.
+  * Be explicitly reported against either the latest `PyPI released version <https://pypi.org/pypi/wires>`_ or the current `GitHub master branch <https://github.com/tmontes/python-wires/tree/master>`_.
 
   * Describe the steps to reproduce the bug, ideally with a minimal code sample.
 
@@ -197,7 +197,7 @@ Once confirmed, rename the :guilabel:`NEXT` milestone to :guilabel:`YY.MINOR.MIC
 
     .. code-block:: console
 
-        $ pip install -i https://testpypi.python.org/pypi wires
+        $ pip install -i https://test.pypi.org/pypi wires
 
   - If ok, upload to PyPI:
 
