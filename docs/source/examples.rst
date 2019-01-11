@@ -464,7 +464,7 @@ Overriding **returns** at call-time:
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
 
-    w(returns=True).callable()      # Override call coupling at calltime.
+    w(returns=True).callable()      # Override call coupling at call time.
                                     # prints 'about to raise', then 'about to return'
                                     # returns [(ZeroDivisionError(), None), (None, 42)]
 
@@ -541,7 +541,7 @@ Overriding **ignore exceptions** at call-time:
     w.callable.wire(raise_exception)
     w.callable.wire(return_42)
 
-    w(ignore_exceptions=False).callable()   # Override call coupling at calltime.
+    w(ignore_exceptions=False).callable()   # Override call coupling at call time.
                                             # prints 'about to raise' only
                                             # returns None
 

@@ -1,7 +1,7 @@
 Concepts
 ========
 
-This section describes the key concepts in Python Wires, pusposely omitting sample code and fine grained details. For that, refer to the :doc:`examples` and to the :doc:`reference`.
+This section describes the key concepts in Python Wires, purposely omitting sample code and fine grained details. For that, refer to the :doc:`examples` and to the :doc:`reference`.
 
 
 
