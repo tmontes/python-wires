@@ -97,7 +97,7 @@ All development issues will be `labelled <https://github.com/tmontes/python-wire
 :guilabel:`enhancement` Describing a new feature or capability.
 :guilabel:`bug`         Describing something that isn't working as documented.
 :guilabel:`release`     Describing release process issues.
-:guilabel:`dev-misc`    Describing other development related issues: refactors, automation, process, etc.
+:guilabel:`maintenance` Describing other development related issues: refactors, automation, process, etc.
 ======================= =================================================================================
 
 
@@ -130,7 +130,7 @@ General requirements:
   * Include a reference to where the documentation is inconsistent with the actual results.
 
 
-* :guilabel:`dev-misc` issues:
+* :guilabel:`maintenance` issues:
 
   * Must describe the purpose, benefits and trade-offs.
 
