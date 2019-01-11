@@ -13,7 +13,7 @@ There is, however, a limited set of interpreters and platforms where development
 
 .. important::
 
-    For these motives, the only supported version is the latest `PyPI released version <https://pypi.python.org/pypi/wires>`_, running on an interpreter and platform for which automated testing is in place:
+    For these motives, the only supported version is the latest `PyPI released version <https://pypi.org/pypi/wires>`_, running on an interpreter and platform for which automated testing is in place:
 
     * CPython 2.7 on a glibc based Linux system.
     * CPython 3.6 on a glibc based Linux system.
