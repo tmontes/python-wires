@@ -17,6 +17,7 @@ There is, however, a limited set of interpreters and platforms where development
 
     * CPython 2.7 on a glibc based Linux system.
     * CPython 3.6 on a glibc based Linux system.
+    * CPython 3.7 on a glibc based Linux system.
 
     Other interpreters and platforms may become supported in the future.
 
@@ -48,7 +49,7 @@ Deprecation Policy
 
 If a non-backwards compatible API change is planned:
 
-* A fully backwards compatible release will be made, where uses of API about to break compatibility will issue ``WiresDeprecationWarning``\s using the Python Standard Library's `warnings <https://docs.python.org/3.6/library/warnings.html>`_ module as in:
+* A fully backwards compatible release will be made, where uses of API about to break compatibility will issue ``WiresDeprecationWarning``\s using the Python Standard Library's `warnings <https://docs.python.org/3/library/warnings.html>`_ module as in:
 
     .. code-block:: python
 

@@ -50,7 +50,7 @@ Running the test suite with `tox <https://pypi.python.org/pypi/tox>`_:
 
 .. code-block:: console
 
-    $ pip install tox
+    $ pip install tox tox-venv
     $ tox
 
 
