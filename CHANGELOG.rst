@@ -5,6 +5,22 @@ Python Wires Change Log
 
 .. towncrier release notes start
 
+Wires 19.2.0
+------------
+
+Bug Fixes
+^^^^^^^^^
+
+- Fixed release process documentation and its packaging dependencies. (`#112 <https://github.com/tmontes/python-wires/issues/112>`_)
+
+
+Other Changes
+^^^^^^^^^^^^^
+
+- 64 bit Windows now supported. Automated tests in place. (`#94 <https://github.com/tmontes/python-wires/issues/94>`_)
+- macOS now supported. Automated tests in place. (`#95 <https://github.com/tmontes/python-wires/issues/95>`_)
+
+
 Wires 19.1.0
 ------------
 
