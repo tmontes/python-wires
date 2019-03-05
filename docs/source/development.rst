@@ -180,7 +180,11 @@ Once confirmed, rename the :guilabel:`NEXT` milestone to :guilabel:`YY.MINOR.MIC
 - Update the local repository with the GitHub merged changes.
 - Release in PyPI:
 
-  - Install release dependencies with ``pip install -e .[release]``.
+  - Install release dependencies:
+
+    .. code-block:: console
+
+        $ pip install -e .[release]
 
   - Build the release artifacts:
 
