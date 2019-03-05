@@ -15,9 +15,9 @@ There is, however, a limited set of interpreters and platforms where development
 
     For these motives, the only supported version is the latest `PyPI released version <https://pypi.org/pypi/wires>`_, running on an interpreter and platform for which automated testing is in place:
 
-    * CPython 2.7 on a glibc based Linux system.
-    * CPython 3.6 on a glibc based Linux system.
-    * CPython 3.7 on a glibc based Linux system.
+    * CPython 2.7 on 64 bit Linux, Windows or macOS systems.
+    * CPython 3.6 on 64 bit Linux, Windows or macOS systems.
+    * CPython 3.7 on 64 bit Linux, Windows or macOS systems.
 
     Other interpreters and platforms may become supported in the future.
 
