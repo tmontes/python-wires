@@ -5,7 +5,7 @@ trigger:
 
 jobs:
 
-- job: 'Test Windows'
+- job: 'Test'
   pool:
     vmImage: 'vs2017-win2016'
   strategy:
@@ -16,7 +16,7 @@ jobs:
         python.version: '3.6'
       Python37:
         python.version: '3.7'
-    maxParallel: 3
+    maxParallel: 4
 
   steps:
   - task: UsePythonVersion@0
@@ -25,8 +25,21 @@ jobs:
       architecture: 'x64'
 
   - script: python -m pip install --upgrade pip && pip install .
-    displayName: 'Install'
+    displayName: 'Install dependencies'
 
   - script: python -m unittest discover
     displayName: 'Run tests'
 
+- job: 'Publish'
+  dependsOn: 'Test'
+  pool:
+    vmImage: 'vs2017-win2016'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      architecture: 'x64'
+
+  - script: python setup.py sdist
+    displayName: 'Build sdist'
