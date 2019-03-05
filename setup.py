@@ -36,6 +36,10 @@ EXTRAS_REQUIRE = {
     "tests": [
         "coverage",
     ],
+    "release": [
+        "wheel",
+        "twine",
+    ],
 }
 EXTRAS_REQUIRE["dev"] = EXTRAS_REQUIRE["tests"] + EXTRAS_REQUIRE["docs"]
 
