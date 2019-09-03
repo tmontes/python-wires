@@ -18,6 +18,7 @@ There is, however, a limited set of interpreters and platforms where development
     * CPython 2.7 on 64 bit Linux, Windows or macOS systems.
     * CPython 3.6 on 64 bit Linux, Windows or macOS systems.
     * CPython 3.7 on 64 bit Linux, Windows or macOS systems.
+    * CPython 3.8 on 64 bit Linux.
 
     Other interpreters and platforms may become supported in the future.
 
