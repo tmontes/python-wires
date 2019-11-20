@@ -36,6 +36,8 @@ jobs:
   - script: coverage run --branch -m unittest discover
     displayName: 'Run tests'
 
-  - script: python -m pip install codecov && codecov
+  - script: python -m pip install codecov && codecov --no-color --required
     displayName: 'Upload coverage results'
+    env:
+      CODECOV_TOKEN: $(CODECOV_TOKEN)
 
